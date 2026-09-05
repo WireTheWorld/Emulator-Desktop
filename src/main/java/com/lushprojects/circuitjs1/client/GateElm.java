@@ -34,7 +34,7 @@ package com.lushprojects.circuitjs1.client;
 	    noDiagonal = true;
 	    inputCount = 2;
 	    
-	    // copy defaults from last gate edited
+	    // 从上次编辑的门电路复制默认值
 	    highVoltage = lastHighVoltage;
 	    if (lastSchmitt)
 		flags |= FLAG_SCHMITT;
@@ -79,7 +79,7 @@ package com.lushprojects.circuitjs1.client;
 		setSize(2);
 	    int hs = gheight;
 	    int i;
-	    ww = gwidth2; // was 24
+	    ww = gwidth2; // 原为 24
 	    if (ww > dn/2)
 		ww = (int) (dn/2);
 	    if (isInverting() && ww+8 > dn/2)
@@ -107,11 +107,11 @@ package com.lushprojects.circuitjs1.client;
 		schmittPoly = getSchmittPolygon(gsize, .47f);
 	}
 	
-	// Restore state if loading from file or volts is reallocated.
+	// 如果从文件加载或 volts 被重新分配，则恢复状态。
 	void setupVolts() {
 	    int i;
-	    // We don't remember all the inputs, just the last output.
-	    // Fill inputs with something that keeps output the same.
+	    // 我们不保存所有输入，只保存最后的输出。
+	    // 用能使输出保持不变的某个值填充输入。
 	    for (i = 0; i != inputCount; i++)
 		volts[i] = (lastOutput ^ isInverting()) ? highVoltage : 0;
 	}
@@ -201,10 +201,10 @@ package com.lushprojects.circuitjs1.client;
 		f = !f;
 	    
 	    if (lastTime != sim.t) {
-		// detect oscillation (using same strategy as Atanua)
+		// 检测振荡（使用与 Atanua 相同的策略）
 		if (lastOutput == !f) {
 		    if (oscillationCount++ > 50) {
-			// output is oscillating too much, randomly leave output the same
+			// 输出振荡过于剧烈，随机保持输出不变
 			oscillationCount = 0;
 			if (sim.getrand(10) > 5)
 			    f = lastOutput;
@@ -254,8 +254,8 @@ package com.lushprojects.circuitjs1.client;
 		setPoints();
 	    }
 	}
-	// there is no current path through the gate inputs, but there
-	// is an indirect path through the output to ground.
+	// 门电路输入之间没有电流通路，但存在
+	// 通过输出到地的间接通路。
 	boolean getConnection(int n1, int n2) { return false; }
 	boolean hasGroundConnection(int n1) {
 	    return (n1 == inputCount);

@@ -22,7 +22,7 @@ package com.lushprojects.circuitjs1.client;
 import java.util.NoSuchElementException;
 import com.google.gwt.user.client.ui.TextArea;
 
-// contributed by Edward Calver
+// 由 Edward Calver 贡献
 
 class SeqGenElm extends ChipElm {
 	final int FLAG_NEW_VERSION = 2;
@@ -47,10 +47,10 @@ class SeqGenElm extends ChipElm {
 		super(xa, ya, xb, yb, f, st);
 		try {
 			if ((flags & FLAG_NEW_VERSION) == 0) {
-				// This is an old sequence generator. Upgrade it to the new, flexible version.
+				// 这是一个旧的序列发生器。将其升级到新的灵活版本。
 				flags |= FLAG_NEW_VERSION;
 				
-				//The old sequence generator read bytes backwards, from right to left, and this needs to be corrected.
+				//旧的序列发生器是从右到左反向读取字节的，这需要修正。
 				byte oldData = (byte)Integer.parseInt(st.nextToken());
 				byte newData = 0;
 				for (int i = 0; i < Integer.SIZE; i++)
@@ -59,17 +59,17 @@ class SeqGenElm extends ChipElm {
 				bitCount = 8;
 				data = new int[] { newData };
 			} else {
-				// Load normally
+				// 正常加载
 				bitCount = Integer.parseInt(st.nextToken());
-				data = new int[(bitCount / Integer.SIZE) + (bitCount % Integer.SIZE != 0 ? 1 : 0)]; //Allocate enough bytes to fit the requested number of bits
+				data = new int[(bitCount / Integer.SIZE) + (bitCount % Integer.SIZE != 0 ? 1 : 0)]; //分配足够的整数以容纳所请求的位数
 				for (int i = 0; i < data.length; i++)
 					data[i] = Integer.parseInt(st.nextToken());
 			}
 		} catch (NoSuchElementException e) {
-			// Corrupted element: Data is incomplete
+			// 损坏的元件：数据不完整
 		}
 		
-		// Ensure bitCount does not exceed the amount of data we have. (This can happen if there was an error)
+		// 确保 bitCount 不超过我们拥有的数据量。（如果出现错误，可能会发生这种情况）
 		if (bitCount > data.length * Integer.SIZE)
 			bitCount = data.length * Integer.SIZE;
 	}
@@ -105,7 +105,7 @@ class SeqGenElm extends ChipElm {
 			if (bitPosition >= bitCount) {
 				if (hasPlayOnce()) {
 					pins[1].value = false;
-					return; //Stopped
+					return; //已停止
 				}
 				bitPosition = 0;
 			}
@@ -118,16 +118,16 @@ class SeqGenElm extends ChipElm {
 	
 	void execute() {
 		if (hasReset() && pins[2].value) {
-			// Suspended state (RESET raised)
+			// 挂起状态（RESET 置位）
 			bitPosition = 0;
 			clockstate = pins[0].value;
 			nextBit();
 		} else {
-			// Normal operation
+			// 正常运行
 			if (pins[0].value != clockstate) {
-				// Edge transition
+				// 边沿跳变
 				clockstate = pins[0].value;
-				if (clockstate) // Rising-edge event
+				if (clockstate) // 上升沿事件
 					nextBit();
 			}
 		}
@@ -171,7 +171,7 @@ class SeqGenElm extends ChipElm {
 		if (n == 1) {
 			String s = ei.textArea.getText();
 			
-			// First count the number of bits so we can initialize the data array
+			// 首先统计位数，以便初始化数据数组
 			bitCount = 0;
 			for (int i = 0; i < s.length(); i++) {
 				char c = s.charAt(i);
@@ -180,7 +180,7 @@ class SeqGenElm extends ChipElm {
 			}
 			data = new int[bitCount / Integer.SIZE];
 			
-			// Fill the data array
+			// 填充数据数组
 			bitCount = 0;
 			for (int i = 0; i < s.length(); i++) {
 				char c = s.charAt(i);

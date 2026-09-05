@@ -27,7 +27,7 @@ package com.lushprojects.circuitjs1.client;
 	    noDiagonal = true;
 	    slewRate = .5;
 	    
-	    // copy defaults from last gate edited
+	    // 从上次编辑的门电路复制默认值
 	    highVoltage = GateElm.lastHighVoltage;
 	}
 	public InverterElm(int xa, int ya, int xb, int yb, int f,
@@ -75,7 +75,7 @@ package com.lushprojects.circuitjs1.client;
 	    
 	    if (GateElm.useEuroGates()) {
 		Point pts[] = newPointArray(4);
-		Point l2 = interpPoint(point1, point2, .5+(ww-5)/dn);   // make room for circle
+		Point l2 = interpPoint(point1, point2, .5+(ww-5)/dn);   // 为圆圈留出空间
 		interpPoint2(lead1, l2, pts[0], pts[1], 0, hs);
 		interpPoint2(lead1, l2, pts[3], pts[2], 1, hs);
 		gatePoly = createPolygon(pts);
@@ -123,8 +123,8 @@ package com.lushprojects.circuitjs1.client;
 	    if (n == 1)
 		highVoltage = GateElm.lastHighVoltage = ei.value;
 	}
-	// there is no current path through the inverter input, but there
-	// is an indirect path through the output to ground.
+	// 反相器输入端没有直接的电流通路，但存在
+	// 经由输出端到地的间接通路。
 	boolean getConnection(int n1, int n2) { return false; }
 	boolean hasGroundConnection(int n1) {
 	    return (n1 == 1);

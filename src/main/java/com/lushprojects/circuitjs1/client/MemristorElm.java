@@ -71,7 +71,7 @@ class MemristorElm extends CircuitElm {
 	setPowerColor(g, true);
 	double segf = 1./segments;
 
-	// draw zigzag
+	// 绘制锯齿形
 	for (i = 0; i <= segments; i++) {
 	    int nx = (i & 1) == 0 ? 1 : -1;
 	    if (i == segments)

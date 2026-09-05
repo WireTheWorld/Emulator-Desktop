@@ -58,7 +58,7 @@ class PhaseCompElm extends ChipElm {
 	if (out != -1)
 	    sim.stampVoltageSource(0, nodes[2], pins[2].voltSource, out);
 	else {
-	    // tie current through output pin to 0
+	    // 将流过输出引脚的电流约束为 0
 	    int vn = sim.nodeList.size()+pins[2].voltSource;
 	    sim.stampMatrix(vn, vn, 1);
 	}

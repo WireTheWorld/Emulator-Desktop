@@ -19,12 +19,12 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// Silicon-Controlled Rectifier
-// 3 nodes, 1 internal node
-// 0 = anode, 1 = cathode, 2 = gate
-// 0, 3 = variable resistor
-// 3, 1 = diode
-// 2, 1 = 50 ohm resistor
+// 可控硅整流器
+// 3 个节点，1 个内部节点
+// 0 = 阳极, 1 = 阴极, 2 = 栅极
+// 0, 3 = 可变电阻
+// 3, 1 = 二极管
+// 2, 1 = 50 欧姆电阻
 
 class SCRElm extends CircuitElm {
     final int anode = 0;
@@ -66,7 +66,7 @@ class SCRElm extends CircuitElm {
     void setup() {
 	diode = new Diode(sim);
 	diode.setupForDefaultModel();
-	aresistance = 1; // to avoid divide by zero
+	aresistance = 1; // 避免除以零
     }
     boolean nonLinear() { return true; }
     void reset() {
@@ -96,8 +96,8 @@ class SCRElm extends CircuitElm {
 	if (abs(dx) > abs(dy)) {
 	    dir = -sign(dx)*sign(dy);
 	    
-	    // correct dn (length) or else calcLeads() may get confused, and also gate may be drawn weirdly.  Can't do this with old circuits or it may
-	    // break them
+	    // 修正 dn（长度），否则 calcLeads() 可能会出错，栅极也可能绘制异常。对旧电路不能这样做，否则可能
+	    // 使其损坏
 	    if (applyGateFix())
 		dn = abs(dx);
 	    point2.y = point1.y;
@@ -139,7 +139,7 @@ class SCRElm extends CircuitElm {
 
 	draw2Leads(g);
 
-	// draw arrow thingy
+	// 绘制箭头图形
 	setVoltageColor(g, v1);
 	setPowerColor(g, true);
 	g.fillPolygon(poly);
@@ -148,7 +148,7 @@ class SCRElm extends CircuitElm {
 	drawThickLine(g, lead2,   gate[0]);
 	drawThickLine(g, gate[0], gate[1]);
 	
-	// draw thing arrow is pointing to
+	// 绘制箭头所指的图形
 	setVoltageColor(g, v2);
 	setPowerColor(g, true);
 	drawThickLine(g, cathode[0], cathode[1]);
@@ -167,7 +167,7 @@ class SCRElm extends CircuitElm {
 	    g.setColor(whiteColor);
 	    int ds = sign(dx);
 	    g.drawString("C", lead2.x+((ds < 0) ? 5 : -15), lead2.y+12);
-	    g.drawString("A", lead1.x+5, lead1.y-4); // x+6 if ds=1, -12 if -1
+	    g.drawString("A", lead1.x+5, lead1.y-4); // 若 ds=1 则为 x+6，若 ds=-1 则为 -12
 	    g.drawString("G", gate[0].x, gate[0].y+12);
 	}
 	
@@ -204,8 +204,8 @@ class SCRElm extends CircuitElm {
     }
 
     void doStep() {
-	double vac = volts[anode]-volts[cnode]; // typically negative
-	double vag = volts[anode]-volts[gnode]; // typically positive
+	double vac = volts[anode]-volts[cnode]; // 通常为负
+	double vag = volts[anode]-volts[gnode]; // 通常为正
 	if (Math.abs(vac-lastvac) > .01 ||
 	    Math.abs(vag-lastvag) > .01)
 	    sim.converged = false;
@@ -254,8 +254,8 @@ class SCRElm extends CircuitElm {
 	    gresistance = ei.value;
     }
 
-    // if point1 and point2 are in line, then we don't know which way the gate
-    // is pointed and flip won't work.  fix this
+    // 如果 point1 和 point2 在同一条直线上，就无法判断栅极
+    // 的指向，翻转将不起作用。修复此问题
     void fixEnds() {
 	Point pt = new Point();
 	interpPoint(point1, point2, pt, 1, sim.gridSize*dir);

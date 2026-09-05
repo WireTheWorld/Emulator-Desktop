@@ -56,7 +56,7 @@ class EditDialog extends Dialog {
 
 	EditDialog(Editable ce, CirSim f) {
 //		super(f, "Edit Component", false);
-		super(); // Do we need this?
+		super(); // 我们需要这个吗？
 		setText(Locale.LS("Edit Component"));
 		cframe = f;
 		elm = ce;
@@ -133,7 +133,7 @@ class EditDialog extends Dialog {
 			} else if (ei.button != null) {
 			    vp.add(ei.button);
 			    if (ei.loadFile != null) {
-			    	//Open file dialog
+			    	// 打开文件对话框
 			    	vp.add(ei.loadFile);
 				    ei.button.addClickHandler( new ClickHandler() {
 						public void onClick(ClickEvent event) {
@@ -141,7 +141,7 @@ class EditDialog extends Dialog {
 						}
 				    });
 			    } else {
-			    	//Normal button press
+			    	// 普通按钮按下
 				    ei.button.addClickHandler( new ClickHandler() {
 						public void onClick(ClickEvent event) {
 						    itemStateChanged(event);
@@ -168,7 +168,7 @@ class EditDialog extends Dialog {
 				}
 			}
 			if (vp.getWidgetCount() > 15) {
-			    // start a new column
+			    // 开始新的一列
 			    vp = new VerticalPanel();
 			    hp.add(vp);
 			    vp.getElement().getStyle().setPaddingLeft(10, Unit.PX);
@@ -184,7 +184,7 @@ class EditDialog extends Dialog {
 	}
 	
 	String unitString(EditInfo ei) {
-	    // for voltage elements, express values in rms if that would be shorter
+	    // 对于电压元件，如果 RMS 表示更短则用 RMS 表示值
 	    if (elm != null && elm instanceof VoltageElm &&
 		Math.abs(ei.value) > 1e-4 &&
 		diffFromInteger(ei.value*1e4) > diffFromInteger(ei.value*1e4/ROOT2))
@@ -230,9 +230,9 @@ class EditDialog extends Dialog {
 		    s = s.substring(0, s.length()-3).trim();
 		    rmsMult = ROOT2;
 		}
-		// rewrite shorthand (eg "2k2") in to normal format (eg 2.2k) using regex
+		// 使用正则表达式将简写（例如 "2k2"）重写为正常格式（例如 2.2k）
 		s=s.replaceAll("([0-9]+)([pPnNuUmMkKgG])([0-9]+)", "$1.$3$2");
-		// rewrite meg to M
+		// 将 meg 重写为 M
 		s=s.replaceAll("[mM][eE][gG]$", "M");
 		int len = s.length();
 		char uc = s.charAt(len-1);
@@ -243,7 +243,7 @@ class EditDialog extends Dialog {
 		case 'n': case 'N': mult = 1e-9; break;
 		case 'u': case 'U': mult = 1e-6; break;
 
-		// for ohm values, we used to assume mega for lowercase m, otherwise milli
+		// 对于欧姆值，我们过去对小写 m 假定为兆欧，否则为毫欧
 		case 'm': mult = /*(ei.forceLargeM) ? 1e6 : */ 1e-3; break;
 
 		case 'k': case 'K': mult = 1e3; break;
@@ -263,13 +263,13 @@ class EditDialog extends Dialog {
 				try {
 					double d = parseUnits(ei);
 					ei.value = d;
-				} catch (Exception ex) { /* ignored */ }
+				} catch (Exception ex) { /* 忽略 */ }
 			}
 			if (ei.button != null)
 			    continue;
 			elm.setEditValue(i, ei);
 			
-			// update slider if any
+			// 如果有滑块则更新
 			if (elm instanceof CircuitElm) {
 			    Adjustable adj = cframe.findAdjustable((CircuitElm)elm, i);
 			    if (adj != null)
@@ -290,7 +290,7 @@ class EditDialog extends Dialog {
 		EditInfo ei = einfos[i];
 		if (ei.choice == src || ei.checkbox == src || ei.button == src) {
 		    
-		    // if we're pressing a button, make sure to apply changes first
+		    // 如果正在按下按钮，确保先应用更改
 		    if (ei.button == src && !ei.newDialog) {
 			apply();
 			applied = true;
@@ -303,8 +303,8 @@ class EditDialog extends Dialog {
 		}
 	    }
 	    if (changed) {
-		// apply changes before we reset everything
-		// (need to check if we already applied changes; otherwise Diode create simple model button doesn't work)
+		// 在重置所有内容之前应用更改
+		// （需要检查是否已经应用了更改；否则二极管的创建简单模型按钮不工作）
 		if (!applied)
 		    apply();
 		

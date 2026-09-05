@@ -126,7 +126,7 @@ class SweepElm extends CircuitElm {
     }
     double v;
     void startIteration() {
-	// has timestep been changed?
+	// 时间步长是否已被更改？
 	if (sim.timeStep != savedTimeStep)
 	    setParams();
 	v = Math.sin(freqTime)*maxV;

@@ -4,29 +4,29 @@ import java.util.Vector;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-// Circuit element made up of a composition of other circuit elements
-// Using this will be (relatively) inefficient in terms of simulation performance because
-// all the internal workings of the element are simulated from the individual components.
-// However, it may allow some types of components to be more quickly programed in to the simulator
-// than writing each component from scratch.
+// 由其他电路元件组合而成的电路元件
+// 使用这种方式在仿真性能上会（相对）低效，因为
+// 元件的所有内部工作原理都是通过各个独立元件仿真出来的。
+// 然而，它可能让某些类型的元件能够更快地编写进仿真器，
+// 而不必从头编写每个元件。
 //
-// It also provides a path to allow user created circuits to be 
-// re-imported in to the simuation as new circuit elements.
+// 它还提供了一种途径，让用户创建的电路能够
+// 作为新的电路元件重新导入到仿真中。
 
-// Instatiations should:
-// - Set the variable "diagonal" in the constructors
-// - Override constructors to set up the elements posts/leads etc. and configure the contents of the CompositeElm
-// - Override getDumpType, dump, draw, getInfo, setPoints, canViewInScope
+// 实例化时应该：
+// - 在构造函数中设置 "diagonal" 变量
+// - 重写构造函数以设置元件的焊盘/引线等，并配置 CompositeElm 的内容
+// - 重写 getDumpType、dump、draw、getInfo、setPoints、canViewInScope
 
 public abstract class CompositeElm extends CircuitElm {
 
-    // need to use escape() instead of converting spaces to _'s so composite elements can be nested
+    // 需要使用 escape() 而不是把空格转换为 _，以便复合元件可以嵌套
     final int FLAG_ESCAPE = 1;
     
-    // list of elements contained in this subcircuit
+    // 此子电路中包含的元件列表
     Vector<CircuitElm> compElmList;
     
-    // list of nodes, mapping each one to a list of elements that reference that node
+    // 节点列表，将每个节点映射到引用该节点的元件列表
     protected Vector<CircuitNode> compNodeList;
     
     protected int numPosts = 0;
@@ -67,7 +67,7 @@ public abstract class CompositeElm extends CircuitElm {
 	compNodeList = new Vector<CircuitNode>();
 	voltageSources = new Vector<VoltageSourceRecord>();
 
-	// Build compElmList and compNodeHash from input string
+	// 从输入字符串构建 compElmList 和 compNodeHash
 
 	while (modelLinet.hasMoreTokens()) {
 	    String line = modelLinet.nextToken();
@@ -91,7 +91,7 @@ public abstract class CompositeElm extends CircuitElm {
 	    while (stModel.hasMoreTokens()) {
 		int nodeOfThisPost = new Integer(stModel.nextToken()).intValue();
 
-		// node = 0 means ground
+		// node = 0 表示接地
 		if (nodeOfThisPost == 0) {
 		    newce.setNode(thisPost, 0);
 		    newce.setNodeVoltage(thisPost, 0);
@@ -113,9 +113,9 @@ public abstract class CompositeElm extends CircuitElm {
 	    }
 	}
 
-	// Flatten compNodeHash in to compNodeList
+	// 将 compNodeHash 展开为 compNodeList
 	numPosts = externalNodes.length;
-	for (int i = 0; i < externalNodes.length; i++) { // External Nodes First
+	for (int i = 0; i < externalNodes.length; i++) { // 外部节点优先
 	    if (compNodeHash.containsKey(externalNodes[i])) {
 		compNodeList.add(compNodeHash.get(externalNodes[i]));
 		compNodeHash.remove(externalNodes[i]);
@@ -127,7 +127,7 @@ public abstract class CompositeElm extends CircuitElm {
 	    compNodeList.add(compNodeHash.get(key));
 	}
 
-	// allocate more nodes for sub-elements' internal nodes
+	// 为子元件的内部节点分配更多节点
 	for (int i = 0; i != compElmList.size(); i++) {
 	    CircuitElm ce = compElmList.get(i);
 	    int inodes = ce.getInternalNodeCount();
@@ -150,7 +150,7 @@ public abstract class CompositeElm extends CircuitElm {
 
 	posts = new Point[numPosts];
 	
-	// Enumerate voltage sources
+	// 枚举电压源
 	for (int i = 0; i < compElmList.size(); i++) {
 	    int cnt = compElmList.get(i).getVoltageSourceCount();
 	    for (int j=0;j < cnt ; j++) {
@@ -161,7 +161,7 @@ public abstract class CompositeElm extends CircuitElm {
 	    }
 	}
 	
-	// dump new circuits with escape()
+	// 使用 escape() 转储新电路
 	flags |= FLAG_ESCAPE;
     }
 
@@ -182,13 +182,13 @@ public abstract class CompositeElm extends CircuitElm {
 	String dumpStr = "";
 	for (int i = 0; i < compElmList.size(); i++) {
 	    String tstring = compElmList.get(i).dump();
-	    tstring = tstring.replaceFirst("[A-Za-z0-9]+ 0 0 0 0 ", ""); // remove unused tint x1 y1 x2 y2 coords for internal components
+	    tstring = tstring.replaceFirst("[A-Za-z0-9]+ 0 0 0 0 ", ""); // 移除内部元件未使用的 tint x1 y1 x2 y2 坐标
 	    dumpStr += " "+ CustomLogicModel.escape(tstring);
 	}
 	return dumpStr;
     }
 
-    // dump subset of elements (some of them may not have any state, and/or may be very long, so we avoid dumping them for brevity)
+    // 转储元件的子集（其中一些可能没有任何状态，和/或可能非常长，因此为简洁起见我们避免转储它们）
     public String dumpWithMask(int mask) {
 	String dumpStr=super.dump();
 	return dumpStr + dumpElements(mask);
@@ -200,39 +200,39 @@ public abstract class CompositeElm extends CircuitElm {
 	    if ((mask & (1<<i)) == 0)
 		continue;
 	    String tstring = compElmList.get(i).dump();
-	    tstring = tstring.replaceFirst("[A-Za-z0-9]+ 0 0 0 0 ", ""); // remove unused tint x1 y1 x2 y2 coords for internal components
+	    tstring = tstring.replaceFirst("[A-Za-z0-9]+ 0 0 0 0 ", ""); // 移除内部元件未使用的 tint x1 y1 x2 y2 坐标
 	    dumpStr += " "+ CustomLogicModel.escape(tstring);
 	}
 	return dumpStr;
     }
 
-    // are n1 and n2 connected internally somehow?
+    // n1 和 n2 在内部是否以某种方式相连？
     public boolean getConnectionSlow(int n1, int n2) {
 	Vector<Integer> connectedNodes = new Vector<Integer>();
 
-	// keep list of nodes connected to n1
+	// 维护与 n1 相连的节点列表
 	connectedNodes.add(n1);
 	int i;
 	for (i = 0; i < connectedNodes.size(); i++) {
-	    // next node in list
+	    // 列表中的下一个节点
 	    int n = connectedNodes.get(i);
 	    if (n == n2)
 		return true;
 	    
-	    // find all elements connected to n
+	    // 查找与 n 相连的所有元件
 	    Vector<CircuitNodeLink> cnLinks = compNodeList.get(n).links;
 	    for (int j = 0; j < cnLinks.size(); j++) {
 		CircuitNodeLink link = cnLinks.get(j);
 		CircuitElm lelm = link.elm;
-		// loop through all other nodes this element has
+		// 遍历该元件拥有的所有其他节点
 		for (int k = 0; k != lelm.getConnectionNodeCount(); k++)
-		    // are they connected?
+		    // 它们相连吗？
 		    if (k != link.num && lelm.getConnection(link.num, k)) {
 			int kn = lelm.getConnectionNode(k);
 			if (kn == 0)
 			    return true;
 			int m;
-			// find local node number (kn is global) and add it to list
+			// 查找本地节点编号（kn 是全局的）并将其添加到列表
 			for (m = 0; m != nodes.length; m++)
 			    if (nodes[m] == kn && !connectedNodes.contains(m))
 				connectedNodes.add(m);
@@ -257,7 +257,7 @@ public abstract class CompositeElm extends CircuitElm {
 	return result;
     }
 
-    // is n1 connected to ground somehow?
+    // n1 是否以某种方式接地？
     public boolean hasGroundConnection(int n1) {
 	if (groundConnectionMap == null)
 	    groundConnectionMap = new HashMap<Integer, Boolean>();
@@ -273,26 +273,26 @@ public abstract class CompositeElm extends CircuitElm {
     public boolean hasGroundConnectionSlow(int n1) {
 	Vector<Integer> connectedNodes = new Vector<Integer>();
 
-	// keep list of nodes connected to n1
+	// 维护与 n1 相连的节点列表
 	connectedNodes.add(n1);
 	int i;
 	for (i = 0; i < connectedNodes.size(); i++) {
-	    // next node in list
+	    // 列表中的下一个节点
 	    int n = connectedNodes.get(i);	    
-	    // find all elements connected to n
+	    // 查找与 n 相连的所有元件
 	    Vector<CircuitNodeLink> cnLinks = compNodeList.get(n).links;
 	    for (int j = 0; j < cnLinks.size(); j++) {
 		CircuitNodeLink link = cnLinks.get(j);
 		CircuitElm lelm = link.elm;
 		if (lelm.hasGroundConnection(link.num))
 		    return true;
-		// loop through all other nodes this element has
+		// 遍历该元件拥有的所有其他节点
 		for (int k = 0; k != lelm.getConnectionNodeCount(); k++)
-		    // are they connected?
+		    // 它们相连吗？
 		    if (k != link.num && lelm.getConnection(link.num, k)) {
 			int kn = lelm.getConnectionNode(k);
 			int m;
-			// find local node number (kn is global) and add it to list
+			// 查找本地节点编号（kn 是全局的）并将其添加到列表
 			for (m = 0; m != nodes.length; m++)
 			    if (nodes[m] == kn && !connectedNodes.contains(m))
 				connectedNodes.add(m);
@@ -359,14 +359,14 @@ public abstract class CompositeElm extends CircuitElm {
 	    compElmList.get(i).stepFinished();
     }
 
-    // called to set node p (local to this element) to equal n (global)
+    // 调用此方法将节点 p（该元件的本地节点）设置为等于 n（全局节点）
     public void setNode(int p, int n) {
 	// nodes[p] = n
 	Vector<CircuitNodeLink> cnLinks;
 	super.setNode(p, n);
 	cnLinks = compNodeList.get(p).links;
 
-        // call setNode() for all elements that use that node
+        // 为使用该节点的所有元件调用 setNode()
 	for (int i = 0; i < cnLinks.size(); i++) {
 	    cnLinks.get(i).elm.setNode(cnLinks.get(i).num, n);
 	}
@@ -398,9 +398,9 @@ public abstract class CompositeElm extends CircuitElm {
 	return voltageSources.size();
     }
 
-    // Find the component with the nth voltage
-    // and set the
-    // appropriate source in that component
+    // 找到第 n 个电压对应的元件
+    // 并设置该元件中
+    // 相应的电压源
     void setVoltageSource(int n, int v) {
 	// voltSource(n) = v;
 	VoltageSourceRecord vsr;

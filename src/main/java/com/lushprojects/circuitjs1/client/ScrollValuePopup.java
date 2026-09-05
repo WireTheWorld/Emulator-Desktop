@@ -113,12 +113,12 @@ public class ScrollValuePopup extends PopupPanel implements MouseOutHandler, Mou
 		double currentvalue=inf.value;
 		for (int i=0; i<nvalues+1; i++) {
 			if (CircuitElm.getShortUnitText(currentvalue,"")==
-					CircuitElm.getShortUnitText(values[i],"")) { // match to an existing value
-				values[i]=currentvalue; // Just in case it isn't 100% identical
+					CircuitElm.getShortUnitText(values[i],"")) { // 与现有值匹配
+				values[i]=currentvalue; // 以防并非 100% 完全相同
 				currentidx=i;
 				break;
 			}
-			if (currentvalue<values[i])	 { // overshot - need to insert value
+			if (currentvalue<values[i])	 { // 超出范围 - 需要插入值
 				currentidx=i;
 				for(int j=nvalues-1; j>=i; j--)
 					values[j+1]=values[j];

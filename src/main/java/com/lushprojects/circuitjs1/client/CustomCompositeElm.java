@@ -6,7 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.lushprojects.circuitjs1.client.util.Locale;
 
-// instances of subcircuits
+// 子电路的实例
 
 public class CustomCompositeElm extends CompositeElm {
     String modelName;
@@ -20,8 +20,8 @@ public class CustomCompositeElm extends CompositeElm {
     public CustomCompositeElm(int xx, int yy) {
 	super(xx, yy);
 	
-	// use last model as default when creating new element in UI.
-	// use default otherwise, to avoid infinite recursion when creating nested subcircuits.
+	// 在 UI 中创建新元件时使用上次的模型作为默认值。
+	// 否则使用默认模型，以避免创建嵌套子电路时无限递归。
 	modelName = (xx == 0 && yy == 0) ? "default" : lastModelName;
 		
 	flags |= FLAG_ESCAPE;
@@ -47,7 +47,7 @@ public class CustomCompositeElm extends CompositeElm {
     }
     
     public String dump() {
-	// insert model name before the elements
+	// 在元件信息之前插入模型名称
 	String s = super.dumpWithMask(0);
 	s += " " + CustomLogicModel.escape(modelName);
 	s += dumpElements();
@@ -57,7 +57,7 @@ public class CustomCompositeElm extends CompositeElm {
     String dumpModel() {
 	String modelStr = "";
 	
-	// dump models of all children
+	// 导出所有子元件的模型
 	for (int i = 0; i < compElmList.size(); i++) {
 	    CircuitElm ce = compElmList.get(i);
 	    String m = ce.dumpModel();
@@ -70,7 +70,7 @@ public class CustomCompositeElm extends CompositeElm {
 	if (model.dumped)
 	    return modelStr;
 	
-	// dump our model
+	// 导出我们自己的模型
 	if (!modelStr.isEmpty())
 	    modelStr += "\n";
 	modelStr += model.dump();
@@ -143,7 +143,7 @@ public class CustomCompositeElm extends CompositeElm {
     void flipXY(int xmy, int count) {
 	flags ^= ChipElm.FLAG_FLIP_XY;
 
-        // FLAG_FLIP_XY is applied first.  So need to swap X and Y
+        // FLAG_FLIP_XY 最先应用，因此需要交换 X 和 Y
         if (isFlippedX() != isFlippedY())
             flags ^= ChipElm.FLAG_FLIP_X|ChipElm.FLAG_FLIP_Y;
 
@@ -176,7 +176,7 @@ public class CustomCompositeElm extends CompositeElm {
     Vector<CustomCompositeModel> models;
     
     public EditInfo getEditInfo(int n) {
-	// if model is built in, don't allow it to be changed
+	// 如果模型是内置的，不允许更改它
 	if (model.builtin)
 	    n += 2;
 	

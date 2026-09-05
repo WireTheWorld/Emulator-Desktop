@@ -21,8 +21,8 @@ class VaractorElm extends DiodeElm {
     }
     double capacitance, capCurrent;
     
-    // DiodeElm.lastvoltdiff = volt diff from last iteration
-    // capvoltdiff = volt diff from last timestep
+    // DiodeElm.lastvoltdiff = 上次迭代的电压差
+    // capvoltdiff = 上次时间步的电压差
     double compResistance, capvoltdiff;
     Point plate1[], plate2[];
     
@@ -49,7 +49,7 @@ class VaractorElm extends DiodeElm {
 	interpPoint2(lead1, lead2, cathode[0], cathode[1], platef, hs);
 	Point arrowPoint = interpPoint(lead1, lead2, platef);
 	poly = createPolygon(pa[0], pa[1], arrowPoint);
-	// calc plates
+	// 计算极板
 	plate1 = newPointArray(2);
 	plate2 = newPointArray(2);
 	interpPoint2(lead1, lead2, plate1[0], plate1[1], platef, hs);
@@ -58,17 +58,17 @@ class VaractorElm extends DiodeElm {
 	
     
     void draw(Graphics g) {
-	// draw leads and diode arrow
+	// 绘制引线和二极管箭头
 	drawDiode(g);
 	    
-	// draw first plate
+	// 绘制第一块极板
 	setVoltageColor(g, volts[0]);
 	setPowerColor(g, false);
 	drawThickLine(g, plate1[0], plate1[1]);
 	if (sim.powerCheckItem.getState())
 	    g.setColor(Color.gray);
 
-	// draw second plate
+	// 绘制第二块极板
 	setVoltageColor(g, volts[1]);
 	setPowerColor(g, false);
 	drawThickLine(g, plate2[0], plate2[1]);
@@ -84,9 +84,9 @@ class VaractorElm extends DiodeElm {
     }
     void startIteration() {
 	super.startIteration();
-	// capacitor companion model using trapezoidal approximation
-	// (Thevenin equivalent) consists of a voltage source in
-	// series with a resistor
+	// 使用梯形近似的电容伴随模型
+	// （戴维南等效）由一个电压源与一个
+	// 电阻串联组成
 	double c0 = baseCapacitance;
 	if (capvoltdiff > 0)
 	    capacitance = c0;

@@ -68,11 +68,11 @@ public class ExportAsUrlDialog extends Dialog {
 				}
 
 				public void onResponseReceived(Request request, Response response) {
-					// processing goes here
+					// 在此处进行处理
 					if (response.getStatusCode()==Response.SC_OK) {
 					String text = response.getText();
 					textArea.setText(text);
-					// end or processing
+					// 处理结束
 					}
 					else  {
 						String text="Shortner error:"+response.getStatusText();

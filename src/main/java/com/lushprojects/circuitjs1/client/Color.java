@@ -40,7 +40,7 @@ public class Color
     
     private int r, g, b;
     
-    // only for special cases, like no color, or maybe named colors
+    // 仅用于特殊情况，例如无颜色，或命名颜色
     private String colorText = null;
 
     public Color (String colorText) {
@@ -55,7 +55,7 @@ public class Color
         }
     }
 
-    // create mixture of c1 and c2
+    // 创建 c1 和 c2 的混合色
     public Color (Color c1, Color c2, double mix) {
 	double m0 = 1-mix;
 	this.r = (int) (c1.r*m0 + c2.r*mix);

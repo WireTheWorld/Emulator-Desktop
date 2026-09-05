@@ -43,12 +43,12 @@ class TextElm extends GraphicElm {
 	size = new Integer(st.nextToken()).intValue();
 	text = st.nextToken();
 	if ((flags & FLAG_ESCAPE) == 0) {
-	    // old-style dump before escape/unescape
+	    // 转义/反转义之前的旧式转储
 	    while (st.hasMoreTokens())
 		text += ' ' + st.nextToken();
 	    text=text.replaceAll("%2[bB]", "+");
 	} else {
-	    // new-style dump
+	    // 新式转储
 	    text = CustomLogicModel.unescape(text); 
 	}
 	split();

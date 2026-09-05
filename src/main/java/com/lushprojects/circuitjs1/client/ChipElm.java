@@ -83,7 +83,7 @@ abstract class ChipElm extends CircuitElm {
 	    Font f = new Font("normal", 0, 10*csize);
 //	    FontMetrics fm = g.getFontMetrics();
 	    boolean hasVertical = false;
-	    // check if there are any vertical pins.  if not, we can make the labels wider
+	    // 检查是否存在垂直方向的引脚。如果没有，我们可以让标签更宽
 	    for (i = 0; i != getPostCount(); i++)
 		if (pins[i].side == SIDE_N || pins[i].side == SIDE_S) {
 		    hasVertical = true;
@@ -111,14 +111,14 @@ abstract class ChipElm extends CircuitElm {
 		g.setColor(p.selected ? selectColor : whiteColor);
 		int fsz = 10*csize;
 		double availSpace = cspc*2-8;
-		// allow a little more space if the chip is wide and there are no vertical pins
-		// (we could still do this if vertical pins are present but then we would have to do
-		// more work to avoid overlaps)
+		// 如果芯片较宽且没有垂直方向的引脚，可留出更多空间
+		//（如果存在垂直引脚，我们仍可以这样做，但那样就需要
+		// 做更多工作来避免重叠）
 		if (!hasVertical && sizeX > 2)
 		    availSpace = cspc*2.5+cspc*(sizeX-3);
 		while (true) {
 		    int sw=(int)g.context.measureText(p.text).getWidth();
-		    // scale font down if it's too big
+		    // 如果字体太大，则缩小字号
 		    if (sw > availSpace) {
 			fsz -= 1;
 			Font f2 = new Font("normal", 0, fsz);
@@ -127,7 +127,7 @@ abstract class ChipElm extends CircuitElm {
 		    }
 		    int asc=(int)g.currentFontSize;
 		    int tx;
-		    // put text closer to edge if it's on left or right.
+		    // 如果文本位于左侧或右侧，则将其放置得更靠近边缘。
 		    if (p.side == flippedXSide(SIDE_W))
 			tx = p.textloc.x-(cspc-5);
 		    else if (p.side == flippedXSide(SIDE_E))
@@ -201,7 +201,7 @@ abstract class ChipElm extends CircuitElm {
 	    labelY = yr+ys/2;
 	}
 	
-	// see if we can move pin to position xp, yp, and return the new position
+	// 判断能否将引脚移动到 xp, yp 位置，并返回新位置
 	boolean getPinPos(int xp, int yp, int pin, int pos[]) {
 	    int x0 = x+cspc2; int y0 = y;
 	    int xr = x0-cspc;
@@ -245,7 +245,7 @@ abstract class ChipElm extends CircuitElm {
 	Point getPost(int n) {
 	    return pins[n].post;
 	}
-	abstract int getVoltageSourceCount(); // output count
+	abstract int getVoltageSourceCount(); // 输出数量
 	void setVoltageSource(int j, int vs) {
 	    int i;
 	    for (i = 0; i != getPostCount(); i++) {
@@ -391,7 +391,7 @@ abstract class ChipElm extends CircuitElm {
 		int bitIndex = 0;
 		for (int i = 0; i < data.length; i++) {
 			if (bitIndex >= Integer.SIZE) {
-				//Flush completed integer
+				//刷新已完成的整数
 				sb.append(' ');
 				sb.append(integer);
 				integer = 0;
@@ -413,10 +413,10 @@ abstract class ChipElm extends CircuitElm {
 		for (int i = 0; i < output.length; i++) {
 			if (bitIndex >= Integer.SIZE)
 				if (st.hasMoreTokens()) {
-					integer = Integer.parseInt(st.nextToken()); //Load next integer
+					integer = Integer.parseInt(st.nextToken()); //加载下一个整数
 					bitIndex = 0;
 				} else
-					break; //Data is absent
+					break; //数据缺失
 			
 			output[i] = (integer & (1 << bitIndex)) != 0;
 			bitIndex++;
@@ -463,7 +463,7 @@ abstract class ChipElm extends CircuitElm {
 	void flipXY(int xmy, int count) {
 	    flags ^= FLAG_FLIP_XY;
 
-	    // FLAG_FLIP_XY is applied first.  So need to swap X and Y
+	    // FLAG_FLIP_XY 先应用。因此需要交换 X 和 Y
 	    if (isFlippedX() != isFlippedY())
 		flags ^= FLAG_FLIP_X|FLAG_FLIP_Y;
 
@@ -520,7 +520,7 @@ abstract class ChipElm extends CircuitElm {
 		    clockPointsX[2] = xa+dax*cspc+dx*cspc/2;
 		    clockPointsY[2] = ya+day*cspc+dy*cspc/2;
 		    if (text.length() > 0) {
-			// See for example http://127.0.0.1:8000/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgAncDQkPKlDSr8oySGzTkwPPlTAo8s2iADCAGQDSALgCSAOQBqWle0khBwgUJDYUy9dv1GVKCZHIXwNGubyKw3vaauobG2G5SMgE+0rxgxHY+DiHONJzcvCKxXj5y8OnZ0ebWRXlw6Z5FniJl4kA
+			// 参见示例 http://127.0.0.1:8000/circuitjs.html?ctz=CQAgjCAMB0l3BWcMBMcUHYMGZIA4UA2ATmIxAUgpABZsKBTAWjDACgAncDQkPKlDSr8oySGzTkwPPlTAo8s2iADCAGQDSALgCSAOQBqWle0khBwgUJDYUy9dv1GVKCZHIXwNGubyKw3vaauobG2G5SMgE+0rxgxHY+DiHONJzcvCKxXj5y8OnZ0ebWRXlw6Z5FniJl4kA
 			clockPointsX[1] += dax*cspc/2;
 			clockPointsY[1] += day*cspc/2;
 			textloc.x -= dax*cspc/2;
@@ -533,7 +533,7 @@ abstract class ChipElm extends CircuitElm {
 		}
 	    }
 
-	    // convert position, side to a grid position (0=top left) so we can detect overlaps
+	    // 将位置和方向转换为网格位置（0=左上角），以便检测重叠
 	    int toGrid(int p, int s) {
 		if (s == SIDE_N)
 		    return p;

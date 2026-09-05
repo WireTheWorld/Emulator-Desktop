@@ -1,4 +1,3 @@
-# Work with JavaScript
+# 与 JavaScript 协作
 
-This folder contains the source code of the **Circuit Simulator** for **Web2Executable** program.
-
+此文件夹包含用于 **Web2Executable** 程序的 **Circuit Simulator** 的源码。

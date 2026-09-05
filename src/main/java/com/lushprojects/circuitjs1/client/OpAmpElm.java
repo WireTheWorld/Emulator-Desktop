@@ -33,7 +33,7 @@ package com.lushprojects.circuitjs1.client;
 	    maxOut = 15;
 	    minOut = -15;
 	    gbw = 1e6;
-           flags = FLAG_GAIN; // need to do this before setSize()
+           flags = FLAG_GAIN; // 需要在 setSize() 之前执行此操作
 	    gain = 100000;
            setSize(sim.smallGridCheckItem.getState() ? 1 : 2);
 	}
@@ -42,8 +42,8 @@ package com.lushprojects.circuitjs1.client;
 	    super(xa, ya, xb, yb, f);
 	    maxOut = 15;
 	    minOut = -15;
-	    // GBW has no effect in this version of the simulator, but we
-	    // retain it to keep the file format the same
+	    // GBW 在此版本的模拟器中不起作用，但我们
+	    // 保留它以保持文件格式不变
 	    gbw = 1e6;
 	    try {
 		maxOut = new Double(st.nextToken()).doubleValue();
@@ -62,8 +62,8 @@ package com.lushprojects.circuitjs1.client;
 	    if ((flags & FLAG_GAIN) != 0)
 		return;
 		
-	    // gain of 100000 breaks e-amp-dfdx.txt
-	    // gain was 1000, but it broke amp-schmitt.txt
+	    // 增益为 100000 会破坏 e-amp-dfdx.txt
+	    // 增益曾是 1000，但它破坏了 amp-schmitt.txt
 	    gain = ((flags & FLAG_LOWGAIN) != 0) ? 1000 : 100000;
 	}
 	String dump() {
@@ -130,8 +130,8 @@ package com.lushprojects.circuitjs1.client;
 	    arr[0] = "op-amp";
 	    arr[1] = "V+ = " + getVoltageText(volts[1]);
 	    arr[2] = "V- = " + getVoltageText(volts[0]);
-	    // sometimes the voltage goes slightly outside range, to make
-	    // convergence easier.  so we hide that here.
+	    // 有时电压会略微超出范围，这是为了使
+	    // 收敛更容易。所以这里将其隐藏。
 	    double vo = Math.max(Math.min(volts[2], maxOut), minOut);
 	    arr[3] = "Vout = " + getVoltageText(vo);
 	    arr[4] = "Iout = " + getCurrentText(-current);
@@ -170,7 +170,7 @@ package com.lushprojects.circuitjs1.client;
 	    }
 	    //System.out.println("opamp " + vd + " " + volts[2] + " " + dx + " "  + x + " " + lastvd + " " + sim.converged);
 	    
-	    // newton-raphson
+	    // 牛顿-拉夫逊法
 	    sim.stampMatrix(vn, nodes[0], dx);
 	    sim.stampMatrix(vn, nodes[1], -dx);
 	    sim.stampMatrix(vn, nodes[2], 1);
@@ -180,8 +180,8 @@ package com.lushprojects.circuitjs1.client;
 	    /*if (sim.converged)
 	      System.out.println((volts[1]-volts[0]) + " " + volts[2] + " " + initvd);*/
 	}
-	// there is no current path through the op-amp inputs, but there
-	// is an indirect path through the output to ground.
+	// 运算放大器输入端之间没有电流通路，但存在
+	// 通过输出端到地的间接通路。
 	boolean getConnection(int n1, int n2) { return false; }
 	boolean hasGroundConnection(int n1) {
 	    return (n1 == 2);

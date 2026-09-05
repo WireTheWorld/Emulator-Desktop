@@ -15,9 +15,9 @@ public class ImportFromDropbox {
 	static public final native boolean isSupported() 
 	/*-{
 		try {
-			// Bug in firefox prevents Dropbox dialog working properly in this application
-			// even though Dropbox chooser supports firefox
-			// See https://github.com/gwtproject/gwt/issues/7923
+			// Firefox 中的 Bug 会阻止 Dropbox 对话框在此应用中正常工作，
+			// 尽管 Dropbox chooser 支持 firefox
+			// 参见 https://github.com/gwtproject/gwt/issues/7923
 			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))
 				return false;
 			return !!($wnd.Dropbox.isBrowserSupported());
@@ -37,7 +37,7 @@ public class ImportFromDropbox {
 	/*-{
 		var options = {
 
-		    // Required. Called when a user selects an item in the Chooser.
+		    // 必需。当用户在 Chooser 中选择一个项目时调用。
 		    success: function(files) {
 		    	try {
 			        //console.log("Here's the file link: " + files[0].link);
@@ -56,25 +56,25 @@ public class ImportFromDropbox {
 		        } 
 		    },
 		
-		    // Optional. Called when the user closes the dialog without selecting a file
-		    // and does not include any parameters.
+		    // 可选。当用户未选择文件就关闭对话框时调用，
+		    // 且不包含任何参数。
 		    // cancel: function() {
 		
 		    //},
 		
-		    // Optional. "preview" (default) is a preview link to the document for sharing,
-		    // "direct" is an expiring link to download the contents of the file. For more
-		    // information about link types, see Link types below.
-		    linkType: "direct", // "preview" or "direct"
+		    // 可选。"preview"（默认）是用于分享的文档预览链接，
+		    // "direct" 是用于下载文件内容的过期链接。有关
+		    // 链接类型的更多信息，请参见下面的 Link types。
+		    linkType: "direct", // "preview" 或 "direct"
 		
-		    // Optional. A value of false (default) limits selection to a single file, while
-		    // true enables multiple file selection.
-		    multiselect: false, // or true
+		    // 可选。false（默认）将选择限制为单个文件，而
+		    // true 则允许多文件选择。
+		    multiselect: false, // 或 true
 		
-		    // Optional. This is a list of file extensions. If specified, the user will
-		    // only be able to select files with these extensions. You may also specify
-		    // file types, such as "video" or "images" in the list. For more information,
-		    // see File types below. By default, all extensions are allowed.
+		    // 可选。这是文件扩展名列表。如果指定，用户将
+		    // 只能选择具有这些扩展名的文件。你也可以在列表中指定
+		    // 文件类型，例如 "video" 或 "images"。更多信息
+		    // 请参见下面的 File types。默认情况下，允许所有扩展名。
 		    // extensions: ['.pdf', '.doc', '.docx'],
 		};
 		$wnd.Dropbox.choose(options);

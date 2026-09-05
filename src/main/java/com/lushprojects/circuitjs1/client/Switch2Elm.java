@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// SPDT switch
+// SPDT 开关
 
     class Switch2Elm extends SwitchElm {
 	int link;
@@ -66,7 +66,7 @@ package com.lushprojects.circuitjs1.client;
 		interpPoint(lead1,  lead2,  swpoles[i], 1, hs);
 		interpPoint(point1, point2, swposts[i], 1, hs);
 	    }
-	    swpoles[i] = lead2; // for center off
+	    swpoles[i] = lead2; // 用于中间断开位置
 	    posCount = hasCenterOff() ? 3 : throwCount;
 	}
 	
@@ -74,18 +74,18 @@ package com.lushprojects.circuitjs1.client;
 	    setBbox(point1, point2, openhs);
 	    adjustBbox(swposts[0], swposts[throwCount-1]);
 
-	    // draw first lead
+	    // 绘制第一个引线
 	    setVoltageColor(g, volts[0]);
 	    drawThickLine(g, point1, lead1);
 
-	    // draw other leads
+	    // 绘制其他引线
 	    int i;
 	    for (i = 0; i != throwCount; i++) {
 		setVoltageColor(g, volts[i+1]);
 		drawThickLine(g, swpoles[i], swposts[i]);
 	    }
 	    
-	    // draw switch
+	    // 绘制开关
 	    if (!needsHighlight())
 		g.setColor(whiteColor);
 	    drawThickLine(g, lead1, swpoles[position]);
@@ -119,7 +119,7 @@ package com.lushprojects.circuitjs1.client;
 	}
 	
 	void stamp() {
-	    if (position == 2 && hasCenterOff()) // in center?
+	    if (position == 2 && hasCenterOff()) // 在中间断开位置吗？
 		return;
 	    sim.stampVoltageSource(nodes[0], nodes[position+1], voltSource, 0);
 	}
@@ -150,7 +150,7 @@ package com.lushprojects.circuitjs1.client;
 	
 	boolean isWireEquivalent() { return true; }
 	
-	// optimizing out this element is too complicated to be worth it (see #646)
+	// 优化掉这个元件太复杂，不值得做（见 #646）
 	boolean isRemovableWire() { return false; }
 	
 	void getInfo(String arr[]) {
@@ -192,7 +192,7 @@ package com.lushprojects.circuitjs1.client;
 	    	super.setEditValue(n, ei);
 	}
 	
-	// this is for backwards compatibility only.  we only support it if throwCount = 2
+	// 这仅用于向后兼容。我们只在 throwCount = 2 时支持它
 	boolean hasCenterOff() { return (flags & FLAG_CENTER_OFF) != 0 && throwCount == 2; }
 	
 	int getShortcut() { return 'S'; }

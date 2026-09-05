@@ -21,13 +21,13 @@ public class Toolbar extends HorizontalPanel {
 
     private Label modeLabel;
     private HashMap<String, Label> highlightableButtons = new HashMap<>();
-    private Label activeButton;  // Currently active button
+    private Label activeButton;  // 当前活动按钮
     private String SEPARATOR = "<div style=\"height:30px;width:0;border-left:2px solid grey;\"></div>";
 
     Label resistorButton;
 
     public Toolbar() {
-        // Set the overall style of the toolbar
+        // 设置工具栏的整体样式
 	Style style = getElement().getStyle();
         style.setPadding(2, Style.Unit.PX);
         style.setBackgroundColor("#f8f8f8");
@@ -41,7 +41,7 @@ public class Toolbar extends HorizontalPanel {
 	add(createIconButton("folder",  "Open File...", new MyCommand("file", "importfromlocalfile")));
 	add(createIconButton("floppy", "Save", new MyCommand("file", "save")));
 	add(createIconButton("floppy",  "Save As...", new MyCommand("file", "saveas")));
-	add(new HTML("<sup style=\"margin-left:-12px;\"><strong>+</strong></sup>")); // add symbol to "Save As" icon
+	add(new HTML("<sup style=\"margin-left:-12px;\"><strong>+</strong></sup>")); // 为"另存为"图标添加符号
     add(new HTML(SEPARATOR));
 	add(createIconButton("ccw", "Undo", new MyCommand("edit", "undo")));
 	add(createIconButton("cw",  "Redo", new MyCommand("edit", "redo")));
@@ -108,16 +108,16 @@ public class Toolbar extends HorizontalPanel {
     }
 
     private Label createIconButton(String iconClass, String tooltip, MyCommand command) {
-        // Create a label to hold the icon
+        // 创建一个用于承载图标的标签
         Label iconLabel = new Label();
-        iconLabel.setText(""); // No text, just an icon
+        iconLabel.setText(""); // 无文本，仅图标
 	if (iconClass.startsWith("<svg"))
 	    iconLabel.getElement().setInnerHTML(makeSvg(iconClass, 24));
         else
 	    iconLabel.getElement().addClassName("cirjsicon-" + iconClass);
         iconLabel.setTitle(Locale.LS(tooltip));
 
-        // Style the icon button
+        // 设置图标按钮的样式
 	Style style = iconLabel.getElement().getStyle();
         style.setFontSize(24, Style.Unit.PX);
         style.setColor("#333");
@@ -127,15 +127,15 @@ public class Toolbar extends HorizontalPanel {
 	if (iconClass.startsWith("<svg"))
 	    style.setPaddingTop(5, Style.Unit.PX);
 
-        // Add hover effect for the button
+        // 为按钮添加悬停效果
         iconLabel.addMouseOverHandler(event -> iconLabel.getElement().getStyle().setColor("#007bff"));
         iconLabel.addMouseOutHandler(event -> iconLabel.getElement().getStyle().setColor("#333"));
 
-        // Add a click handler to perform the action
+        // 添加点击处理器以执行操作
         iconLabel.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-		// un-highlight
+		// 取消高亮
         	iconLabel.getElement().getStyle().setColor("#333");
 		if (iconLabel == activeButton) {
 		    new MyCommand("main", "Select").execute();
@@ -145,7 +145,7 @@ public class Toolbar extends HorizontalPanel {
             }
         });
 
-        // Track buttons that belong to the "main" command group
+        // 跟踪属于"main"命令组的按钮
         if (command.getMenuName().equals("main"))
             highlightableButtons.put(command.getItemName(), iconLabel);
 
@@ -158,20 +158,20 @@ public class Toolbar extends HorizontalPanel {
                  s.substring(5, s.length()-5) + "<g></svg>";
     }
 
-    // New method for creating variant buttons
+    // 用于创建变体按钮的新方法
     private Label createButtonSet(String info[]) {
 	MyCommand mainCommand = new MyCommand("main", info[1]);
 	CirSim sim = CirSim.theSim;
 	Label iconLabel = createIconButton(info[0], sim.getLabelTextForClass(info[1]), mainCommand);
 	
 	FlowPanel paletteContainer = new FlowPanel();
-	paletteContainer.setVisible(false); // Hidden by default
+	paletteContainer.setVisible(false); // 默认隐藏
 	paletteContainer.setStyleName("palette-container");
 
-	// Apply CSS styles for positioning and visibility
+	// 应用 CSS 样式以控制定位和可见性
 	Style paletteStyle = paletteContainer.getElement().getStyle();
 	paletteStyle.setPosition(Style.Position.ABSOLUTE);
-	paletteStyle.setZIndex(1000); // High z-index to appear on top
+	paletteStyle.setZIndex(1000); // 高 z-index 以显示在最上层
 	paletteStyle.setBackgroundColor("#ffffff");
 	paletteStyle.setBorderWidth(1, Style.Unit.PX);
 	paletteStyle.setBorderColor("#ccc");
@@ -180,13 +180,13 @@ public class Toolbar extends HorizontalPanel {
 
 	int i;
 	for (i = 0; i < info.length; i += 2) {
-	    // Create each variant button
+	    // 创建每个变体按钮
 	    Label variantButton = new Label();
-	    variantButton.setText(""); // No text, just an icon
+	    variantButton.setText(""); // 无文本，仅图标
 	    variantButton.getElement().setInnerHTML(makeSvg(info[i], 40));
 	    variantButton.setTitle(sim.getLabelTextForClass(info[i+1]));
 
-	    // Style the variant button
+	    // 设置变体按钮的样式
 	    Style variantStyle = variantButton.getElement().getStyle();
 	    variantStyle.setColor("#333");
 	    //variantStyle.setPadding(5, Style.Unit.PX);
@@ -195,39 +195,39 @@ public class Toolbar extends HorizontalPanel {
 	    final MyCommand command = new MyCommand("main", info[i+1]);
 	    final String smallSvg = makeSvg(info[i], 24);
 
-	    // Add click handler to update the main button and execute the command
+	    // 添加点击处理器以更新主按钮并执行命令
 	    variantButton.addClickHandler(event -> {
-		// Change the icon of the main button to reflect the variant selected
+		// 更改主按钮的图标以反映所选变体
 		iconLabel.getElement().setInnerHTML(smallSvg);
 		highlightableButtons.remove(mainCommand.getItemName());
                 highlightableButtons.put(command.getItemName(), iconLabel);
 		paletteContainer.setVisible(false);
 		mainCommand.setItemName(command.getItemName());
-		command.execute();  // Execute the corresponding command for the selected variant
+		command.execute();  // 执行所选变体对应的命令
 	    });
 
-	    // Append the variant button to the palette container
+	    // 将变体按钮追加到面板容器
 	    paletteContainer.add(variantButton);
 	}
 
-	// Add the palette container to the document (or you could append it to the toolbar directly)
+	// 将面板容器添加到文档中（也可以直接将其追加到工具栏）
 	RootPanel.get().add(paletteContainer);
 
-	// Show palette on mouse-over
+	// 鼠标悬停时显示面板
 	iconLabel.addMouseOverHandler(event -> {
 	    paletteContainer.setVisible(true);
 
-	    // Position the palette relative to the icon label
+	    // 将面板相对于图标标签定位
 	    int leftOffset = iconLabel.getAbsoluteLeft() - 12;
 	    int topOffset = iconLabel.getAbsoluteTop() + iconLabel.getOffsetHeight() - 2;
 	    paletteContainer.getElement().getStyle().setLeft(leftOffset, Style.Unit.PX);
 	    paletteContainer.getElement().getStyle().setTop(topOffset, Style.Unit.PX);
 	});
 
-	// Hide palette on mouse-out
+	// 鼠标移出时隐藏面板
 	iconLabel.addMouseOutHandler(event -> { paletteContainer.setVisible(false); });
 
-	// Keep the palette visible when hovering over it
+	// 悬停于面板上时保持其可见
 	paletteContainer.addDomHandler(event -> paletteContainer.setVisible(true), MouseOverEvent.getType());
 	paletteContainer.addDomHandler(event -> { paletteContainer.setVisible(false); }, MouseOutEvent.getType());
 
@@ -243,16 +243,16 @@ public class Toolbar extends HorizontalPanel {
     }
 
     public void highlightButton(String key) {
-        // Deactivate the currently active button
+        // 取消激活当前活动按钮
         if (activeButton != null) {
-            activeButton.getElement().getStyle().setColor("#333"); // Reset color
+            activeButton.getElement().getStyle().setColor("#333"); // 重置颜色
             activeButton.getElement().getStyle().setBackgroundColor(null);
         }
 
-        // Activate the new button
+        // 激活新按钮
         Label newActiveButton = highlightableButtons.get(key);
         if (newActiveButton != null) {
-            newActiveButton.getElement().getStyle().setColor("#007bff"); // Active color
+            newActiveButton.getElement().getStyle().setColor("#007bff"); // 激活颜色
             newActiveButton.getElement().getStyle().setBackgroundColor("#e6f7ff");
             activeButton = newActiveButton;
         }

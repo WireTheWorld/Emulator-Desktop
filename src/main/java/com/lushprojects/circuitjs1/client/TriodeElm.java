@@ -85,23 +85,23 @@ class TriodeElm extends CircuitElm {
 	drawThickCircle(g, point2.x, point2.y, circler);
 	setBbox(point1, plate[0], 16);
 	adjustBbox(cath[0].x, cath[1].y, point2.x+circler, point2.y+circler);
-	// draw plate
+	// 绘制阳极
 	setVoltageColor(g, volts[0]);
 	setPowerColor(g, currentp*(volts[0]-volts[2]));
 	drawThickLine(g, plate[0], plate[1]);
 	drawThickLine(g, plate[2], plate[3]);
-	// draw grid
+	// 绘制栅极
 	setVoltageColor(g, volts[1]);
 	setPowerColor(g, currentg*(volts[1]-volts[2]));
 	int i;
 	for (i = 0; i != 8; i += 2)
 	    drawThickLine(g, grid[i], grid[i+1]);
-	// draw cathode
+	// 绘制阴极
 	setVoltageColor(g, volts[2]);
 	setPowerColor(g, 0);
 	for (i = 0; i != 3; i++)
 	    drawThickLine(g, cath[i], cath[i+1]);
-	// draw dots
+	// 绘制电流点
 	curcountp = updateDotCount(currentp, curcountp);
 	curcountc = updateDotCount(currentc, curcountc);
 	curcountg = updateDotCount(currentg, curcountg);
@@ -128,7 +128,7 @@ class TriodeElm extends CircuitElm {
     }
     int getPostCount() { return 3; }
     double getPower() { return (volts[0]-volts[2])*currentc + (volts[gridN]-volts[cathN])*currentg; }
-    double getCurrent() { return currentc; } // for scope
+    double getCurrent() { return currentc; } // 供示波器使用
 
     final int gridN = 1;
     final int cathN = 2;
@@ -166,10 +166,10 @@ class TriodeElm extends CircuitElm {
 	    sim.stampResistor(nodes[gridN], nodes[cathN], gridCurrentR);
 	    currentg = vgk/gridCurrentR;
 	} else
-	    sim.stampResistor(nodes[gridN], nodes[cathN], 1e8); // avoid singular matrix 
+	    sim.stampResistor(nodes[gridN], nodes[cathN], 1e8); // 避免奇异矩阵
 	if (ival < 0) {
-	    // should be all zero, but that causes a singular matrix,
-	    // so instead we treat it as a large resistor
+	    // 本应全为零，但那会导致奇异矩阵，
+	    // 因此我们将其视为一个大电阻
 	    Gds = 1e-8;
 	    ids = vpk*Gds;
 	} else {
@@ -211,7 +211,7 @@ class TriodeElm extends CircuitElm {
 	arr[4] = "Ic = " + getUnitText(currentc, "A");
 	arr[5] = "Ig = " + getUnitText(currentg, "A");
     }
-    // grid not connected to other terminals
+    // 栅极与其他端子不连接
     boolean getConnection(int n1, int n2) { return !(n1 == 1 || n2 == 1); }
     public EditInfo getEditInfo(int n) {
 	if (n == 0)

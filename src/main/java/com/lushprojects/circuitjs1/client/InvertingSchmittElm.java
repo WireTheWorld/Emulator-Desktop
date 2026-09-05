@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// contributed by Edward Calver
+// 由 Edward Calver 贡献
 
     class InvertingSchmittElm extends CircuitElm {
 	double slewRate; // V/ns
@@ -63,7 +63,7 @@ package com.lushprojects.circuitjs1.client;
 	    return super.dump() + " " + slewRate+" "+lowerTrigger+" "+upperTrigger+" "+logicOnLevel+" "+logicOffLevel;
 	}
 	
-	int getDumpType() { return 183; }//Trying to find unused type
+	int getDumpType() { return 183; }//尝试寻找未使用的类型
 
 	void draw(Graphics g) {
 	    drawPosts(g);
@@ -105,8 +105,8 @@ package com.lushprojects.circuitjs1.client;
 	    double v0 = volts[1];
 	    double out;
 		if(state)
-		{//Output is high
-			if(volts[0]>upperTrigger)//Input voltage high enough to set output low
+		{//输出为高电平
+			if(volts[0]>upperTrigger)//输入电压足够高，使输出置为低电平
 			{
 			state=false;
 			out=logicOffLevel;
@@ -117,8 +117,8 @@ package com.lushprojects.circuitjs1.client;
 			}
 		}
 		else
-		{//Output is low
-			if(volts[0]<lowerTrigger)//Input voltage low enough to set output high
+		{//输出为低电平
+			if(volts[0]<lowerTrigger)//输入电压足够低，使输出置为高电平
 			{
 			state=true;
 			out=logicOnLevel;
@@ -187,8 +187,8 @@ package com.lushprojects.circuitjs1.client;
 		}
 
 	}
-	// there is no current path through the InvertingSchmitt input, but there
-	// is an indirect path through the output to ground.
+	// 反相施密特触发器的输入端没有电流通路，但
+	// 存在一条通过输出端到地的间接通路。
 	boolean getConnection(int n1, int n2) { return false; }
 	boolean hasGroundConnection(int n1) {
 	    return (n1 == 1);

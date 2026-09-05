@@ -51,7 +51,7 @@ package com.lushprojects.circuitjs1.client;
 
         void doStep() {
             int i;
-            // converged yet?
+            // 已收敛？
             double convergeLimit = getConvergeLimit();
             for (i = 0; i != inputCount; i++) {
         	if (Math.abs(volts[i]-lastVolts[i]) > convergeLimit)
@@ -61,7 +61,7 @@ package com.lushprojects.circuitjs1.client;
             }
             int vn = pins[inputCount].voltSource + sim.nodeList.size();
             if (expr != null) {
-        	// calculate output
+        	// 计算输出
         	for (i = 0; i != inputCount; i++)
         	    exprState.values[i] = volts[i];
         	exprState.t = sim.t;
@@ -70,7 +70,7 @@ package com.lushprojects.circuitjs1.client;
         	    sim.converged = false;
         	double rs = v0;
         	
-        	// calculate and stamp output derivatives
+        	// 计算并标记输出导数
         	for (i = 0; i != inputCount; i++) {
         	    double dv = volts[i]-lastVolts[i];
         	    if (Math.abs(dv) < 1e-6)
@@ -85,7 +85,7 @@ package com.lushprojects.circuitjs1.client;
 //        	    if (sim.subIterations > 1)
 //        		sim.console("ccedx " + i + " " + dx + " v " + v + " v2 " + v2 + " dv " + dv + " lv " + lastVolts[i] + " " + volts[i] + " " + sim.subIterations + " " + sim.t);
         	    sim.stampMatrix(vn,  nodes[i], -dx);
-        	    // adjust right side
+        	    // 调整右端项
         	    rs -= dx*volts[i];
         	    exprState.values[i] = volts[i];
         	}

@@ -34,7 +34,7 @@ public class ExportAsImageDialog extends Dialog {
 	VerticalPanel vp;
 	
 	private static native String b64encode(String a) /*-{
-	  // string may have unicode text strings in it, so we don't just call btoa() 
+	  // 字符串中可能包含 unicode 文本字符串，因此我们不能直接调用 btoa() 
 	  return window.btoa(unescape(encodeURIComponent(a)));
 	}-*/;
 

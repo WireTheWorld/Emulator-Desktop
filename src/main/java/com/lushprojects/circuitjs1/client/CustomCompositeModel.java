@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import com.google.gwt.storage.client.Storage;
 
-// model for subcircuits
+// 子电路的模型
 
 class ExtListEntry {
     ExtListEntry(String s, int n) { name = s; node = n; side = ChipElm.SIDE_W; }
@@ -28,8 +28,8 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
     String elmDump;
     String modelCircuit;
     boolean dumped;
-    boolean internal; // don't show in list
-    boolean builtin;  // included by default, don't allow deletion
+    boolean internal; // 不在列表中显示
+    boolean builtin;  // 默认包含，不允许删除
     static int sequenceNumber;
     static final int FLAG_SHOW_LABEL = 1;
     
@@ -43,7 +43,7 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
     static void initModelMap() {
 	modelMap = new HashMap<String,CustomCompositeModel>();
 
-	// create default stub model
+	// 创建默认的占位模型
 	Vector<ExtListEntry> extList = new Vector<ExtListEntry>();
 	extList.add(new ExtListEntry("gnd", 1));
 	CustomCompositeModel d = createModel("default", "0 0", "GroundElm 1", extList);
@@ -52,7 +52,7 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
 	modelMap.put(d.name, d);
 	sequenceNumber = 1;
 	
-	// get models from local storage
+	// 从本地存储获取模型
         Storage stor = Storage.getLocalStorageIfSupported();
         if (stor != null) {
             int len = stor.getLength();
@@ -137,7 +137,7 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
 	    modelMap.put(name, model);
 	    sequenceNumber++;
 	} else if (model.modelCircuit != null) {
-	    // if model has an associated model circuit, don't overwrite it.  keep the old one.
+	    // 如果模型有关联的模型电路，不要覆盖它。保留旧的那个。
 	    CirSim.console("ignoring model " + name + ", using stored version instead");
 	    return model;
 	}

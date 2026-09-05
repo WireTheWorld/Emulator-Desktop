@@ -55,7 +55,7 @@ public class HelpDialog extends DialogBox {
 		//String tab4Title = "DE";
 		//String tab5Title = "DA";
 
-		//create tabs 
+		//创建选项卡 
 		tp.add(vpEN = new VerticalPanel(), tab1Title);
 		vpEN.setWidth("500px");
 		vpEN.add(new HTML("<iframe style=\"border:0;\" src=\"help/EN.html\" width=\"500\" height=\"400\" scrolling=\"auto\" frameborder=\"1\"></iframe>"));
@@ -81,10 +81,10 @@ public class HelpDialog extends DialogBox {
 		hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		hp.setStyleName("topSpace");
 		
-		//select first tab
+		//选择第一个选项卡
 		tp.selectTab(0);
 
-		//set width if tabpanel
+		//设置选项卡面板的宽度
 		tp.setWidth("500");
 		
 		vp.add(hp);

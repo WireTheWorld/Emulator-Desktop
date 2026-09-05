@@ -72,25 +72,25 @@ class WattmeterElm extends CircuitElm {
 	super.setPoints();
 	int ds = (dy == 0) ? sign(dx) : -sign(dy);
 	
-	// get 2 more terminals
+	// 再获取 2 个端子
 	Point p3 = interpPoint(point1, point2, 0, -width*ds);
 	Point p4 = interpPoint(point1, point2, 1, -width*ds);
 	
-	// get stubs
+	// 获取短引线
 	int sep = sim.gridSize;
 	Point p5 = interpPoint(point1, point2,   sep/dn);
 	Point p6 = interpPoint(point1, point2, 1-sep/dn);
 	Point p7 = interpPoint(p3, p4,   sep/dn);
 	Point p8 = interpPoint(p3, p4, 1-sep/dn);
 
-	// we number the posts like this because we want the lower-numbered
-	// points to be on the bottom, so that if some of them are unconnected
-	// (which is often true) then the bottom ones will get automatically
-	// attached to ground.
+	// 我们这样给接线柱编号，是因为我们希望编号较小的
+	// 点位于底部，这样如果其中有些点未连接
+	// （这种情况经常发生），底部的点会自动
+	// 接地。
 	posts = new Point[] { p3, p4, point1, point2 };
 	inner = new Point[] { p7, p8, p5, p6 };
 
-	// get rectangle
+	// 获取矩形
 	Point r1 = interpPoint(point1, point2,   sep/dn, ds*sep);
 	Point r2 = interpPoint(point1, point2, 1-sep/dn, ds*sep);
 	Point r3 = interpPoint(point1, point2,   sep/dn, -ds*(sep+width));
@@ -110,7 +110,7 @@ class WattmeterElm extends CircuitElm {
     }
 
     void stamp() {
-	// zero-valued voltage sources from 0 to 1 and 2 to 3, so we can measure current
+	// 在 0-1 和 2-3 之间使用零值电压源，以便测量电流
 	sim.stampVoltageSource(nodes[0], nodes[1], voltSources[0], 0);
 	sim.stampVoltageSource(nodes[2], nodes[3], voltSources[1], 0);
     }
@@ -141,7 +141,7 @@ class WattmeterElm extends CircuitElm {
 	g.save();
 	int fsize = 15;
 	int w;
-	// adjust font size to fit
+	// 调整字体大小以适应
 	while (true) {
 	    g.setFont(new Font("SansSerif", 0, fsize));
 	    w=(int)g.context.measureText(str).getWidth();

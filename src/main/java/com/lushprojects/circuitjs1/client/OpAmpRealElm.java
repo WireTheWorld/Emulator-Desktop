@@ -9,11 +9,11 @@ public class OpAmpRealElm extends CompositeElm {
             "NTransistorElm 17 17 4\rPTransistorElm 18 18 7\rPTransistorElm 18 20 7\rNTransistorElm 20 7 25\rNTransistorElm 13 22 24\r" + // Q11-15
             "NTransistorElm 21 20 22\rNTransistorElm 25 20 6\rNTransistorElm 24 22 23\rPTransistorElm 22 4 15\rNTransistorElm 23 13 4\r" + // Q16-22 (no Q18, Q21)
             "CapacitorElm 13 20\r" +
-            "ResistorElm 15 6\rResistorElm 6 25\r" + // output resistors
+            "ResistorElm 15 6\rResistorElm 6 25\r" + // 输出电阻
             "ResistorElm 4 1\rResistorElm 4 14\rResistorElm 4 5\rResistorElm 4 16\rResistorElm 4 24\rResistorElm 4 23\rResistorElm 17 18\r" +
             "ResistorElm 22 21\rResistorElm 21 20\r";
     private static int[] model741ExternalNodes = { 2, 3, 6, 7, 4 }; // , 1, 5 };
-    // 0 = input -, 1 = input +, 2 = output, 3 = V+, 4 = V-, 5, 6 = offset null
+    // 0 = 反相输入, 1 = 同相输入, 2 = 输出, 3 = V+, 4 = V-, 5、6 = 失调调零
     
     private static String lm324ModelString =
 	    "TransistorElm 1 2 3\rCurrentElm 4 3\rTransistorElm 2 2 5\rTransistorElm 2 6 5\rCapacitorElm 6 7\rCurrentElm 4 8\rCurrentElm 4 7\rTransistorElm 8 4 9\r" +
@@ -24,7 +24,7 @@ public class OpAmpRealElm extends CompositeElm {
 	    "0 -1 -0 0 10000/0 0.000006/0 1 0 0 100/0 1 0 0 100/0 1e-11 0/0 0.000004/0 0.0001/0 1 0 0 100/0 1 0 0 100/0 1 0 0 100/0 1 0 0 100/0 25/0 -1 0 0 100/0 0.00005/" +
 	    "0 -1 0 0 100/0 10000/0 1 0 0 100/0 -1 0 0 10000";
     
-    // from LM324 spice model, ON SEMICONDUCTOR NEXT GEN MODEL 9/27/2018
+    // 来自 LM324 SPICE 模型，ON SEMICONDUCTOR 下一代模型 9/27/2018
     private static String lm324v2ModelString =
 	    "ResistorElm 4 6\rCurrentElm 4 7\rResistorElm 4 29\rResistorElm 8 30\rResistorElm 9 31\rTransistorElm 30 29 31 \rResistorElm 4 32\rResistorElm 2 33\rResistorElm 10 34\r" +
             "TransistorElm 33 32 34 \rResistorElm 9 35\rResistorElm 9 36\rResistorElm 11 37\rTransistorElm 36 35 37 \rResistorElm 10 38\rResistorElm 10 39\rResistorElm 11 40\r" +
@@ -98,16 +98,16 @@ public class OpAmpRealElm extends CompositeElm {
     private void init741() {
 	loadComposite(null, model741String, model741ExternalNodes);
 	
-	// adjust capacitor value to get desired slew rate
+	// 调整电容值以获得所需的压摆率
 	getCapacitor().capacitance = 30e-12 / (slewRate/.6);
 	getCapacitor().voltdiff = capValue;
 	
-	// set resistor values
+	// 设置电阻值
 	int i;
 	for (i = 0; i != 11; i++)
 	    ((ResistorElm) compElmList.get(21+i)).resistance = model741resistances[i];
 	
-	// adjust output stage resistor values and transistor betas to increase current if desired
+	// 调整输出级电阻值和晶体管 β 值，以在需要时增大电流
 	double currentMult = currentLimit / defaultCurrentLimit;
 	((ResistorElm) compElmList.get(21)).resistance /= currentMult;
 	((ResistorElm) compElmList.get(22)).resistance /= currentMult;
@@ -120,11 +120,11 @@ public class OpAmpRealElm extends CompositeElm {
 	StringTokenizer st = new StringTokenizer(lm324ModelDump, "/");
 	loadComposite(st, lm324ModelString, lm324ExternalNodes);
 	
-	// adjust capacitor value to get desired slew rate
+	// 调整电容值以获得所需的压摆率
 	getCapacitor().capacitance = 10e-12 / (slewRate/.55);
 	getCapacitor().voltdiff = capValue;
 	
-	// adjust output stage resistor values and transistor betas to increase current if desired
+	// 调整输出级电阻值和晶体管 β 值，以在需要时增大电流
 	double currentMult = currentLimit / defaultCurrentLimit;
 	((ResistorElm) compElmList.get(11)).resistance /= currentMult;
 	((TransistorElm) compElmList.get(9)).setBeta(currentMult * 100);
@@ -183,7 +183,7 @@ public class OpAmpRealElm extends CompositeElm {
         drawDots(g, in1p[1], in1p[0], curCounts[0]);
         drawDots(g, in2p[1], in2p[0], curCounts[1]);
         drawDots(g, lead2, point2,    curCounts[2]); 
-        // these two segments may not be an event multiple of gridSize so we draw them the other way so the dots line up
+        // 这两个线段的长度可能不是 gridSize 的整数倍，因此我们反方向绘制它们，使圆点对齐
         drawDots(g, rail1p[0], rail1p[1], -curCounts[3]); 
         drawDots(g, rail2p[0], rail2p[1], -curCounts[4]); 
         drawPosts(g);
@@ -212,7 +212,7 @@ public class OpAmpRealElm extends CompositeElm {
         interpPoint2(lead1 , lead2,  in1p[1],  in2p[1], 0, hsswap);
         interpPoint2(lead1 , lead2,  textp[0], textp[1], .2, hsswap);
         
-        // position rails; ideally in middle, but may need to be off-center to fit grid
+        // 定位电源轨；理想情况下位于中间，但可能需要偏离中心以适配网格
         double railPos = .5 - ((dn/2) % sim.gridSize)/(ww*2);
         interpPoint2(lead1 , lead2,  rail1p[1], rail2p[1], railPos, hs*2*(1-railPos));
         interpPoint2(lead1 , lead2,  rail1p[0], rail2p[0], railPos, hs*2);
@@ -248,7 +248,7 @@ public class OpAmpRealElm extends CompositeElm {
             EditInfo ei =  new EditInfo(EditInfo.makeLink("opampreal.html", "Model"), modelType);
             ei.choice = new Choice();
             ei.choice.add("LM741");
-            // hide old 324 model
+            // 隐藏旧的 324 模型
             if (modelType == MODEL_324) {
         	ei.choice.add("LM324, old");
         	ei.choice.add("LM324, fixed");

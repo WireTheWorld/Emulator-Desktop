@@ -80,7 +80,7 @@ public class DataRecorderElm extends CircuitElm {
                 var datain=[""];
                 datain[0]=data;
 		var oldblob = $doc.recorderBlob;
-		// remove old blob if any.  We should do this when dialog is dismissed, but this is easier
+		// 如果有旧 blob 则移除。我们本应在对话框关闭时执行此操作，但这样做更简单
 		if (oldblob)
 		    URL.revokeObjectURL(oldblob);
                 var blob=new Blob(datain, {type: 'text/plain' } );

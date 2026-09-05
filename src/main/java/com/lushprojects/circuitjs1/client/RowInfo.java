@@ -19,14 +19,14 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// info about each row/column of the matrix for simplification purposes
+// 关于矩阵每一行/列的信息，用于简化处理
     class RowInfo {
-	static final int ROW_NORMAL = 0;  // ordinary value
-	static final int ROW_CONST  = 1;  // value is constant
+	static final int ROW_NORMAL = 0;  // 普通值
+	static final int ROW_CONST  = 1;  // 值为常量
 	int type, mapCol, mapRow;
 	double value;
-	boolean rsChanges; // row's right side changes
-	boolean lsChanges; // row's left side changes
-	boolean dropRow;   // row is not needed in matrix
+	boolean rsChanges; // 行的右侧发生变化
+	boolean lsChanges; // 行的左侧发生变化
+	boolean dropRow;   // 矩阵中不需要该行
 	RowInfo() { type = ROW_NORMAL; }
     }

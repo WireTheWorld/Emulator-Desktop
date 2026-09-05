@@ -34,7 +34,7 @@ class MotorProtectionSwitchElm extends CircuitElm {
 	final double blownResistance = 1e9;
 	public MotorProtectionSwitchElm(int xx, int yy) {
 	    super(xx, yy);
-	    // from https://m.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_218_datasheet.pdf.pdf
+	    // 数据来源：https://m.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_218_datasheet.pdf.pdf
 	    i2t = 6.73;
 	    resistance = .0613;
 	    heats = new double[3];
@@ -119,7 +119,7 @@ class MotorProtectionSwitchElm extends CircuitElm {
 	    int squareX = -spx-12;
 	    int squareY = 48-12;
 	    
-	    // dotted lines
+	    // 虚线
 	    g.setColor(Color.lightGray);
 	    g.drawLine(squareX+24+4, squareY+12, 48*2-(blown ? 8 : 0), squareY+12);
 	    g.drawLine(squareX+12, squareY+24+4, squareX+12, 80+48+48/2);
@@ -128,7 +128,7 @@ class MotorProtectionSwitchElm extends CircuitElm {
 	    g.setLineDash(0, 0);
 	    
 	    for (i = 0; i != 3; i++) {
-		// terminal at top
+		// 顶部端子
 		setVoltageColor(g, volts[i*2]);
 		drawThickLine(g, i*spx, 0, i*spx, 32);
 		if (blown)
@@ -205,11 +205,11 @@ class MotorProtectionSwitchElm extends CircuitElm {
 	    for (j = 0; j != 3; j++) {
 		double i = currents[j];
 	    
-		// accumulate heat
+		// 累积热量
 		double heat = heats[j];
 		heat += i*i*sim.timeStep;
 
-		// dissipate heat.  we assume the fuse can dissipate its entire i2t in 3 seconds
+		// 散热。我们假设保险丝能在 3 秒内散发其全部 i2t 能量
 		heat -= sim.timeStep*i2t/3;
 	    
 		if (heat < 0)

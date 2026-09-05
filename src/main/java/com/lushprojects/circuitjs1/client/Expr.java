@@ -227,8 +227,8 @@ class Expr {
     static final int E_COSH = 48;
     static final int E_TANH = 49;
     static final int E_A = 50;
-    static final int E_DADT = E_A+10; // must be E_A+10
-    static final int E_LASTA = E_DADT+10; // should be at end and equal to E_DADT+10
+    static final int E_DADT = E_A+10; // 必须为 E_A+10
+    static final int E_LASTA = E_DADT+10; // 应位于末尾且等于 E_DADT+10
 };
 
 class ExprParser {

@@ -106,7 +106,7 @@ package com.lushprojects.circuitjs1.client;
 		setVoltageColor(g, volts[3-i*2]);
 		drawThickLine(g, throwPosts[i*2+1], throwLeads[i*4+1]);
 		
-	        // draw line
+	        // 绘制连线
 		if (!needsHighlight())
 		    g.setColor(Color.lightGray);
 		
@@ -120,12 +120,12 @@ package com.lushprojects.circuitjs1.client;
 	            g.setLineDash(0,  0);
 	        }
 		
-		// draw switch
+		// 绘制开关
 		if (!needsHighlight())
 		    g.setColor(whiteColor);
 		drawThickLine(g, poleLeads[i], throwLeads[i*4+3-position*2]);
 		
-		// current
+		// 电流
 		curcounts[i] = updateDotCount(currents[i], curcounts[i]);
 		drawDots(g, polePosts[i], poleLeads[i], curcounts[i]);
 		drawDots(g, throwLeads[i*4+position], throwPosts[i*2+position], curcounts[i]);
@@ -206,7 +206,7 @@ package com.lushprojects.circuitjs1.client;
 	
 	boolean isWireEquivalent() { return true; }
 	
-	// optimizing out this element is too complicated to be worth it (see #646)
+	// 优化掉此元件过于复杂，不值得（参见 #646）
 	boolean isRemovableWire() { return false; }
 
 	void getInfo(String arr[]) {

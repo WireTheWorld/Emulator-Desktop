@@ -41,7 +41,7 @@ class DataInputElm extends RailElm {
     	String fileName;
     	final int FLAG_REPEAT = 1<<8;
     	
-    	// cache to preserve data when doing cut/paste, or undo/redo
+    	// 缓存以在剪切/粘贴或撤销/重做时保留数据
     	static int fileNumCounter = 1;
     	static HashMap<Integer, DataFileEntry> dataFileMap = new HashMap<Integer, DataFileEntry>();
     	
@@ -69,8 +69,8 @@ class DataInputElm extends RailElm {
 	double fmphase;
 	
 	String dump() {
-	    // add a file number to the dump so we can preserve the data when doing cut and paste, or undo/redo.
-	    // we don't save the entire file in the dump because it would be huge.
+	    // 在转储中添加一个文件编号，以便在剪切粘贴或撤销/重做时保留数据。
+	    // 我们不在转储中保存整个文件，因为文件会很大。
 	    if (data != null) {
 		if (fileNum == 0)
 		    fileNum = fileNumCounter++;
@@ -149,7 +149,7 @@ class DataInputElm extends RailElm {
 		flags = ei.changeFlag(flags, FLAG_REPEAT);
 	}
 	
-        // fetch data for a selected file
+        // 获取所选文件的数据
         static native String fetchLoadFileData(DataInputElm elm, Element uploadElement) /*-{
             var oFiles = uploadElement.files;
             if (oFiles.length >= 1) {
@@ -164,16 +164,16 @@ class DataInputElm extends RailElm {
         }-*/;
 
         void doLoadCallback(String s, String t) {
-            // parse data file.  each line contains a single voltage value
+            // 解析数据文件。每行包含一个电压值
             String arr[] = s.split("\r*\n");
             data = new ArrayList<Double>();
             int i;
             for (i = 0; i != arr.length; i++) {
-        	// skip blank lines
+        	// 跳过空行
         	if (arr[i].length() == 0)
         	    continue;
         	
-        	// skip comments
+        	// 跳过注释
         	if (arr[i].charAt(0) == '#')
         	    continue;
         	try {

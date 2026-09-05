@@ -71,7 +71,7 @@ class EditInfo {
 	Choice choice;
 	Checkbox checkbox;
 	Button button;
-	EditDialogLoadFile loadFile = null; //if non-null, the button will open a file dialog
+	EditDialogLoadFile loadFile = null; // 如果非空，该按钮将打开文件对话框
 	TextArea textArea;
 	Widget widget;
 	boolean newDialog;

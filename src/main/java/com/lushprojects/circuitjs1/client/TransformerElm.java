@@ -150,48 +150,48 @@ package com.lushprojects.circuitjs1.client;
 	}
 	int getPostCount() { return 4; }
 	void reset() {
-	    // need to set current-source values here in case one of the nodes is node 0.  In that case
-	    // calculateCurrent() may get called (from setNodeVoltage()) when analyzing circuit, before
-	    // startIteration() gets called
+	    // 需要在此处设置电流源值，以防某个节点是节点 0。在这种情况下，
+	    // 分析电路时可能在 startIteration() 被调用之前
+	    // 就调用了 calculateCurrent()（从 setNodeVoltage() 调用）
 	    current[0] = current[1] = volts[0] = volts[1] = volts[2] =
 		volts[3] = curcount[0] = curcount[1] = curSourceValue1 = curSourceValue2 = 0;
 	}
 	double a1, a2, a3, a4;
 	void stamp() {
-	    // equations for transformer:
+	    // 变压器的方程：
 	    //   v1 = L1 di1/dt + M  di2/dt
 	    //   v2 = M  di1/dt + L2 di2/dt
-	    // we invert that to get:
+	    // 我们将其求逆得到：
 	    //   di1/dt = a1 v1 + a2 v2
 	    //   di2/dt = a3 v1 + a4 v2
-	    // integrate di1/dt using trapezoidal approx and we get:
+	    // 用梯形近似对 di1/dt 积分得到：
 	    //   i1(t2) = i1(t1) + dt/2 (i1(t1) + i1(t2))
 	    //          = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1) +
 	    //                     a1 dt/2 v1(t2) + a2 dt/2 v2(t2)
-	    // the norton equivalent of this for i1 is:
-	    //  a. current source, I = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1)
-	    //  b. resistor, G = a1 dt/2
-	    //  c. current source controlled by voltage v2, G = a2 dt/2
-	    // and for i2:
-	    //  a. current source, I = i2(t1) + a3 dt/2 v1(t1) + a4 dt/2 v2(t1)
-	    //  b. resistor, G = a3 dt/2
-	    //  c. current source controlled by voltage v2, G = a4 dt/2
+	    // 对 i1 而言，其诺顿等效为：
+	    //  a. 电流源，I = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1)
+	    //  b. 电阻，G = a1 dt/2
+	    //  c. 由电压 v2 控制的电流源，G = a2 dt/2
+	    // 对 i2 同理：
+	    //  a. 电流源，I = i2(t1) + a3 dt/2 v1(t1) + a4 dt/2 v2(t1)
+	    //  b. 电阻，G = a3 dt/2
+	    //  c. 由电压 v2 控制的电流源，G = a4 dt/2
 	    //
-	    // For backward euler,
+	    // 对于后向欧拉法，
 	    //
 	    //   i1(t2) = i1(t1) + a1 dt v1(t2) + a2 dt v2(t2)
 	    //
-	    // So the current source value is just i1(t1) and we use
-	    // dt instead of dt/2 for the resistor and VCCS.
+	    // 因此电流源的值就是 i1(t1)，并且对电阻和压控电流源
+	    // 使用 dt 而不是 dt/2。
 	    //
-	    // first winding goes from node 0 to 2, second is from 1 to 3
+	    // 第一个绕组从节点 0 到 2，第二个从 1 到 3
 	    double l1 = inductance;
 	    double l2 = inductance*ratio*ratio;
 	    double m = couplingCoef*Math.sqrt(l1*l2);
-	    // build inverted matrix
+	    // 构建逆矩阵
 	    double deti = 1/(l1*l2-m*m);
 	    double ts = isTrapezoidal() ? sim.timeStep/2 : sim.timeStep;
-	    a1 = l2*deti*ts; // we multiply dt/2 into a1..a4 here
+	    a1 = l2*deti*ts; // 此处我们将 dt/2 乘入 a1..a4
 	    a2 = -m*deti*ts;
 	    a3 = -m*deti*ts;
 	    a4 = l1*deti*ts;

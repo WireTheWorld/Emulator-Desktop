@@ -19,10 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// SPST switch
+// SPST 开关
 class SwitchElm extends CircuitElm {
     boolean momentary;
-    // position 0 == closed, position 1 == open
+    // 位置 0 == 闭合，位置 1 == 断开
     int position, posCount;
     final int FLAG_IEC = 2;
     final int FLAG_LABEL = 4;

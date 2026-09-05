@@ -69,7 +69,7 @@ class DiodeElm extends CircuitElm {
     void setup() {
 //	CirSim.console("setting up for model " + modelName + " " + model);
         model = DiodeModel.getModelWithNameOrCopy(modelName, model);
-        modelName = model.name;   // in case we couldn't find that model
+        modelName = model.name;   // 以防找不到该模型
 	diode.setup(model);
 	hasResistance = (model.seriesResistance > 0);
 	diodeEndNode = (hasResistance) ? 2 : 1;
@@ -133,12 +133,12 @@ class DiodeElm extends CircuitElm {
 
 	draw2Leads(g);
 
-	// draw arrow thingy
+	// 绘制箭头图形
 	setVoltageColor(g, v1);
 	setPowerColor(g, true);
 	g.fillPolygon(poly);
 
-	// draw thing arrow is pointing to
+	// 绘制箭头所指的图形
 	setVoltageColor(g, v2);
 	setPowerColor(g, true);
 	drawThickLine(g, cathode[0], cathode[1]);
@@ -146,12 +146,12 @@ class DiodeElm extends CircuitElm {
 	
     void stamp() {
 	if (hasResistance) {
-	    // create diode from node 0 to internal node
+	    // 创建从节点 0 到内部节点的二极管
 	    diode.stamp(nodes[0], nodes[2]);
-	    // create resistor from internal node to node 1
+	    // 创建从内部节点到节点 1 的电阻
 	    sim.stampResistor(nodes[1], nodes[2], model.seriesResistance);
 	} else
-	    // don't need any internal nodes if no series resistance
+	    // 如果没有串联电阻，则不需要内部节点
 	    diode.stamp(nodes[0], nodes[1]);
     }
     void doStep() {
@@ -234,7 +234,7 @@ class DiodeElm extends CircuitElm {
         }
         if (n == 3) {
             if (model.readOnly) {
-        	// probably never reached
+        	// 可能永远不会执行到这里
         	Window.alert(Locale.LS("This model cannot be modified.  Change the model name to allow customization."));
         	return;
             }
@@ -253,7 +253,7 @@ class DiodeElm extends CircuitElm {
     }
     
     void stepFinished() {
-        // stop for huge currents that make simulator act weird
+        // 出现巨大电流时停止，防止模拟器行为异常
         if (Math.abs(current) > 1e12)
             sim.stop("max current exceeded", this);
     }

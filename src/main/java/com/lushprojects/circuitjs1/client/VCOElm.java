@@ -42,14 +42,14 @@ package com.lushprojects.circuitjs1.client;
 	}
 	boolean nonLinear() { return true; }
 	void stamp() {
-	    // output pin
+	    // 输出引脚
 	    sim.stampVoltageSource(0, nodes[1], pins[1].voltSource);
-	    // attach Vi to R1 pin so its current is proportional to Vi
+	    // 将 Vi 连接到 R1 引脚，使其电流与 Vi 成正比
 	    sim.stampVoltageSource(nodes[0], nodes[4], pins[4].voltSource, 0);
-	    // attach 5V to R2 pin so we get a current going
+	    // 将 5V 连接到 R2 引脚，以产生电流
 	    sim.stampVoltageSource(0, nodes[5], pins[5].voltSource, 5);
-	    // put resistor across cap pins to give current somewhere to go
-	    // in case cap is not connected
+	    // 在电容引脚之间放置电阻，以便在电容未连接时
+	    // 给电流一条通路
 	    sim.stampResistor(nodes[2], nodes[3], cResistance);
 	    sim.stampNonLinear(nodes[2]);
 	    sim.stampNonLinear(nodes[3]);
@@ -61,7 +61,7 @@ package com.lushprojects.circuitjs1.client;
 	    double vc = volts[3]-volts[2];
 	    double vo = volts[1];
 	    int dir = (vo < 2.5) ? 1 : -1;
-	    // switch direction of current through cap as we oscillate
+	    // 振荡时切换流过电容的电流方向
 	    if (vo < 2.5 && vc > 4.5) {
 		vo = 5;
 		dir = -1;
@@ -71,11 +71,11 @@ package com.lushprojects.circuitjs1.client;
 		dir = 1;
 	    }
 
-	    // generate output voltage
+	    // 生成输出电压
 	    sim.updateVoltageSource(0, nodes[1], pins[1].voltSource, vo);
-	    // now we set the current through the cap to be equal to the
-	    // current through R1 and R2, so we can measure the voltage
-	    // across the cap
+	    // 现在将流过电容的电流设为等于
+	    // 流过 R1 和 R2 的电流，从而可以测量
+	    // 电容两端的电压
 	    int cur1 = sim.nodeList.size() + pins[4].voltSource;
 	    int cur2 = sim.nodeList.size() + pins[5].voltSource;
 	    sim.stampMatrix(nodes[2], cur1, dir);
@@ -84,8 +84,8 @@ package com.lushprojects.circuitjs1.client;
 	    sim.stampMatrix(nodes[3], cur2, -dir);
 	    cDir = dir;
 	}
-	// can't do this in calculateCurrent() because it's called before
-        // we get pins[4].current and pins[5].current, which we need
+	// 不能在 calculateCurrent() 中执行此操作，因为它在
+        // 我们获得所需的 pins[4].current 和 pins[5].current 之前就被调用
 	void computeCurrent() {
 	    if (cResistance == 0)
 		return;

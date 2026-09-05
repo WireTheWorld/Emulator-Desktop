@@ -27,12 +27,12 @@ class CustomTransformerElm extends CircuitElm {
         public static final int FLAG_FLIP = 1;
 	int flip;
 	
-	// node number n of first node of each coil (second node = n+1)
+	// 每个线圈第一个节点的节点编号 n（第二个节点为 n+1）
 	int coilNodes[];
 	
 	int coilCount, nodeCount;
 	
-	// number of primary coils
+	// 初级线圈的数量
 	int primaryCoils;
 	
 	Point nodePoints[], nodeTaps[], ptCore[];
@@ -92,14 +92,14 @@ class CustomTransformerElm extends CircuitElm {
 	}
 	
 	boolean parseDescription(String desc) {
-	    // a number indicates a coil (number = turns ratio to base inductance coil)
-	    // (negative number = reverse polarity)
-	    // : separates primary and secondary
-	    // , separates two coils
-	    // + separates two connected coils (tapped)
+	    // 数字表示一个线圈（数字 = 相对于基础电感线圈的匝数比）
+	    // （负数表示极性相反）
+	    // : 分隔初级和次级
+	    // , 分隔两个线圈
+	    // + 分隔两个相连的线圈（抽头）
 	    StringTokenizer st = new StringTokenizer(desc, ",:+", true);
 	    
-	    // count coils/nodes
+	    // 统计线圈/节点数量
 	    coilCount = nodeCount = 0;
 	    while (st.hasMoreTokens()) {
 		String s = st.nextToken();
@@ -113,7 +113,7 @@ class CustomTransformerElm extends CircuitElm {
 	    
 	    coilNodes = new int[coilCount];
 	    coilInductances = new double[coilCount];
-	    // save coil currents if possible (needed for undumping)
+	    // 尽可能保存线圈电流（反序列化时需要）
 	    if (coilCurrents == null || coilCurrents.length != coilCount)
 		coilCurrents = new double[coilCount];
 	    coilCurCounts = new double[coilCount];
@@ -124,7 +124,7 @@ class CustomTransformerElm extends CircuitElm {
 	    nodeCurrents = new double[nodeCount];
 	    nodeCurCounts = new double[nodeCount];
 	    
-	    // start over
+	    // 重新开始
 	    st = new StringTokenizer(desc, ",:+", true);
 	    int nodeNum = 0;
 	    int coilNum = 0;
@@ -139,7 +139,7 @@ class CustomTransformerElm extends CircuitElm {
 		} catch (Exception e) { return false; }
 		if (n == 0)
 		    return false;
-		// create new coil
+		// 创建新线圈
 		coilNodes[coilNum] = nodeNum;
 		coilInductances[coilNum] = n*n*inductance;
 		coilPolarities[coilNum] = 1;
@@ -161,7 +161,7 @@ class CustomTransformerElm extends CircuitElm {
 		    continue;
 		}
 		if (tok == ":") {
-		    // switch to secondary
+		    // 切换到次级
 		    if (secondary)
 			return false;
 		    secondary = true;
@@ -179,13 +179,13 @@ class CustomTransformerElm extends CircuitElm {
 	void draw(Graphics g) {
 	    int i;
 	    
-	    // draw taps
+	    // 绘制抽头
 	    for (i = 0; i != getPostCount(); i++) {
 		setVoltageColor(g, volts[i]);
 		drawThickLine(g, nodePoints[i], nodeTaps[i]);
 	    }
 	    
-	    // draw coils
+	    // 绘制线圈
 	    for (i = 0; i != coilCount; i++) {
 		int n = coilNodes[i];
 		setVoltageColor(g, volts[n]);
@@ -198,19 +198,19 @@ class CustomTransformerElm extends CircuitElm {
 	    }
 	    g.setColor(needsHighlight() ? selectColor : lightGrayColor);
 	    
-	    // draw core
+	    // 绘制铁芯
 	    for (i = 0; i != 2; i++) {
 		drawThickLine(g, ptCore[i], ptCore[i+2]);
 	    }
 	    
-	    // draw coil currents
+	    // 绘制线圈电流
 	    for (i = 0; i != coilCount; i++) {
 		coilCurCounts[i] = updateDotCount(coilCurrents[i], coilCurCounts[i]);
 		int ni = coilNodes[i];
 		drawDots(g, nodeTaps[ni], nodeTaps[ni+1], coilCurCounts[i]);
 	    }
 	    
-	    // draw tap currents
+	    // 绘制抽头电流
 	    for (i = 0; i != nodeCount; i++) {
 		nodeCurCounts[i] = updateDotCount(nodeCurrents[i], nodeCurCounts[i]);
 		drawDots(g, nodePoints[i], nodeTaps[i], nodeCurCounts[i]);
@@ -247,11 +247,11 @@ class CustomTransformerElm extends CircuitElm {
 		    maxWidth = Math.max(maxWidth, offset); 
 		    int nn = c < coilCount ? coilNodes[c] : -1;
 		    if (nn == i) {
-			// this is first node of a coil, make room
+			// 这是线圈的第一个节点，留出空间
 			c++;
 			offset += width;
 		    } else {
-			// this is last node of a coil, make small gap
+			// 这是线圈的最后一个节点，留出小间隙
 			offset += 16;
 		    }
 		}
@@ -287,35 +287,35 @@ class CustomTransformerElm extends CircuitElm {
 	double xformMatrix[][];
 	
 	void stamp() {
-	    // equations for transformer:
+	    // 变压器的方程：
 	    //   v1 = L1  di1/dt + M12  di2/dt + M13 di3/dt + ...
 	    //   v2 = M21 di1/dt + L2 di2/dt   + M23 di3/dt + ...
-	    //   v3 = ... (one row for each coil)
-	    // we invert that to get:
+	    //   v3 = ... （每个线圈对应一行）
+	    // 我们对其求逆得到：
 	    //   di1/dt = a1 v1 + a2 v2 + ...
 	    //   di2/dt = a3 v1 + a4 v2 + ...
-	    // integrate di1/dt using trapezoidal approx and we get:
+	    // 使用梯形近似对 di1/dt 积分，得到：
 	    //   i1(t2) = i1(t1) + dt/2 (i1(t1) + i1(t2))
 	    //          = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1) + ... +
 	    //                     a1 dt/2 v1(t2) + a2 dt/2 v2(t2) + ...
-	    // the norton equivalent of this for i1 is:
-	    //  a. current source, I = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1) + ...
-	    //  b. resistor, G = a1 dt/2
-	    //  c. current source controlled by voltage v2, G = a2 dt/2
-	    // and for i2:
-	    //  a. current source, I = i2(t1) + a3 dt/2 v1(t1) + a4 dt/2 v2(t1) + ...
-	    //  b. resistor, G = a3 dt/2
-	    //  c. current source controlled by voltage v2, G = a4 dt/2
+	    // 由此可得到 i1 的诺顿等效电路：
+	    //  a. 电流源，I = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1) + ...
+	    //  b. 电阻，G = a1 dt/2
+	    //  c. 由电压 v2 控制的电流源，G = a2 dt/2
+	    // 对于 i2：
+	    //  a. 电流源，I = i2(t1) + a3 dt/2 v1(t1) + a4 dt/2 v2(t1) + ...
+	    //  b. 电阻，G = a3 dt/2
+	    //  c. 由电压 v2 控制的电流源，G = a4 dt/2
 	    //
-	    // For backward euler, the current source value is just i1(t1) and we use
-	    // dt instead of dt/2 for the resistor and VCCS.
+	    // 对于向后欧拉法，电流源的值仅为 i1(t1)，电阻和 VCCS 使用
+	    // dt 而非 dt/2。
 	    xformMatrix = new double[coilCount][coilCount];
 	    int i;
-	    // fill diagonal
+	    // 填充对角线
 	    for (i = 0; i != coilCount; i++)
 		xformMatrix[i][i] = coilInductances[i];
 	    int j;
-	    // fill off-diagonal
+	    // 填充非对角线
 	    for (i = 0; i != coilCount; i++)
 		for (j = 0; j != i; j++)
 		    xformMatrix[i][j] = xformMatrix[j][i] = couplingCoef*Math.sqrt(coilInductances[i]*coilInductances[j])*coilPolarities[i]*coilPolarities[j];
@@ -325,7 +325,7 @@ class CustomTransformerElm extends CircuitElm {
 	    double ts = isTrapezoidal() ? sim.timeStep/2 : sim.timeStep;
 	    for (i = 0; i != coilCount; i++)
 		for (j = 0; j != coilCount; j++) {
-		    // multiply in dt/2 (or dt for backward euler)
+		    // 乘以 dt/2（向后欧拉法时为 dt）
 		    xformMatrix[i][j] *= ts;
 		    int ni = coilNodes[i];
 		    int nj = coilNodes[j];
@@ -465,7 +465,7 @@ class CustomTransformerElm extends CircuitElm {
 	    super.flipY(c2, count);
 	}
 
-	// vertical not supported
+	// 不支持竖直方向
 	boolean canFlipXY() { return false; }
 
     }

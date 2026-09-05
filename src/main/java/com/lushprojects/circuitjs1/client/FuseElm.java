@@ -30,7 +30,7 @@ class FuseElm extends CircuitElm {
 	final double blownResistance = 1e9;
 	public FuseElm(int xx, int yy) {
 	    super(xx, yy);
-	    // from https://m.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_218_datasheet.pdf.pdf
+	    // 来自 https://m.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_218_datasheet.pdf.pdf
 	    i2t = 6.73;
 	    resistance = .0613;
 	}
@@ -131,10 +131,10 @@ class FuseElm extends CircuitElm {
 	void startIteration() {
 	    double i = getCurrent();
 	    
-	    // accumulate heat
+	    // 累积热量
 	    heat += i*i*sim.timeStep;
 
-	    // dissipate heat.  we assume the fuse can dissipate its entire i2t in 3 seconds
+	    // 散热。我们假设保险丝能在 3 秒内散发其全部 i2t 热量
 	    heat -= sim.timeStep*i2t/3;
 	    
 	    if (heat < 0)

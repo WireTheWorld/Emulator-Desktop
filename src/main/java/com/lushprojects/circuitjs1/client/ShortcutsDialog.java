@@ -102,10 +102,10 @@ public class ShortcutsDialog extends Dialog {
 	    int i;
 	    if (checkForDuplicates())
 		return;
-	    // clear existing shortcuts
+	    // 清除现有快捷键
 	    for (i = 0; i != sim.shortcuts.length; i++)
 		sim.shortcuts[i] = null;
-	    // load new ones
+	    // 加载新的快捷键
 	    for (i = 0; i != textBoxes.size(); i++) {
 		String str = textBoxes.get(i).getText();
 		CheckboxMenuItem item = sim.mainMenuItems.get(i);
@@ -113,7 +113,7 @@ public class ShortcutsDialog extends Dialog {
 		if (str.length() > 0)
 		    sim.shortcuts[str.charAt(0)] = sim.mainMenuItemNames.get(i);
 	    }
-	    // save to local storage
+	    // 保存到本地存储
 	    sim.saveShortcuts();
 	    closeDialog();
 	}
@@ -129,14 +129,14 @@ public class ShortcutsDialog extends Dialog {
 		    continue;
 		char c = str.charAt(0);
 		
-		// check if character if out of range
+		// 检查字符是否超出范围
 		if (c > boxForShortcut.length) {
 		    box.getElement().getStyle().setColor("red");
 		    result = true;
 		    continue;
 		}
 		
-		// check for duplicates and mark them
+		// 检查重复项并标记
 		if (boxForShortcut[c] != null) {
 		    box.getElement().getStyle().setColor("red");
 		    boxForShortcut[c].getElement().getStyle().setColor("red");

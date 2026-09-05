@@ -31,7 +31,7 @@ class LatchElm extends ChipElm {
 		    StringTokenizer st) {
 	super(xa, ya, xb, yb, f, st);
 
-	// add FLAG_STATE flag to old latches so their state gets saved
+	// 为旧锁存器添加 FLAG_STATE 标志，以便保存其状态
 	if ((flags & FLAG_STATE) == 0) {
 	    flags |= FLAG_STATE;
 	    setupPins();

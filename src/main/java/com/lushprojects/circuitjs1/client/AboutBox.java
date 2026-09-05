@@ -35,7 +35,7 @@ public class AboutBox extends PopupPanel {
 	AboutBox(String version) {
 		super();
 		
-		// Add versionString variable to SessionStorage for iFrame in AboutBox
+		// 将 versionString 变量添加到 SessionStorage，供 AboutBox 中的 iFrame 使用
 		Storage sstor = Storage.getSessionStorageIfSupported();
 		sstor.setItem("versionString", version);
 		

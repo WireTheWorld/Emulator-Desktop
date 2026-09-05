@@ -147,7 +147,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 	double segf = 1./segments;
 	int divide = (int) (segments*position);
 	if (!sim.euroResistorCheckItem.getState()) {
-	    // draw zigzag
+	    // 绘制锯齿形
 	    for (i = 0; i != segments; i++) {
 		int nx = 0;
 		switch (i & 3) {
@@ -165,7 +165,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 		ox = nx;
 	    }
 	} else {
-	    // draw rectangle
+	    // 绘制矩形
 	    setVoltageColor(g, v1);
 	    interpPoint2(lead1, lead2, ps1, ps2, 0, hs);
 	    drawThickLine(g, ps1, ps2);
@@ -199,14 +199,14 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 	drawPosts(g);
 
 	if (sim.showValuesCheckItem.getState() && resistance1 > 0 && (flags & FLAG_SHOW_VALUES) != 0) {
-	    // check for vertical pot with 3rd terminal on left
+	    // 检查第三端子位于左侧的垂直电位器
 	    boolean reverseY = (post3.x < lead1.x && lead1.x == lead2.x);
-	    // check for horizontal pot with 3rd terminal on top
+	    // 检查第三端子位于顶部的水平电位器
 	    boolean reverseX = (post3.y < lead1.y && lead1.x != lead2.x);
-	    // check if we need to swap texts (if leads are reversed, e.g. drawn right to left)
+	    // 检查是否需要交换文本（如果引线反向，例如从右到左绘制）
 	    boolean rev = (lead1.x == lead2.x && lead1.y < lead2.y) || (lead1.y == lead2.y && lead1.x > lead2.x);
 	    
-	    // draw units
+	    // 绘制单位
 	    String s1 = getShortUnitText(rev ? resistance2 : resistance1, "");
 	    String s2 = getShortUnitText(rev ? resistance1 : resistance2, "");
 	    g.setFont(unitsFont);
@@ -215,7 +215,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 	    int w;
 	    w = (int)g.context.measureText(s1).getWidth();
 	    
-	    // vertical?
+	    // 垂直？
 	    if (lead1.x == lead2.x)
 		g.drawString(s1, !reverseY ? arrowPoint.x+2 : arrowPoint.x-2-w, Math.max(arrow1.y, arrow2.y)+5+ya);
 	    else
@@ -229,7 +229,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 	}
     }
     
-    // draw component values (number of resistor ohms, etc).  hs = offset
+    // 绘制元件值（电阻欧姆数等）。hs = 偏移量
     void drawValues(Graphics g, String s, Point pt, int hs) {
 	if (s == null)
 	    return;
@@ -260,7 +260,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
     }
     void calculateCurrent() {
 	if (resistance1 == 0)
-	    return; // avoid NaN
+	    return; // 避免 NaN
 	current1 = (volts[0]-volts[2])/resistance1;
 	current2 = (volts[1]-volts[2])/resistance2;
 	current3 = -current1-current2;
@@ -289,7 +289,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
 	arr[5] = "I2 = " + getCurrentDText(current2);
     }
     public EditInfo getEditInfo(int n) {
-	// ohmString doesn't work here on linux
+	// 欧姆符号字符串在 Linux 上在这里不起作用
 	if (n == 0)
 	    return new EditInfo("Resistance (ohms)", maxResistance, 0, 0);
 	if (n == 1) {
@@ -326,7 +326,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
     		slider.onMouseWheel(e);
     }
     void flipX(int c2, int count) {
-	// this is only needed / only has an effect if point1 and point2 are on same grid line
+	// 仅当 point1 和 point2 在同一网格线上时才需要/才有效
 	flags ^= FLAG_FLIP_OFFSET;
 	super.flipX(c2, count);
     }

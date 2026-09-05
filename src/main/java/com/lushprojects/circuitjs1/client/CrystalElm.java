@@ -69,10 +69,10 @@ class CrystalElm extends CompositeElm {
 	void setPoints() {
 	    super.setPoints();
 	    double f = (dn/2-10)/dn;
-	    // calc leads
+	    // 计算引线
 	    lead1 = interpPoint(point1, point2, f);
 	    lead2 = interpPoint(point1, point2, 1-f);
-	    // calc plates
+	    // 计算极板
 	    plate1 = newPointArray(2);
 	    plate2 = newPointArray(2);
 	    interpPoint2(point1, point2, plate1[0], plate1[1], f, 8);
@@ -83,7 +83,7 @@ class CrystalElm extends CompositeElm {
 	    interpPoint2(point1, point2, sandwichPoints[0], sandwichPoints[1],   f2, 10);
 	    interpPoint2(point1, point2, sandwichPoints[3], sandwichPoints[2], 1-f2, 10);
 	    
-	    // need to do this explicitly for CompositeElms
+	    // 对于 CompositeElm 需要显式执行此操作
 	    setPost(0, point1);
 	    setPost(1, point2);
 	}
@@ -92,7 +92,7 @@ class CrystalElm extends CompositeElm {
 	    int hs = 12;
 	    setBbox(point1, point2, hs);
 	    
-	    // draw first lead and plate
+	    // 绘制第一根引线和极板
 	    setVoltageColor(g, volts[0]);
 	    drawThickLine(g, point1, lead1);
 	    setPowerColor(g, false);
@@ -100,7 +100,7 @@ class CrystalElm extends CompositeElm {
 	    if (sim.powerCheckItem.getState())
 		g.setColor(Color.gray);
 
-	    // draw second lead and plate
+	    // 绘制第二根引线和极板
 	    setVoltageColor(g, volts[1]);
 	    drawThickLine(g, point2, lead2);
 	    setPowerColor(g, false);

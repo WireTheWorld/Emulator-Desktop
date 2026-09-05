@@ -66,26 +66,26 @@ class MosfetElm extends CircuitElm {
 		beta = new Double(st.nextToken()).doubleValue();
 	    } catch (Exception e) {}
 	    globalFlags = flags & (FLAGS_GLOBAL);
-	    allocNodes(); // make sure volts[] has the right number of elements when hasBodyTerminal() is true 
+	    allocNodes(); // 确保当 hasBodyTerminal() 为 true 时 volts[] 有正确的元素数量 
 	}
 
-	// set up body diodes
+	// 设置体二极管
 	void setupDiodes() {
-	    // diode from node 1 to body terminal 
+	    // 从节点 1 到体端子的二极管 
 	    diodeB1 = new Diode(sim);
 	    diodeB1.setupForDefaultModel();
-	    // diode from node 2 to body terminal
+	    // 从节点 2 到体端子的二极管
 	    diodeB2 = new Diode(sim);
 	    diodeB2.setupForDefaultModel();
 	}
 	
 	double getDefaultThreshold() { return 1.5; }
 	
-	// default beta for new elements
+	// 新元件的默认 beta
 	double getDefaultBeta() { return lastBeta == 0 ? getBackwardCompatibilityBeta() : lastBeta; }
 	
-	// default for elements in old files with no configurable beta.  JfetElm overrides this.
-	// Not sure where this value came from, but the ZVP3306A has a beta of about .027.  Power MOSFETs have much higher betas (like 80 or more)
+	// 旧文件中无 beta 配置项的元件的默认值。JfetElm 会覆盖此方法。
+	// 不确定这个值从何而来，但 ZVP3306A 的 beta 约为 .027。功率 MOSFET 的 beta 要高得多（如 80 或更高）
 	double getBackwardCompatibilityBeta() { return .02; }
 	
 	boolean nonLinear() { return true; }
@@ -108,19 +108,19 @@ class MosfetElm extends CircuitElm {
 	final int hs = 16;
 	
 	void draw(Graphics g) {
-	    // pick up global flags changes
+	    // 获取全局标志的更改
 	    if ((flags & FLAGS_GLOBAL) != globalFlags)
 		setPoints();
 	    
 		setBbox(point1, point2, hs);
 		
-		// draw source/drain terminals
+		// 绘制源极/漏极端子
 		setVoltageColor(g, volts[1]);
 		drawThickLine(g, src[0], src[1]);
 		setVoltageColor(g, volts[2]);
 		drawThickLine(g, drn[0], drn[1]);
 		
-		// draw line connecting source and drain
+		// 绘制连接源极和漏极的线段
 		int segments = 6;
 		int i;
 		setPowerColor(g, true);
@@ -137,7 +137,7 @@ class MosfetElm extends CircuitElm {
 		    drawThickLine(g, ps1, ps2);
 		}
 		
-		// draw little extensions of that line
+		// 绘制该线段的末端小延伸
 		if (!power)
 		    setVoltageColor(g, volts[1]);
 		drawThickLine(g, src[1], src[2]);
@@ -145,7 +145,7 @@ class MosfetElm extends CircuitElm {
 		    setVoltageColor(g, volts[2]);
 		drawThickLine(g, drn[1], drn[2]);
 		
-		// draw bulk connection
+		// 绘制衬底连接
 		if (showBulk()) {
 		    setVoltageColor(g, volts[bodyTerminal]);
 		    if (!hasBodyTerminal())
@@ -153,7 +153,7 @@ class MosfetElm extends CircuitElm {
 		    drawThickLine(g, body[0], body[1]);
 		}
 		
-		// draw arrow
+		// 绘制箭头
 		if (!drawDigital()) {
 		    setVoltageColor(g, volts[bodyTerminal]);
 		    g.fillPolygon(arrowPoly);
@@ -161,7 +161,7 @@ class MosfetElm extends CircuitElm {
 		if (power)
 		    g.setColor(Color.gray);
 		
-		// draw gate
+		// 绘制栅极
 		setVoltageColor(g, volts[0]);
 		drawThickLine(g, point1, gate[1]);
 		drawThickLine(g, gate[0], gate[2]);
@@ -186,12 +186,12 @@ class MosfetElm extends CircuitElm {
 		    drawDots(g, body[0], drn [0],  curcount_body2);
 		}
 		
-		// label pins when highlighted
+		// 高亮显示时标注引脚
 		if (needsHighlight() || sim.dragElm == this) {
 		    g.setColor(whiteColor);
 		    g.setFont(unitsFont);
 
-		    // make fiddly adjustments to pin label locations depending on orientation
+		    // 根据方向对引脚标签位置做精细调整
 		    int dsx = sign(dx);
 		    int dsy = sign(dy);
 		    int dsyn = dy == 0 ? 0 : 1;
@@ -206,8 +206,8 @@ class MosfetElm extends CircuitElm {
 		drawPosts(g);
 	}
 	
-	// post 0 = gate, 1 = source for NPN, 2 = drain for NPN, 3 = body (if present)
-	// for PNP, 1 is drain, 2 is source
+	// 端点 0 = 栅极，NPN 的 1 = 源极，NPN 的 2 = 漏极，3 = 衬底（若存在）
+	// 对于 PNP，1 是漏极，2 是源极
 	Point getPost(int n) {
 	    return (n == 0) ? point1 : (n == 1) ? src[0] :
 		(n == 2) ? drn[0] : body[0];
@@ -221,22 +221,22 @@ class MosfetElm extends CircuitElm {
 
 	int pcircler;
 	
-	// points for source and drain (these are swapped on PNP mosfets)
+	// 源极和漏极的点（在 PNP MOSFET 上会互换）
 	Point src[], drn[];
 	
-	// points for gate, body, and the little circle on PNP mosfets
+	// 栅极、衬底的点，以及 PNP MOSFET 上的小圆圈
 	Point gate[], body[], pcircle;
 	Polygon arrowPoly;
 	
 	void setPoints() {
 	    super.setPoints();
 
-	    // these two flags apply to all mosfets
+	    // 这两个标志适用于所有 mosfet
 	    flags &= ~FLAGS_GLOBAL;
 	    flags |= globalFlags;
 	    
-	    // find the coordinates of the various points we need to draw
-	    // the MOSFET.
+	    // 计算出我们绘制
+	    // MOSFET 所需的各个点的坐标。
 	    int hs2 = hs*dsign;
 	    if ((flags & FLAG_FLIP) != 0)
 	    	hs2 = -hs2;
@@ -247,7 +247,7 @@ class MosfetElm extends CircuitElm {
 	    interpPoint2(point1, point2, src[2], drn[2], 1-22/dn, -hs2*4/3);
 
 	    gate = newPointArray(3);
-	    interpPoint2(point1, point2, gate[0], gate[2], 1-28/dn, hs2/2); // was 1-20/dn
+	    interpPoint2(point1, point2, gate[0], gate[2], 1-28/dn, hs2/2); // 原为 1-20/dn
 	    interpPoint(gate[0], gate[2], gate[1], .5);
 
 	    if (showBulk()) {
@@ -292,11 +292,11 @@ class MosfetElm extends CircuitElm {
 
 	    if (doBodyDiode()) {
 		if (pnp == -1) {
-		    // pnp: diodes conduct when S or D are higher than body
+		    // pnp：当 S 或 D 的电位高于衬底时二极管导通
 		    diodeB1.stamp(nodes[1], nodes[bodyTerminal]);
 		    diodeB2.stamp(nodes[2], nodes[bodyTerminal]);
 		} else {
-		    // npn: diodes conduct when body is higher than S or D
+		    // npn：当衬底电位高于 S 或 D 时二极管导通
 		    diodeB1.stamp(nodes[bodyTerminal], nodes[1]);
 		    diodeB2.stamp(nodes[bodyTerminal], nodes[2]);
 		}
@@ -306,17 +306,17 @@ class MosfetElm extends CircuitElm {
 	boolean nonConvergence(double last, double now) {
 	    double diff = Math.abs(last-now);
 	    
-	    // high beta MOSFETs are more sensitive to small differences, so we are more strict about convergence testing
+	    // 高 beta 的 MOSFET 对微小差异更敏感，因此我们对收敛测试要求更严格
 	    if (beta > 1)
 		diff *= 100;
 	    
-	    // difference of less than 10mV is fine
+	    // 差值小于 10mV 是可以的
 	    if (diff < .01)
 		return false;
-	    // larger differences are fine if value is large
+	    // 若数值较大，稍大的差值也可接受
 	    if (sim.subIterations > 10 && diff < Math.abs(now)*.001)
 		return false;
-	    // if we're having trouble converging, get more lenient
+	    // 如果收敛困难，则放宽标准
 	    if (sim.subIterations > 100 && diff < .01+(sim.subIterations-100)*.0001)
 		return false;
 	    return true;
@@ -325,7 +325,7 @@ class MosfetElm extends CircuitElm {
 	void stepFinished() {
 	    calculate(true);
 	    
-	    // fix current if body is connected to source or drain
+	    // 若衬底连接到源极或漏极，则修正电流
 	    if (bodyTerminal == 1)
 		diodeCurrent1 = -diodeCurrent2;
 	    if (bodyTerminal == 2)
@@ -338,13 +338,13 @@ class MosfetElm extends CircuitElm {
 	
 	double lastv0;
 	
-	// this is called in doStep to stamp the matrix, and also called in stepFinished() to calculate the current
+	// 此方法在 doStep 中用于填充矩阵，也会在 stepFinished() 中被调用以计算电流
 	void calculate(boolean finished) {
 	    double vs[];
 	    if (finished)
 		vs = volts;
 	    else {
-		// limit voltage changes to .5V
+		// 将电压变化限制在 .5V 以内
 		vs = new double[3];
 		vs[0] = volts[0];
 		vs[1] = volts[1];
@@ -362,8 +362,8 @@ class MosfetElm extends CircuitElm {
 	    int source = 1;
 	    int drain = 2;
 	    
-	    // if source voltage > drain (for NPN), swap source and drain
-	    // (opposite for PNP)
+	    // 若源极电压 > 漏极电压（对于 NPN），则交换源极和漏极
+	    //（PNP 则相反）
 	    if (pnp*vs[1] > pnp*vs[2]) {
 	    	source = 2;
 	    	drain = 1;
@@ -384,21 +384,21 @@ class MosfetElm extends CircuitElm {
 	    gm = 0;
 	    double Gds = 0;
 	    if (vgs < vt) {
-		// should be all zero, but that causes a singular matrix,
-		// so instead we treat it as a large resistor
+		// 本来应该全为零，但那会导致奇异矩阵，
+		// 因此我们将其视为一个大电阻
 		Gds = 1e-8;
 		ids = vds*Gds;
 		mode = 0;
 	    } else if (vds < vgs-vt) {
-		// linear
+		// 线性区
 		ids = beta*((vgs-vt)*vds - vds*vds*.5);
 		gm  = beta*vds;
 		Gds = beta*(vgs-vds-vt);
 		mode = 1;
 	    } else {
-		// saturation; Gds = 0
+		// 饱和区；Gds = 0
 		gm  = beta*(vgs-vt);
-		// use very small Gds to avoid nonconvergence
+		// 使用极小的 Gds 以避免不收敛
 		Gds = 1e-8;
 		ids = .5*beta*(vgs-vt)*(vgs-vt) + (vds-(vgs-vt))*Gds;
 		mode = 2;
@@ -414,7 +414,7 @@ class MosfetElm extends CircuitElm {
 
 	    double ids0 = ids;
 	    
-	    // flip ids if we swapped source and drain above
+	    // 如果上面交换了源极和漏极，则翻转 ids
 	    if (source == 2 && pnp == 1 ||
 		source == 1 && pnp == -1)
 		ids = -ids;
@@ -522,7 +522,7 @@ class MosfetElm extends CircuitElm {
 		    flags = ei.changeFlag(flags, FLAG_BODY_TERMINAL);
 		}
 
-		// lots of different cases where the body terminal might have gotten removed/added so just do this all the time
+		// 体端子可能在各种不同情况下被移除/添加，因此每次都执行此操作
 		allocNodes();
 		setPoints();
 	}

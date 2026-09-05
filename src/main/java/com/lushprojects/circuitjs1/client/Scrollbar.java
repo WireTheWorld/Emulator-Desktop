@@ -93,7 +93,7 @@ public class Scrollbar extends  Composite implements
 		can.addMouseOverHandler(this);
 		can.addMouseWheelHandler(this);
 		
-		// our hack from CirSim doesn't work here so we have to handle touch events explicitly
+		// 我们在 CirSim 中的技巧在这里不适用，因此必须显式处理触摸事件
 		can.addTouchStartHandler(this);
 		can.addTouchMoveHandler(this);
 		can.addTouchEndHandler(this);
@@ -193,8 +193,8 @@ public class Scrollbar extends  Composite implements
 			val=calcValueFromPos(x);	
 			dragging=true;
 			
-			// setCapture doesn't work on touch for some reason; touchend/touchmoved events
-			// don't get sent
+			// 出于某种原因 setCapture 在触摸设备上不工作；touchend/touchmoved 事件
+			// 不会被发送
 			if (mouse)
 			    Event.setCapture(can.getElement());
 		    }
@@ -213,7 +213,7 @@ public class Scrollbar extends  Composite implements
 //		GWT.log("Move");
 		e.preventDefault();
 		
-		// we don't always get the mouse up event so make sure the button is still down
+		// 我们不总能收到鼠标释放事件，因此要确认按钮仍然按下
 		if (dragging && noButtonsDown(e.getNativeEvent())) {
 		    Event.releaseCapture(can.getElement());
 		    dragging = false;

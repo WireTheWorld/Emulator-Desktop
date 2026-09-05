@@ -92,14 +92,14 @@ class ScopeElm extends CircuitElm {
 	if (elmDump == null)
 	    return null;
 	String sStr = elmDump.replace(' ', '_');
-	sStr = sStr.replaceFirst("o_", ""); // remove unused prefix for embedded Scope
+	sStr = sStr.replaceFirst("o_", ""); // 移除嵌入式 Scope 的未使用前缀
 	return dumpStr + " " + sStr;
     }
     
     void draw(Graphics g) {
 	g.setColor(needsHighlight() ? selectColor : whiteColor);
 	g.context.save();
-	// setTransform() doesn't work in version of canvas2svg we are using
+	// setTransform() 在我们使用的 canvas2svg 版本中不起作用
 	g.context.scale(1/sim.transform[0], 1/sim.transform[3]);
 	g.context.translate(-sim.transform[4], -sim.transform[5]);
 	//g.context.scale(CirSim.devicePixelRatio(), CirSim.devicePixelRatio());

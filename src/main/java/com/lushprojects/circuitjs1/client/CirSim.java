@@ -21,7 +21,7 @@ package com.lushprojects.circuitjs1.client;
 
 // GWT conversion (c) 2015 by Iain Sharp
 
-// For information about the theory behind this, see Electronic Circuit & System Simulation Methods by Pillage
+// 有关此电路仿真背后理论的说明，请参阅 Electronic Circuit & System Simulation Methods by Pillage
 // or https://github.com/sharpie7/circuitjs1/blob/master/INTERNALS.md
 
 import java.util.Vector;
@@ -215,20 +215,20 @@ MouseOutHandler, MouseWheelHandler {
     int hintType = -1, hintItem1, hintItem2;
     String stopMessage;
 
-    // current timestep (time between iterations)
+    // 当前时间步长（迭代之间的时间间隔）
     double timeStep;
 
-    // maximum timestep (== timeStep unless we reduce it because of trouble
-    // converging)
+    // 最大时间步长（== timeStep，除非因收敛出现问题而减小
+    //）
     double maxTimeStep;
     double minTimeStep;
 
     double wheelSensitivity = 1;
 
-    // accumulated time since we incremented timeStepCount
+    // 自上次递增 timeStepCount 以来累积的时间
     double timeStepAccum;
 
-    // incremented each time we advance t by maxTimeStep
+    // 每次 t 前进 maxTimeStep 时递增
     int timeStepCount;
 
     double minFrameRate = 20;
@@ -308,12 +308,12 @@ MouseOutHandler, MouseWheelHandler {
     Canvas cv;
     Context2d cvcontext;
 
-    // canvas width/height in px (before device pixel ratio scaling)
+    // 画布宽/高（像素），未应用设备像素比缩放
     int canvasWidth, canvasHeight;
 
     static int MENUBARHEIGHT = 30;
     static final int TOOLBARHEIGHT = 40;
-    static int VERTICALPANELWIDTH = 166; // default
+    static int VERTICALPANELWIDTH = 166; // 默认值
     static final int POSTGRABSQ = 25;
     static final int MINPOSTGRABSIZE = 256;
     final Timer timer = new Timer() {
@@ -368,7 +368,7 @@ MouseOutHandler, MouseWheelHandler {
 	if (toolbarCheckItem.getState())
 	    height -= TOOLBARHEIGHT;
 
-    	width = Math.max(width, 0);   // avoid exception when setting negative width
+    	width = Math.max(width, 0);   // 避免设置为负宽度时发生异常
     	height = Math.max(height, 0);
     	
 		if (cv != null) {
@@ -383,7 +383,7 @@ MouseOutHandler, MouseWheelHandler {
 
     	setCircuitArea();
 
-	// recenter circuit in case canvas was hidden at startup
+	// 若画布在启动时被隐藏，则重新居中电路
     	if (transform[0] == 0)
     	    centreCircuit();
     }
@@ -409,11 +409,11 @@ MouseOutHandler, MouseWheelHandler {
 			.inject();
 	}
 
-	// this code is taken from original ExportAsLocalFileDialog.java:
+	// 此代码取自原始 ExportAsLocalFileDialog.java：
 
 	public static void setLastFileName(String s) {
-	    // remember filename for use when saving a new file.
-	    // if s is null or automatically generated then just clear out old filename.
+	    // 记住文件名，以便保存新文件时使用。
+	    // 如果 s 为 null 或自动生成，则直接清除旧文件名。
 	    if (s == null || s.startsWith("circuitjs-"))
 		lastFileName = null;
 	    else
@@ -454,7 +454,7 @@ MouseOutHandler, MouseWheelHandler {
 	public static native void setSidebarAnimation(String duration,String speedcurve) /*-{
 		var triggerLabel = $doc.querySelector(".triggerLabel");
 		var sidebar = $doc.querySelector(".trigger+.triggerLabel+div");
-		// property name | duration | timing function | delay
+		// 属性名 | 时长 | 缓动函数 | 延迟
 		var split = " "+duration+"ms "+speedcurve;
 		triggerLabel.style.transition = (duration=="none") ? duration : "right"+split;
 		sidebar.style.transition = (duration=="none") ? duration : "width"+split;
@@ -471,7 +471,7 @@ MouseOutHandler, MouseWheelHandler {
 	void modSetDefault(){
 		
 		Storage lstor = Storage.getLocalStorageIfSupported();
-		// KEYS:
+		// 键：
 		String MOD_UIScale=lstor.getItem("MOD_UIScale");
 		String MOD_TopMenuBar=lstor.getItem("MOD_TopMenuBar");
 		String MOD_absBtnTheme=lstor.getItem("MOD_absBtnTheme");
@@ -544,7 +544,7 @@ MouseOutHandler, MouseWheelHandler {
     
     public void init() {
 
-	//sets the meta tag to allow the css media queries to work
+	//设置 meta 标签，以允许 css 媒体查询生效
 	MetaElement meta = Document.get().createMetaElement();
 	meta.setName("viewport");
 	meta.setContent("width=device-width");
@@ -576,7 +576,7 @@ MouseOutHandler, MouseWheelHandler {
 
 	try {
 	    //baseURL = applet.getDocumentBase().getFile();
-	    // look for circuit embedded in URL
+	    // 查找嵌入在 URL 中的电路
 	    //		String doc = applet.getDocumentBase().toString();
 	    String cct=qp.getValue("cct");
 	    if (cct!=null)
@@ -737,7 +737,7 @@ MouseOutHandler, MouseWheelHandler {
 	topPanelCheckboxLabel.addClassName("toptriggerlabel");
 	topPanelCheckboxLabel.setAttribute("for", "toptrigger");
 
-	// make buttons side by side if there's room
+	// 如果有空间，则让按钮并排显示
 	buttonPanel=(VERTICALPANELWIDTH == 166) ? new HorizontalPanel() : new VerticalPanel();
 
 	m = new MenuBar(true);
@@ -852,7 +852,7 @@ MouseOutHandler, MouseWheelHandler {
 		new Command() { public void execute(){
 		    setOptionInStorage("conventionalCurrent", conventionCheckItem.getState());
 		    String cc = CircuitElm.currentColor.getHexValue();
-		    // change the current color if it hasn't changed from the default
+		    // 如果当前颜色尚未从默认值改变，则更改之
 		    if (cc.equals("#ffff00") || cc.equals("#00ffff"))
 			CircuitElm.currentColor = conventionCheckItem.getState() ? Color.yellow : Color.cyan;
 		}
@@ -890,7 +890,7 @@ MouseOutHandler, MouseWheelHandler {
 	if (!hideMenu)
 	    layoutPanel.addNorth(menuBar, MENUBARHEIGHT);
 
-	// add toolbar immediately after menuBar
+	// 在 menuBar 之后立即添加工具栏
 	layoutPanel.addNorth(toolbar, TOOLBARHEIGHT);
 
 	if (hideSidebar)
@@ -920,7 +920,7 @@ MouseOutHandler, MouseWheelHandler {
 	});
 
 	cvcontext=cv.getContext2d();
-	setToolbar(); // calls setCanvasSize()
+	setToolbar(); // 调用 setCanvasSize()
 	layoutPanel.add(cv);
 	verticalPanel.add(buttonPanel);
 	buttonPanel.addStyleName("sidePanelElm");
@@ -958,7 +958,7 @@ MouseOutHandler, MouseWheelHandler {
 	l.addStyleName("topSpace");
 	l.addStyleName("sidePanelElm");
 
-	// was max of 140
+	// 原最大值是 140
 	verticalPanel.add( speedBar = new Scrollbar(Scrollbar.HORIZONTAL, 3, 1, 0, 260));
 	speedBar.addStyleName("sidePanelElm");
 
@@ -1026,14 +1026,14 @@ MouseOutHandler, MouseWheelHandler {
 	selectScopeMenuBar = new MenuBar(true) {
 	    @Override
 	    
-	    // when mousing over scope menu item, select associated scope
+	    // 当鼠标悬停在示波器菜单项上时，选中关联的示波器
 	    public void onBrowserEvent(Event event) {
 		int currentItem = -1;
 		int i;
 		for (i = 0; i != selectScopeMenuItems.size(); i++) {
 		    MenuItem item = selectScopeMenuItems.get(i);
 		    if (DOM.isOrHasChild(item.getElement(), DOM.eventGetTarget(event))) {
-			//MenuItem found here
+			//在此处找到菜单项
 			currentItem = i;
 		    }
 		}
@@ -1116,7 +1116,7 @@ MouseOutHandler, MouseWheelHandler {
 
 	Window.addWindowClosingHandler(new Window.ClosingHandler() {
 	    public void onWindowClosing(ClosingEvent event) {
-		// there is a bug in electron that makes it impossible to close the app if this warning is given
+		// electron 中有一个 bug：如果给出此警告，应用将无法关闭
 		if (unsavedChanges && !isElectron())
 		    event.setMessage(Locale.LS("Are you sure?  There are unsaved changes."));
 	    }
@@ -1202,14 +1202,14 @@ MouseOutHandler, MouseWheelHandler {
         stor.setItem(key,  val ? "true" : "false");
     }
     
-    // save shortcuts to local storage
+    // 将快捷键保存到本地存储
     void saveShortcuts() {
         Storage stor = Storage.getLocalStorageIfSupported();
         if (stor == null)
             return;
         String str = "1";
         int i;
-        // format: version;code1=ClassName;code2=ClassName;etc
+        // 格式：version;code1=ClassName;code2=ClassName;等等
         for (i = 0; i != shortcuts.length; i++) {
             String sh = shortcuts[i];
             if (sh == null)
@@ -1219,7 +1219,7 @@ MouseOutHandler, MouseWheelHandler {
         stor.setItem("shortcuts", str);
     }
     
-    // load shortcuts from local storage
+    // 从本地存储加载快捷键
     void loadShortcuts() {
         Storage stor = Storage.getLocalStorageIfSupported();
         if (stor == null)
@@ -1229,21 +1229,21 @@ MouseOutHandler, MouseWheelHandler {
             return;
         String keys[] = str.split(";");
         
-        // clear existing shortcuts
+        // 清除现有快捷键
         int i;
         for (i = 0; i != shortcuts.length; i++)
             shortcuts[i] = null;
         
-        // clear shortcuts from menu
+        // 从菜单中清除快捷键
         for (i = 0; i != mainMenuItems.size(); i++) {
             CheckboxMenuItem item = mainMenuItems.get(i);
-            // stop when we get to drag menu items
+            // 遇到拖动菜单项时停止
             if (item.getShortcut().length() > 1)
         		break;
             item.setShortcut("");
         }
         
-        // go through keys (skipping version at start)
+        // 遍历各键（跳过开头的版本号）
         for (i = 1; i < keys.length; i++) {
             String arr[] = keys[i].split("=");
             if (arr.length != 2)
@@ -1252,7 +1252,7 @@ MouseOutHandler, MouseWheelHandler {
             String className = arr[1];
             shortcuts[c] = className;
             
-            // find menu item and fix it
+            // 找到菜单项并修正它
             int j;
             for (j = 0; j != mainMenuItems.size(); j++) {
         		if (mainMenuItemNames.get(j) == className) {
@@ -1264,11 +1264,11 @@ MouseOutHandler, MouseWheelHandler {
         }
     }
     
-    // install touch handlers
-    // don't feel like rewriting this in java.  Anyway, java doesn't let us create mouse
-    // events and dispatch them.
+    // 安装触摸事件处理器
+    // 不想用 java 重写这些代码。再说，java 也不允许我们创建鼠标
+    // 事件并分发它们。
     native static void doTouchHandlers(CirSim sim, CanvasElement cv) /*-{
-	// Set up touch events for mobile, etc
+	// 为移动设备等设置触摸事件
 	var lastTap;
 	var tmout;
 	var lastScale;
@@ -1325,7 +1325,7 @@ MouseOutHandler, MouseWheelHandler {
   		cv.dispatchEvent(mouseEvent);
 	}, false);
 
-	// Get the position of a touch relative to the canvas
+	// 获取触摸点相对于画布的位置
 	function getTouchPos(canvasDom, touchEvent) {
   		var rect = canvasDom.getBoundingClientRect();
   		return {
@@ -1338,7 +1338,7 @@ MouseOutHandler, MouseWheelHandler {
     
     boolean shown = false;
     
-    // this is called twice, once for the Draw menu, once for the right mouse popup menu
+    // 此方法被调用两次：一次用于 Draw 菜单，一次用于鼠标右键弹出菜单
     public void composeMainMenu(MenuBar mainMenuBar, int num) {
     	mainMenuBar.addItem(getClassCheckItem(Locale.LS("Add Wire"), "WireElm"));
     	mainMenuBar.addItem(getClassCheckItem(Locale.LS("Add Resistor"), "ResistorElm"));
@@ -1486,7 +1486,7 @@ MouseOutHandler, MouseWheelHandler {
     	chipMenuBar.addItem(getClassCheckItem(Locale.LS("Add Sequence generator"), "SeqGenElm"));
     	chipMenuBar.addItem(getClassCheckItem(Locale.LS("Add Adder"), "FullAdderElm"));
     	chipMenuBar.addItem(getClassCheckItem(Locale.LS("Add Half Adder"), "HalfAdderElm"));
-    	chipMenuBar.addItem(getClassCheckItem(Locale.LS("Add Custom Logic"), "UserDefinedLogicElm")); // don't change this, it will break people's saved shortcuts
+    	chipMenuBar.addItem(getClassCheckItem(Locale.LS("Add Custom Logic"), "UserDefinedLogicElm")); // 不要更改此项，否则会破坏用户保存的快捷键
     	chipMenuBar.addItem(getClassCheckItem(Locale.LS("Add Static RAM"), "SRAMElm"));
     	mainMenuBar.addItem(SafeHtmlUtils.fromTrustedString(CheckboxMenuItem.checkBoxHtml+Locale.LS("&nbsp;</div>Digital Chips")), chipMenuBar);
     	
@@ -1527,7 +1527,7 @@ MouseOutHandler, MouseWheelHandler {
 	    return;
 	int mi;
 	
-	// there are two menus to update: the one in the Draw menu, and the one in the right mouse menu
+	// 有两个菜单需要更新：Draw 菜单中的那个，以及鼠标右键菜单中的那个
 	for (mi = 0; mi != 2; mi++) {
 	    MenuBar menu = subcircuitMenuBar[mi];
 	    menu.clearItems();
@@ -1630,7 +1630,7 @@ MouseOutHandler, MouseWheelHandler {
 
     
     void centreCircuit() {
-	if (elmList == null)  // avoid exception if called during initialization
+	if (elmList == null)  // 若在初始化期间被调用则避免异常
 	    return;
 	
 	Rectangle bounds = getCircuitBounds();
@@ -1639,21 +1639,21 @@ MouseOutHandler, MouseWheelHandler {
     	double scale = 1;
     	int cheight = circuitArea.height;
     	
-    	// if there's no scope, and the window isn't very wide, then don't use all of the circuit area when
-    	// centering, because the info in the corner might not get in the way.  We still want circuitArea to be the full
-    	// height though, to allow the user to put stuff there manually.
+    	// 如果没有示波器且窗口不太宽，那么居中时不要占满整个电路区域，
+    	// 因为角落里的信息可能不会碍事。不过我们仍然希望 circuitArea 保持
+    	// 完整高度，以便用户手动把东西放到那里。
     	if (scopeCount == 0 && circuitArea.width < 800) {
     	    int h = (int) ((double)cheight * scopeHeightFraction);
     	    cheight -= h;
     	}
     	
     	if (bounds != null)
-    	    // add some space on edges because bounds calculation is not perfect
+    	    // 在边缘留出一些空间，因为边界计算并不精确
     	    scale = Math.min(circuitArea.width /(double)(bounds.width+140),
     			     cheight/(double)(bounds.height+100));
-    	scale = Math.min(scale, 1.5); // Limit scale so we don't create enormous circuits in big windows
+    	scale = Math.min(scale, 1.5); // 限制缩放比例，以免在大窗口中创建过大的电路
 
-    	// calculate transform so circuit fills most of screen
+    	// 计算变换矩阵，使电路填满屏幕的大部分区域
     	transform[0] = transform[3] = scale;
     	transform[1] = transform[2] = transform[4] = transform[5] = 0;
     	if (bounds != null) {
@@ -1662,15 +1662,15 @@ MouseOutHandler, MouseWheelHandler {
     	}
     }
 
-    // get circuit bounds.  remember this doesn't use setBbox().  That is calculated when we draw
-    // the circuit, but this needs to be ready before we first draw it, so we use this crude method
+    // 获取电路边界。注意这里不使用 setBbox()，那是在绘制电路时才计算的，
+    // 但此边界在首次绘制之前就需要就绪，因此我们使用这种粗略的方法
     Rectangle getCircuitBounds() {
     	int i;
     	int minx = 30000, maxx = -30000, miny = 30000, maxy = -30000;
     	for (i = 0; i != elmList.size(); i++) {
     		CircuitElm ce = getElm(i);
-    		// centered text causes problems when trying to center the circuit,
-    		// so we special-case it here
+    		// 居中文本在尝试居中电路时会引起问题，
+    		// 因此在这里对它们进行特殊处理
     		if (!ce.isCenteredText()) {
     			minx = min(ce.x, min(ce.x2, minx));
     			maxx = max(ce.x, max(ce.x2, maxx));
@@ -1727,7 +1727,7 @@ MouseOutHandler, MouseWheelHandler {
     }
     
     // *****************************************************************
-    //                     UPDATE CIRCUIT
+    //                     更新电路
     
     public void updateCircuit() {
         PerfMonitor perfmon = new PerfMonitor();
@@ -1735,7 +1735,7 @@ MouseOutHandler, MouseWheelHandler {
 
         checkCanvasSize();
         
-        // Analyze circuit
+        // 分析电路
         boolean didAnalyze = analyzeFlag;
         if (analyzeFlag || dcAnalysisFlag) {
             perfmon.startContext("analyzeCircuit()");
@@ -1744,7 +1744,7 @@ MouseOutHandler, MouseWheelHandler {
             perfmon.stopContext();
         }
         
-        // Stamp circuit
+        // 填充电路矩阵（stamp）
         if (needsStamp && simRunning) {
             perfmon.startContext("stampCircuit()");
             try {
@@ -1775,10 +1775,10 @@ MouseOutHandler, MouseWheelHandler {
             cv.getElement().getStyle().setBackgroundColor("#000");
         }
 
-        // Clear the frame
+        // 清除帧
         g.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        // Run circuit
+        // 运行电路
         if (simRunning) {
             if (needsStamp)
                 console("needsStamp while simRunning?");
@@ -1830,11 +1830,11 @@ MouseOutHandler, MouseWheelHandler {
         
         g.setColor(Color.white);
         
-        // Set the graphics transform to deal with zoom and offset
+        // 设置图形变换以处理缩放和偏移
         double scale = devicePixelRatio();
         cvcontext.setTransform(transform[0] * scale, 0, 0, transform[3] * scale, transform[4] * scale, transform[5] * scale);
 
-        // Draw each element
+        // 绘制每个元件
         perfmon.startContext("elm.draw()");
         for (int i = 0; i != elmList.size(); i++) {
             if (powerCheckItem.getState())
@@ -1844,14 +1844,14 @@ MouseOutHandler, MouseWheelHandler {
         }
         perfmon.stopContext();
 
-        // Draw posts normally
+        // 正常绘制连接点（post）
         if (mouseMode != CirSim.MODE_DRAG_ROW && mouseMode != CirSim.MODE_DRAG_COLUMN) {
             for (int i = 0; i != postDrawList.size(); i++)
                 CircuitElm.drawPost(g, postDrawList.get(i));
         }
 
-        // for some mouse modes, what matters is not the posts but the endpoints (which
-        // are only the same for 2-terminal elements). We draw those now if needed
+        // 对于某些鼠标模式，重要的不是连接点而是端点（端点
+        // 只有对于两端元件才与连接点相同）。如有需要，我们现在就绘制它们
         if (tempMouseMode == MODE_DRAG_ROW || 
             tempMouseMode == MODE_DRAG_COLUMN || 
             tempMouseMode == MODE_DRAG_POST || 
@@ -1871,31 +1871,31 @@ MouseOutHandler, MouseWheelHandler {
             }
         }
         
-        // draw handles for elm we're creating
+        // 为正在创建的元件绘制手柄
         if (tempMouseMode == MODE_SELECT && mouseElm != null) {
             mouseElm.drawHandles(g, CircuitElm.selectColor);
         }
 
-        // draw handles for elm we're dragging
+        // 为正在拖动的元件绘制手柄
         if (dragElm != null && (dragElm.x != dragElm.x2 || dragElm.y != dragElm.y2)) {
             dragElm.draw(g);
             dragElm.drawHandles(g, CircuitElm.selectColor);
         }
 
-        // draw bad connections. do this last so they will not be overdrawn.
+        // 绘制错误连接。最后再绘制它们，以免被其他内容覆盖。
         for (int i = 0; i != badConnectionList.size(); i++) {
             Point cn = badConnectionList.get(i);
             g.setColor(Color.red);
             g.fillOval(cn.x - 3, cn.y - 3, 7, 7);
         }
 
-        // draw the selection rect
+        // 绘制选择矩形
         if (selectedArea != null) {
             g.setColor(CircuitElm.selectColor);
             g.drawRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
         }
 
-        // draw the crosshair cursor
+        // 绘制十字光标
         if (crossHairCheckItem.getState() && mouseCursorX >= 0
                 && mouseCursorX <= circuitArea.width && mouseCursorY <= circuitArea.height) {
             g.setColor(Color.gray);
@@ -1905,25 +1905,25 @@ MouseOutHandler, MouseWheelHandler {
             g.drawLine(inverseTransformX(0), y, inverseTransformX(circuitArea.width), y);
         }
 
-        // reset the graphics scale and translation
+        // 重置图形缩放和平移
         cvcontext.setTransform(scale, 0, 0, scale, 0, 0);
 
-        // draw the bottom area i.e. the scope and info section
+        // 绘制底部区域，即示波器和信息部分
         perfmon.startContext("drawBottomArea()");
         drawBottomArea(g);
         perfmon.stopContext();
 
         g.setColor(Color.white);
         
-        perfmon.stopContext(); // graphics
+        perfmon.stopContext(); // 图形
         
         if (stopElm != null && stopElm != mouseElm)
             stopElm.setMouseElm(false);
         
         frames++;
 
-        // if we did DC analysis, we need to re-analyze the circuit with that flag
-        // cleared.
+        // 如果我们执行了直流分析，则需要在清除该标志后
+        // 重新分析电路。
         if (dcAnalysisFlag) {
             dcAnalysisFlag = false;
             analyzeFlag = true;
@@ -1931,7 +1931,7 @@ MouseOutHandler, MouseWheelHandler {
 
         lastFrameTime = lastTime;
 
-        perfmon.stopContext(); // updateCircuit
+        perfmon.stopContext(); // 更新电路
         
         if (developerMode) {
             int height = 45;
@@ -1951,14 +1951,14 @@ MouseOutHandler, MouseWheelHandler {
             }
         }
 
-        // Add info about mouse mode in graphics
+        // 在图形中显示鼠标模式信息
         if (mouseModeCheckItem.getState()){
             if (printableCheckItem.getState()) g.setColor(Color.black);
             g.drawString(Locale.LS("Mode: ") + classToLabelMap.get(mouseModeStr), 10, 29);
         }
         
-        // This should always be the last 
-        // thing called by updateCircuit();
+        // 这应该始终是 updateCircuit()
+        // 最后调用的内容；
         callUpdateHook();
     }
 
@@ -2000,7 +2000,7 @@ MouseOutHandler, MouseWheelHandler {
 	if (stopMessage != null) {
 	    g.drawString(stopMessage, 10, canvasHeight-10);
 	} else if (!hideInfoBox) {
-	    // in JS it doesn't matter how big this is, there's no out-of-bounds exception
+	    // 在 JS 中，这个数组多大都无所谓，不存在越界异常
 	    String info[] = new String[10];
 	    if (mouseElm != null) {
 		if (mousePost == -1) {
@@ -2040,7 +2040,7 @@ MouseOutHandler, MouseWheelHandler {
 //	    x = max(x, canvasWidth*2/3);
 	  //  x=cv.getCoordinateSpaceWidth()*2/3;
 	    
-	    // count lines of data
+	    // 统计数据行数
 	    for (i = 0; info[i] != null; i++)
 		;
 	    int badnodes = badConnectionList.size();
@@ -2079,8 +2079,8 @@ MouseOutHandler, MouseWheelHandler {
     void setupScopes() {
     	int i;
     	Storage lstor = Storage.getLocalStorageIfSupported();
-    	// check scopes to make sure the elements still exist, and remove
-    	// unused scopes/columns
+    	// 检查示波器，确保其元件仍然存在，并移除
+    	// 未使用的示波器/列
     	int pos = -1;
     	for (i = 0; i < scopeCount; i++) {
     	    	if (scopes[i].needToRemove()) {
@@ -2263,7 +2263,7 @@ MouseOutHandler, MouseWheelHandler {
 	NodeMapEntry() { node = -1; }
 	NodeMapEntry(int n) { node = n; }
     }
-    // map points to node numbers
+    // 将坐标点映射到节点编号
     HashMap<Point,NodeMapEntry> nodeMap;
     
     class WireInfo {
@@ -2275,12 +2275,12 @@ MouseOutHandler, MouseWheelHandler {
 	}
     }
     
-    // info about each wire and its neighbors, used to calculate wire currents
+    // 关于每条导线及其相邻元件的信息，用于计算导线电流
     Vector<WireInfo> wireInfoList;
     
-    // find groups of nodes connected by wire equivalents and map them to the same node.  this speeds things
-    // up considerably by reducing the size of the matrix.  We do this for wires, labeled nodes, and ground.
-    // The actual node we map to is not assigned yet.  Instead we map to the same NodeMapEntry.
+    // 找出由导线等效物连接在一起的节点组，并将它们映射到同一个节点。这会通过减小矩阵规模
+    // 显著加快速度。我们对导线、带标签节点和地线都这样做。
+    // 实际映射到的节点尚未分配。相反，我们映射到同一个 NodeMapEntry。
     void calculateWireClosure() {
 	int i;
 	LabeledNodeElm.resetNodeList();
@@ -2297,10 +2297,10 @@ MouseOutHandler, MouseWheelHandler {
 	    Point p0 = ce.getPost(0);
 	    NodeMapEntry cn  = nodeMap.get(p0);
 	    
-	    // what post are we connected to
+	    // 我们连接到哪个端点
 	    Point p1 = ce.getConnectedPost();
 	    if (p1 == null) {
-		// no connected post (true for labeled node the first time it's encountered, or ground)
+		// 没有连接的端点（首次遇到的带标签节点或地线即为这种情况）
 		if (cn == null) {
 		    cn = new NodeMapEntry();
 		    nodeMap.put(p0, cn);
@@ -2309,7 +2309,7 @@ MouseOutHandler, MouseWheelHandler {
 	    }
 	    NodeMapEntry cn2 = nodeMap.get(p1);
 	    if (cn != null && cn2 != null) {
-		// merge nodes; go through map and change all keys pointing to cn2 to point to cn
+		// 合并节点；遍历映射，把所有指向 cn2 的键改为指向 cn
 		for (Map.Entry<Point, NodeMapEntry> entry : nodeMap.entrySet()) {
 		    if (entry.getValue() == cn2)
 			entry.setValue(cn);
@@ -2325,7 +2325,7 @@ MouseOutHandler, MouseWheelHandler {
 		nodeMap.put(p0, cn2);
 		continue;
 	    }
-	    // new entry
+	    // 新条目
 	    cn = new NodeMapEntry();
 	    nodeMap.put(p0, cn);
 	    nodeMap.put(p1, cn);
@@ -2334,15 +2334,15 @@ MouseOutHandler, MouseWheelHandler {
 //	console("got " + (groupCount-mergeCount) + " groups with " + nodeMap.size() + " nodes " + mergeCount);
     }
     
-    // generate info we need to calculate wire currents.  Most other elements calculate currents using
-    // the voltage on their terminal nodes.  But wires have the same voltage at both ends, so we need
-    // to use the neighbors' currents instead.  We used to treat wires as zero voltage sources to make
-    // this easier, but this is very inefficient, since it makes the matrix 2 rows bigger for each wire.
-    // We create a list of WireInfo objects instead to help us calculate the wire currents instead,
-    // so we make the matrix less complex, and we only calculate the wire currents when we need them
-    // (once per frame, not once per subiteration).  We need the WireInfos arranged in the correct order,
-    // each one containing a list of neighbors and which end to use (since one end may be ready before
-    // the other)
+    // 生成计算导线电流所需的信息。大多数其他元件使用其端点上的电压来计算电流，
+    // 但导线两端电压相同，因此我们需要改用相邻元件的电流。我们过去把导线当作零电压源来
+    // 简化这一过程，但这样做效率极低，因为每条导线都会使矩阵多出 2 行。
+    // 我们改为创建一组 WireInfo 对象来帮助计算导线电流，
+    // 这样矩阵更简单，而且我们只在需要时才计算导线电流
+    //（每帧一次，而不是每次子迭代一次）。我们需要按正确顺序排列 WireInfo，
+    // 每个都包含邻居列表以及应使用哪一端
+    //（因为一端可能比
+    // 另一端先就绪）
     boolean calcWireInfo() {
 	int i;
 	int moved = 0;
@@ -2350,18 +2350,18 @@ MouseOutHandler, MouseWheelHandler {
 	for (i = 0; i != wireInfoList.size(); i++) {
 	    WireInfo wi = wireInfoList.get(i);
 	    CircuitElm wire = wi.wire;
-	    CircuitNode cn1 = nodeList.get(wire.getNode(0));  // both ends of wire have same node #
+	    CircuitNode cn1 = nodeList.get(wire.getNode(0));  // 导线两端具有相同的节点编号
 	    int j;
 
 	    Vector<CircuitElm> neighbors0 = new Vector<CircuitElm>();
 	    Vector<CircuitElm> neighbors1 = new Vector<CircuitElm>();
 	    
-	    // assume each end is ready (except ground nodes which have one end)
-	    // labeled nodes are treated as having 2 terminals, see below
+	    // 假设每一端都已就绪（单端的地线节点除外）
+	    // 带标签节点被视为有 2 个端子，见下文
 	    boolean isReady0 = true, isReady1 = !(wire instanceof GroundElm);
 
-	    // go through elements sharing a node with this wire (may be connected indirectly
-	    // by other wires, but at least it's faster than going through all elements)
+	    // 遍历与这条导线共享节点的元件（可能通过其他导线间接连接，
+	    // 但至少比遍历所有元件要快）
 	    for (j = 0; j != cn1.links.size(); j++) {
 		CircuitNodeLink cnl = cn1.links.get(j);
 		CircuitElm ce = cnl.elm;
@@ -2369,11 +2369,11 @@ MouseOutHandler, MouseWheelHandler {
 		    continue;
 		Point pt = ce.getPost(cnl.num);
 		
-		// is this a wire that doesn't have wire info yet?  If so we can't use it yet.
-		// That would create a circular dependency.  So that side isn't ready.
+		// 这是否是一条还没有导线信息的导线？如果是，我们暂时还不能使用它。
+		// 那会造成循环依赖。因此这一侧尚未就绪。
 		boolean notReady = (ce.isRemovableWire() && !ce.hasWireInfo);
 		
-		// which post does this element connect to, if any?
+		// 该元件连接到哪个端点（如果有的话）？
 		if (pt.x == wire.x && pt.y == wire.y) {
 		    neighbors0.add(ce);
 		    if (notReady) isReady0 = false;
@@ -2385,13 +2385,13 @@ MouseOutHandler, MouseWheelHandler {
 		    }
 		} else if (ce instanceof LabeledNodeElm && wire instanceof LabeledNodeElm &&
 			((LabeledNodeElm) ce).text == ((LabeledNodeElm) wire).text) {
-		    // ce and wire are both labeled nodes with matching labels.  treat them as neighbors
+		    // ce 和 wire 都是带标签节点且标签匹配。将它们视为邻居
 		    neighbors1.add(ce);
 		    if (notReady) isReady1 = false;
 		}
 	    }
 
-	    // does one of the posts have all information necessary to calculate current?
+	    // 其中一个端点是否拥有计算电流所需的全部信息？
 	    if (isReady0) {
 		wi.neighbors = neighbors0;
 		wi.post = 0;
@@ -2403,7 +2403,7 @@ MouseOutHandler, MouseWheelHandler {
 		wire.hasWireInfo = true;
 		moved = 0;
 	    } else {
-		// no, so move to the end of the list and try again later
+		// 否，将其移到列表末尾稍后再试
 		wireInfoList.add(wireInfoList.remove(i--));
 		moved++;
 		if (moved > wireInfoList.size() * 2) {
@@ -2416,7 +2416,7 @@ MouseOutHandler, MouseWheelHandler {
 	return true;
     }
 
-    // find or allocate ground node
+    // 查找或分配地线节点
     void setGroundNode(boolean subcircuit) {
 	int i;
 	boolean gotGround = false;
@@ -2424,13 +2424,13 @@ MouseOutHandler, MouseWheelHandler {
 	CircuitElm volt = null;
 	    
 	//System.out.println("ac1");
-	// look for voltage or ground element
+	// 查找电压源或地线元件
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElm ce = getElm(i);
 	    if (ce instanceof GroundElm) {
 		gotGround = true;
 		
-		// set ground node to 0
+		// 将地线节点设为 0
 		NodeMapEntry nme = nodeMap.get(ce.getPost(0));
 		nme.node = 0;
 		break;
@@ -2441,27 +2441,27 @@ MouseOutHandler, MouseWheelHandler {
 	    	volt = ce;
 	}
 
-	// if no ground, and no rails, then the voltage elm's first terminal
-	// is ground (but not for subcircuits)
+	// 如果没有地线也没有电源轨，则电压源元件的第一个端子
+	// 即视为地线（但子电路除外）
 	if (!subcircuit && !gotGround && volt != null && !gotRail) {
 	    CircuitNode cn = new CircuitNode();
 	    Point pt = volt.getPost(0);
 	    nodeList.addElement(cn);
 
-	    // update node map
+	    // 更新节点映射
 	    NodeMapEntry cln = nodeMap.get(pt);
 	    if (cln != null)
 		cln.node = 0;
 	    else
 		nodeMap.put(pt, new NodeMapEntry(0));
 	} else {
-	    // otherwise allocate extra node for ground
+	    // 否则为地线额外分配一个节点
 	    CircuitNode cn = new CircuitNode();
 	    nodeList.addElement(cn);
 	}
     }
 
-    // make list of nodes
+    // 生成节点列表
     void makeNodeList() {
 	int i, j;
 	int vscount = 0;
@@ -2471,15 +2471,15 @@ MouseOutHandler, MouseWheelHandler {
 	    int ivs = ce.getVoltageSourceCount();
 	    int posts = ce.getPostCount();
 	    
-	    // allocate a node for each post and match posts to nodes
+	    // 为每个端点分配一个节点，并将端点与节点对应起来
 	    for (j = 0; j != posts; j++) {
 		Point pt = ce.getPost(j);
 		NodeMapEntry cln = nodeMap.get(pt);
 		
-		// is this node not in map yet?  or is the node number unallocated?
-		// (we don't allocate nodes before this because changing the allocation order
-		// of nodes changes circuit behavior and breaks backward compatibility;
-		// the code below to connect unconnected nodes may connect a different node to ground) 
+		// 这个节点是否还不在映射中？或者节点编号是否尚未分配？
+		//（在此之前我们不分配节点，因为改变节点的分配顺序
+		// 会改变电路行为并破坏向后兼容性；
+		// 下面连接未连接节点的代码可能会把不同的节点接到地线上）
 		if (cln == null || cln.node == -1) {
 		    CircuitNode cn = new CircuitNode();
 		    CircuitNodeLink cnl = new CircuitNodeLink();
@@ -2499,8 +2499,8 @@ MouseOutHandler, MouseWheelHandler {
 		    cnl.elm = ce;
 		    getCircuitNode(n).links.addElement(cnl);
 		    ce.setNode(j, n);
-		    // if it's the ground node, make sure the node voltage is 0,
-		    // cause it may not get set later
+		    // 如果是地线节点，确保节点电压为 0，
+		    // 因为稍后可能不会设置它
 		    if (n == 0)
 			ce.setNodeVoltage(j, 0);
 		}
@@ -2516,7 +2516,7 @@ MouseOutHandler, MouseWheelHandler {
 		nodeList.addElement(cn);
 	    }
 	    
-	    // also count voltage sources so we can allocate array
+	    // 同时统计电压源数量，以便分配数组
 	    vscount += ivs;
 	}
 	
@@ -2530,9 +2530,9 @@ MouseOutHandler, MouseWheelHandler {
     void findUnconnectedNodes() {
 	int i, j;
 	
-	// determine nodes that are not connected indirectly to ground.
-	// all nodes must be connected to ground somehow, or else we
-	// will get a matrix error.
+	// 找出未间接连接到地线的节点。
+	// 所有节点都必须以某种方式连接到地线，否则我们
+	// 会得到矩阵错误。
 	boolean closure[] = new boolean[nodeList.size()];
 	boolean changed = true;
 	unconnectedNodes = new Vector<Integer>();
@@ -2544,8 +2544,8 @@ MouseOutHandler, MouseWheelHandler {
 		CircuitElm ce = getElm(i);
 		if (ce instanceof WireElm)
 		    continue;
-		// loop through all ce's nodes to see if they are connected
-		// to other nodes not in closure
+		// 遍历 ce 的所有节点，检查它们是否连接到
+		// 不在闭包中的其他节点
 		boolean hasGround = false;
 		for (j = 0; j < ce.getConnectionNodeCount(); j++) {
 		    boolean hg = ce.hasGroundConnection(j);
@@ -2573,7 +2573,7 @@ MouseOutHandler, MouseWheelHandler {
 	    if (changed)
 		continue;
 
-	    // connect one of the unconnected nodes to ground with a big resistor, then try again
+	    // 用一个大电阻把某个未连接节点接到地线，然后重试
 	    for (i = 0; i != nodeList.size(); i++)
 		if (!closure[i] && !getCircuitNode(i).internal) {
 		    unconnectedNodes.add(i);
@@ -2586,9 +2586,9 @@ MouseOutHandler, MouseWheelHandler {
 	}
     }
     
-    // take list of unconnected nodes, which we identified earlier, and connect them to ground
-    // with a big resistor.  otherwise we will get matrix errors.  The resistor has to be big,
-    // otherwise circuits like 555 Square Wave will break
+    // 取之前识别出的未连接节点列表，用大电阻将它们接到地线。
+    // 否则我们会得到矩阵错误。这个电阻必须足够大，
+    // 否则像 555 方波发生器等电路会出问题
     void connectUnconnectedNodes() {
 	int i;
 	for (i = 0; i != unconnectedNodes.size(); i++) {
@@ -2602,7 +2602,7 @@ MouseOutHandler, MouseWheelHandler {
 	
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElm ce = getElm(i);
-	    // look for inductors with no current path
+	    // 查找没有电流路径的电感
 	    if (ce instanceof InductorElm) {
 		FindPathInfo fpi = new FindPathInfo(FindPathInfo.INDUCT, ce,
 						    ce.getNode(1));
@@ -2611,7 +2611,7 @@ MouseOutHandler, MouseWheelHandler {
 		    ce.reset();
 		}
 	    }
-	    // look for current sources with no current path
+	    // 查找没有电流路径的电流源
 	    if (ce instanceof CurrentElm) {
 		CurrentElm cur = (CurrentElm) ce;
 		FindPathInfo fpi = new FindPathInfo(FindPathInfo.INDUCT, ce,
@@ -2628,7 +2628,7 @@ MouseOutHandler, MouseWheelHandler {
 		    cur.broken = false;
 	    }
 	    
-	    // look for voltage source or wire loops.  we do this for voltage sources
+	    // 查找电压源或导线环路。我们对电压源执行此检查
 	    if (ce.getPostCount() == 2) {
 		if (ce instanceof VoltageElm) {
 		    FindPathInfo fpi = new FindPathInfo(FindPathInfo.VOLTAGE, ce,
@@ -2640,7 +2640,7 @@ MouseOutHandler, MouseWheelHandler {
 		}
 	    }
 
-	    // look for path from rail to ground
+	    // 查找从电源轨到地线的通路
 	    if (ce instanceof RailElm || ce instanceof LogicInputElm) {
 		FindPathInfo fpi = new FindPathInfo(FindPathInfo.VOLTAGE, ce, ce.getNode(0));
 		if (fpi.findPath(0)) {
@@ -2649,7 +2649,7 @@ MouseOutHandler, MouseWheelHandler {
 		}
 	    }
 	    
-	    // look for shorted caps, or caps w/ voltage but no R
+	    // 查找短路的电容，或有电压但无电阻的电容
 	    if (ce.isIdealCapacitor()) {
 		FindPathInfo fpi = new FindPathInfo(FindPathInfo.SHORT, ce,
 						    ce.getNode(1));
@@ -2659,11 +2659,11 @@ MouseOutHandler, MouseWheelHandler {
 		} else {
 		    fpi = new FindPathInfo(FindPathInfo.CAP_V, ce, ce.getNode(1));
 		    if (fpi.findPath(ce.getNode(0))) {
-			// loop of ideal capacitors; set a small series resistance to avoid
-			// oscillation in case one of them has voltage on it
+			// 理想电容环路；设置一个小的串联电阻，以避免
+			// 某个电容上有电压时产生振荡
 			((CapacitorElm) ce).setSeriesResistance(.1);
 
-			// return false to re-stamp the circuit
+			// 返回 false 以重新填充电路矩阵
 			return false;
 		    }
 		}
@@ -2672,8 +2672,8 @@ MouseOutHandler, MouseWheelHandler {
 	return true;
     }
     
-    // analyze the circuit when something changes, so it can be simulated.
-    // Most of this has been moved to preStampCircuit() so it can be avoided if the simulation is stopped.
+    // 当电路发生变化时对其进行分析，以便能够进行仿真。
+    // 大部分工作已移到 preStampCircuit() 中，这样在仿真停止时可以跳过。
     void analyzeCircuit() {
 	stopMessage = null;
 	stopElm = null;
@@ -2687,7 +2687,7 @@ MouseOutHandler, MouseWheelHandler {
 	needsStamp = true;
     }
 
-    // do the rest of the pre-stamp circuit analysis
+    // 完成剩余的 pre-stamp 电路分析
     boolean preStampCircuit(boolean subcircuit) {
 	int i, j;
 	nodeList = new Vector<CircuitNode>();
@@ -2695,17 +2695,17 @@ MouseOutHandler, MouseWheelHandler {
 	calculateWireClosure();
 	setGroundNode(subcircuit);
 
-	// allocate nodes and voltage sources
+	// 分配节点和电压源
 	makeNodeList();
 	
 	if (!calcWireInfo())
 	    return false;
-	nodeMap = null; // done with this
+	nodeMap = null; // 已不再需要此映射
 	
 	int vscount = 0;
 	circuitNonLinear = false;
 
-	// determine if circuit is nonlinear.  also set voltage sources
+	// 判断电路是否为非线性，同时设置电压源
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElm ce = getElm(i);
 	    if (ce.nonLinear())
@@ -2718,8 +2718,8 @@ MouseOutHandler, MouseWheelHandler {
 	}
 	voltageSourceCount = vscount;
 
-	// show resistance in voltage sources if there's only one.
-	// can't use voltageSourceCount here since that counts internal voltage sources, like the one in GroundElm
+	// 如果只有一个电压源，则显示其内阻。
+	// 这里不能使用 voltageSourceCount，因为它计入内部电压源，例如 GroundElm 中的那个
 	boolean gotVoltageSource = false;
 	showResistanceInVoltageSources = true;
 	for (i = 0; i != elmList.size(); i++) {
@@ -2737,7 +2737,7 @@ MouseOutHandler, MouseWheelHandler {
 	    return false;
 	
 	nodesWithGroundConnectionCount = nodesWithGroundConnection.size();
-	// only need this for validation
+	// 仅在校验时需要此列表
 	nodesWithGroundConnection = null;
 	
 	timeStep = maxTimeStep;
@@ -2747,12 +2747,12 @@ MouseOutHandler, MouseWheelHandler {
 	return true;
     }
 
-    // do pre-stamping and then stamp circuit
+    // 先进行 pre-stamp 处理，然后填充电路矩阵
     void preStampAndStampCircuit() {
 	int i;
 
-	// preStampCircuit returns false if there's an error.  It can return false if we have capacitor loops
-	// but we just need to try again in that case.  Try again 10 times to avoid infinite loop.
+	// preStampCircuit 在出错时返回 false。存在电容环路时它也会返回 false，
+	// 但那种情况下我们只需重试。重试 10 次以避免无限循环。
 	for (i = 0; i != 10; i++)
 	    if (preStampCircuit(false) || stopMessage != null)
 		break;
@@ -2766,8 +2766,8 @@ MouseOutHandler, MouseWheelHandler {
 	stampCircuit();
     }
 
-    // stamp the matrix, meaning populate the matrix as required to simulate the circuit (for all linear elements, at least).
-    // this gets called after something changes in the circuit, and also when auto-adjusting timestep
+    // 填充矩阵，即按照仿真电路所需填充矩阵（至少对所有线性元件而言）。
+    // 此方法在电路发生变化后调用，也在自动调整时间步长时调用
     void stampCircuit() {
 	int i;
 	int matrixSize = nodeList.size()-1 + voltageSourceCount;
@@ -2787,7 +2787,7 @@ MouseOutHandler, MouseWheelHandler {
 	
 	connectUnconnectedNodes();
 
-	// stamp linear circuit elements
+	// 填充线性电路元件
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElm ce = getElm(i);
 	    ce.setParentList(elmList);
@@ -2797,12 +2797,12 @@ MouseOutHandler, MouseWheelHandler {
 	if (!simplifyMatrix(matrixSize))
 	    return;
 	
-	// check if we called stop()
+	// 检查是否已调用 stop()
 	if (circuitMatrix == null)
 	    return;
 	
-	// if a matrix is linear, we can do the lu_factor here instead of
-	// needing to do it every frame
+	// 如果矩阵是线性的，我们可以在这里做 lu_factor 分解，
+	// 而不必每帧都做
 	if (!circuitNonLinear) {
 	    if (!lu_factor(circuitMatrix, circuitMatrixSize, circuitPermute)) {
 		stop("Singular matrix!", null);
@@ -2810,7 +2810,7 @@ MouseOutHandler, MouseWheelHandler {
 	    }
 	}
 	
-	// copy elmList to an array to avoid a bunch of calls to canCast() when doing simulation
+	// 将 elmList 复制到数组，以避免仿真时大量调用 canCast()
 	elmArr = new CircuitElm[elmList.size()];
 	int scopeElmCount = 0;
 	for (i = 0; i != elmList.size(); i++) {
@@ -2819,7 +2819,7 @@ MouseOutHandler, MouseWheelHandler {
 		scopeElmCount++;
 	}
 	
-	// copy ScopeElms to an array to avoid a second pass over entire list of elms during simulation
+	// 将 ScopeElm 复制到数组，以避免仿真时对整个元件列表进行第二次遍历
 	scopeElmArr = new ScopeElm[scopeElmCount];
 	int j = 0;
 	for (i = 0; i != elmList.size(); i++) {
@@ -2830,8 +2830,8 @@ MouseOutHandler, MouseWheelHandler {
 	needsStamp = false;
     }
 
-    // simplify the matrix; this speeds things up quite a bit, especially for digital circuits.
-    // or at least it did before we added wire removal
+    // 简化矩阵；这能显著加快速度，尤其是对数字电路而言。
+    // 至少在我们加入导线移除功能之前是这样的
     boolean simplifyMatrix(int matrixSize) {
 	int i, j;
 	for (i = 0; i != matrixSize; i++) {
@@ -2847,36 +2847,36 @@ MouseOutHandler, MouseWheelHandler {
 		continue;
 	    double rsadd = 0;
 
-	    // see if this row can be removed
+	    // 看看这一行是否可以被移除
 	    for (j = 0; j != matrixSize; j++) {
 		double q = circuitMatrix[i][j];
 		if (circuitRowInfo[j].type == RowInfo.ROW_CONST) {
-		    // keep a running total of const values that have been
-		    // removed already
+		    // 持续累加已经被
+		    // 移除的常量值
 		    rsadd -= circuitRowInfo[j].value*q;
 		    continue;
 		}
-		// ignore zeroes
+		// 忽略零元素
 		if (q == 0)
 		    continue;
-		// keep track of first nonzero element that is not ROW_CONST
+		// 记录第一个非零且非 ROW_CONST 的元素
 		if (qp == -1) {
 		    qp = j;
 		    qv = q;
 		    continue;
 		}
-		// more than one nonzero element?  give up
+		// 有多个非零元素？放弃
 		break;
 	    }
 	    if (j == matrixSize) {
 		if (qp == -1) {
-		    // probably a singular matrix, try disabling matrix simplification above to check this
+		    // 可能是奇异矩阵，可尝试禁用上面的矩阵简化来检查这一点
 		    stop("Matrix error", null);
 		    return false;
 		}
 		RowInfo elt = circuitRowInfo[qp];
-		// we found a row with only one nonzero nonconst entry; that value
-		// is a constant
+		// 我们找到一行只有一个非零非常量元素；该值
+		// 就是一个常量
 		if (elt.type != RowInfo.ROW_NORMAL) {
 		    System.out.println("type already " + elt.type + " for " + qp + "!");
 		    continue;
@@ -2885,17 +2885,17 @@ MouseOutHandler, MouseWheelHandler {
 //		console("ROW_CONST " + i + " " + rsadd);
 		elt.value = (circuitRightSide[i]+rsadd)/qv;
 		circuitRowInfo[i].dropRow = true;
-		// find first row that referenced the element we just deleted
+		// 找到引用刚删除元素的第一行
 		for (j = 0; j != i; j++)
 		    if (circuitMatrix[j][qp] != 0)
 			break;
-		// start over just before that
+		// 从那一行之前重新开始
 		i = j-1;
 	    }
 	}
 	//System.out.println("ac7");
 
-	// find size of new matrix
+	// 计算新矩阵的大小
 	int nn = 0;
 	for (i = 0; i != matrixSize; i++) {
 	    RowInfo elt = circuitRowInfo[i];
@@ -2908,7 +2908,7 @@ MouseOutHandler, MouseWheelHandler {
 		elt.mapCol = -1;
 	}
 
-	// make the new, simplified matrix
+	// 构建新的简化矩阵
 	int newsize = nn;
 	double newmatx[][] = new double[newsize][newsize];
 	double newrs  []   = new double[newsize];
@@ -2946,9 +2946,9 @@ MouseOutHandler, MouseWheelHandler {
 	return true;
     }
     
-    // make list of posts we need to draw.  posts shared by 2 elements should be hidden, all
-    // others should be drawn.  We can't use the node list for this purpose anymore because wires
-    // have the same node number at both ends.
+    // 生成需要绘制的端点列表。被 2 个元件共享的端点应隐藏，其余
+    // 端点都应绘制。我们不能再为此使用节点列表，因为导线
+    // 两端的节点编号相同。
     void makePostDrawList() {
         HashMap<Point,Integer> postCountMap = new HashMap<Point,Integer>();
 	int i, j;
@@ -2968,8 +2968,8 @@ MouseOutHandler, MouseWheelHandler {
 	    if (entry.getValue() != 2)
 		postDrawList.add(entry.getKey());
 	    
-	    // look for bad connections, posts not connected to other elements which intersect
-	    // other elements' bounding boxes
+	    // 查找错误连接，即未连接到其他元件、却与其他元件的
+	    // 边界框相交的端点
 	    if (entry.getValue() == 1) {
 		boolean bad = false;
 		Point cn = entry.getKey();
@@ -2977,11 +2977,11 @@ MouseOutHandler, MouseWheelHandler {
 		    CircuitElm ce = getElm(j);
 		    if ( ce instanceof GraphicElm )
 			continue;
-		    // does this post intersect elm's bounding box?
+		    // 这个端点是否与元件的边界框相交？
 		    if (!ce.boundingBox.contains(cn.x, cn.y))
 			continue;
 		    int k;
-		    // does this post belong to the elm?
+		    // 这个端点是否属于该元件？
 		    int pc = ce.getPostCount();
 		    for (k = 0; k != pc; k++)
 			if (ce.getPost(k).equals(cn))
@@ -3005,8 +3005,8 @@ MouseOutHandler, MouseWheelHandler {
 	CircuitElm firstElm;
 	int type;
 
-	// State object to help find loops in circuit subject to various conditions (depending on type_)
-	// elm_ = source and destination element.  dest_ = destination node.
+	// 状态对象，用于在满足各种条件时（取决于 type_）帮助查找电路中的环路
+	// elm_ = 起点和终点元件。dest_ = 终点节点。
 	FindPathInfo(int type_, CircuitElm elm_, int dest_) {
 	    dest = dest_;
 	    type = type_;
@@ -3014,13 +3014,13 @@ MouseOutHandler, MouseWheelHandler {
 	    visited  = new boolean[nodeList.size()];
 	}
 
-	// look through circuit for loop starting at node n1 of firstElm, for a path back to
-	// dest node of firstElm
+	// 在电路中查找环路：从 firstElm 的节点 n1 出发，寻找一条能回到
+	// firstElm 的 dest 节点的路径
 	boolean findPath(int n1) {
 	    if (n1 == dest)
 		return true;
 
-	    // depth first search, don't need to revisit already visited nodes!
+	    // 深度优先搜索，无需再次访问已访问过的节点！
 	    if (visited[n1])
 		return false;
 
@@ -3047,26 +3047,26 @@ MouseOutHandler, MouseWheelHandler {
 		if (ce == firstElm)
 		    return false;
 		if (type == INDUCT) {
-		    // inductors need a path free of current sources
+		    // 电感需要一条不含电流源的通路
 		    if (ce instanceof CurrentElm)
 			return false;
 		}
 		if (type == VOLTAGE) {
-		    // when checking for voltage loops, we only care about voltage sources/wires/ground
+		    // 检查电压环路时，我们只关心电压源/导线/地线
 		    if (!(ce.isWireEquivalent() || ce instanceof VoltageElm || ce instanceof GroundElm))
 			return false;
 		}
-		// when checking for shorts, just check wires
+		// 检查短路时，只检查导线
 		if (type == SHORT && !ce.isWireEquivalent())
 		    return false;
 		if (type == CAP_V) {
-		    // checking for capacitor/voltage source loops
+		    // 检查电容/电压源环路
 		    if (!(ce.isWireEquivalent() || ce.isIdealCapacitor() || ce instanceof VoltageElm))
 			return false;
 		}
 		if (n1 == 0) {
-		    // look for posts which have a ground connection;
-		    // our path can go through ground
+		    // 查找与地线有连接的端点；
+		    // 我们的路径可以经过地线
 		    int j;
 		    for (j = 0; j != ce.getConnectionNodeCount(); j++)
 			if (ce.hasGroundConnection(j) && findPath(ce.getConnectionNode(j)))
@@ -3078,7 +3078,7 @@ MouseOutHandler, MouseWheelHandler {
 			if (ce.hasGroundConnection(j) && findPath(0))
 			    return true;
 			if (type == INDUCT && ce instanceof InductorElm) {
-			    // inductors can use paths with other inductors of matching current
+			    // 电感可以利用其他电流匹配的电感的路径
 			    double c = ce.getCurrent();
 			    if (j == 0)
 				c = -c;
@@ -3102,22 +3102,22 @@ MouseOutHandler, MouseWheelHandler {
 
     void stop(String s, CircuitElm ce) {
 	stopMessage = Locale.LS(s);
-	circuitMatrix = null;  // causes an exception
+	circuitMatrix = null;  // 会导致异常
 	stopElm = ce;
 	setSimRunning(false);
 	analyzeFlag = false;
 //	cv.repaint();
     }
     
-    // control voltage source vs with voltage from n1 to n2 (must
-    // also call stampVoltageSource())
+    // 控制电压源 vs，其电压为 n1 到 n2 之间的电压（必须
+    // 同时调用 stampVoltageSource()）
     void stampVCVS(int n1, int n2, double coef, int vs) {
 	int vn = nodeList.size()+vs;
 	stampMatrix(vn, n1, coef);
 	stampMatrix(vn, n2, -coef);
     }
     
-    // stamp independent voltage source #vs, from n1 to n2, amount v
+    // 填充独立电压源 #vs，从 n1 到 n2，电压值为 v
     void stampVoltageSource(int n1, int n2, int vs, double v) {
 	int vn = nodeList.size()+vs;
 	stampMatrix(vn, n1, -1);
@@ -3127,7 +3127,7 @@ MouseOutHandler, MouseWheelHandler {
 	stampMatrix(n2, vn, -1);
     }
 
-    // use this if the amount of voltage is going to be updated in doStep(), by updateVoltageSource()
+    // 如果电压值将在 doStep() 中通过 updateVoltageSource() 更新，请使用此方法
     void stampVoltageSource(int n1, int n2, int vs) {
 	int vn = nodeList.size()+vs;
 	stampMatrix(vn, n1, -1);
@@ -3137,7 +3137,7 @@ MouseOutHandler, MouseWheelHandler {
 	stampMatrix(n2, vn, -1);
     }
     
-    // update voltage source in doStep()
+    // 在 doStep() 中更新电压源
     void updateVoltageSource(int n1, int n2, int vs, double v) {
 	int vn = nodeList.size()+vs;
 	stampRightSide(vn, v);
@@ -3163,7 +3163,7 @@ MouseOutHandler, MouseWheelHandler {
 	stampMatrix(n2, n1, -r0);
     }
 
-    // specify that current from cn1 to cn2 is equal to voltage from vn1 to 2, divided by g
+    // 指定从 cn1 到 cn2 的电流等于从 vn1 到 2 的电压除以 g
     void stampVCCurrentSource(int cn1, int cn2, int vn1, int vn2, double g) {
 	stampMatrix(cn1, vn1, g);
 	stampMatrix(cn2, vn2, g);
@@ -3176,16 +3176,16 @@ MouseOutHandler, MouseWheelHandler {
 	stampRightSide(n2, i);
     }
 
-    // stamp a current source from n1 to n2 depending on current through vs
+    // 填充一个电流源，其 n1 到 n2 的电流取决于流过 vs 的电流
     void stampCCCS(int n1, int n2, int vs, double gain) {
 	int vn = nodeList.size()+vs;
 	stampMatrix(n1, vn, gain);
 	stampMatrix(n2, vn, -gain);
     }
 
-    // stamp value x in row i, column j, meaning that a voltage change
-    // of dv in node j will increase the current into node i by x dv.
-    // (Unless i or j is a voltage source node.)
+    // 在第 i 行第 j 列填入值 x，含义是：节点 j 上的电压变化
+    // dv 将使流入节点 i 的电流增加 x dv。
+    //（除非 i 或 j 是电压源节点。）
     void stampMatrix(int i, int j, double x) {
 	if (Double.isInfinite(x))
 	    debugger();
@@ -3208,8 +3208,8 @@ MouseOutHandler, MouseWheelHandler {
 	}
     }
 
-    // stamp value x on the right side of row i, representing an
-    // independent current source flowing into node i
+    // 在第 i 行的右侧填入值 x，表示一个
+    // 流入节点 i 的独立电流源
     void stampRightSide(int i, double x) {
 	if (i > 0) {
 	    if (circuitNeedsMap) {
@@ -3221,21 +3221,21 @@ MouseOutHandler, MouseWheelHandler {
 	}
     }
 
-    // indicate that the value on the right side of row i changes in doStep()
+    // 表示第 i 行右侧的值会在 doStep() 中变化
     void stampRightSide(int i) {
 	//System.out.println("rschanges true " + (i-1));
 	if (i > 0)
 	    circuitRowInfo[i-1].rsChanges = true;
     }
     
-    // indicate that the values on the left side of row i change in doStep()
+    // 表示第 i 行左侧的值会在 doStep() 中变化
     void stampNonLinear(int i) {
 	if (i > 0)
 	    circuitRowInfo[i-1].lsChanges = true;
     }
 
     double getIterCount() {
-    	// IES - remove interaction
+    	// IES - 移除交互
 	if (speedBar.getValue() == 0)
 	   return 0;
 
@@ -3243,8 +3243,8 @@ MouseOutHandler, MouseWheelHandler {
 
     }
 
-    // we need to calculate wire currents for every iteration if someone is viewing a wire in the
-    // scope.  Otherwise we can do it only once per frame.
+    // 如果有人正在示波器中查看导线，我们需要在每次迭代时都计算导线电流。
+    // 否则我们可以每帧只计算一次。
     boolean canDelayWireProcessing() {
 	int i;
 	for (i = 0; i != scopeCount; i++)
@@ -3276,8 +3276,8 @@ MouseOutHandler, MouseWheelHandler {
 	    return;
 	}
 	
-	// Check if we don't need to run simulation (for very slow simulation speeds).
-	// If the circuit changed, do at least one iteration to make sure everything is consistent.
+	// 检查我们是否不需要运行仿真（针对非常慢的仿真速度）。
+	// 如果电路已更改，则至少执行一次迭代，以确保一切一致。
 	if (1000 >= steprate*(tm-lastIterTime) && !didAnalyze)
 	    return;
 	
@@ -3285,14 +3285,14 @@ MouseOutHandler, MouseWheelHandler {
 	
 	int timeStepCountAtFrameStart = timeStepCount;
 	
-	// keep track of iterations completed without convergence issues
+	// 跟踪无收敛问题完成的迭代次数
 	int goodIterations = 100;
 	
 	int frameTimeLimit = (int) (1000/minFrameRate);
 	
 	for (iter = 1; ; iter++) {
 	    if (goodIterations >= 3 && timeStep < maxTimeStep) {
-		// things are going well, double the time step
+		// 一切顺利，将时间步长加倍
 		timeStep = Math.min(timeStep*2, maxTimeStep);
 		console("timestep up = " + timeStep + " at " + t);
 		stampCircuit();
@@ -3323,7 +3323,7 @@ MouseOutHandler, MouseWheelHandler {
 		boolean printit = debugprint;
 		debugprint = false;
 		if (circuitMatrixSize < 8) {
-		    // we only need this for debugging purposes, so skip it for large matrices 
+		    // 我们仅出于调试目的需要它，因此对大矩阵跳过此检查 
 		    for (j = 0; j != circuitMatrixSize; j++) {
 			for (i = 0; i != circuitMatrixSize; i++) {
 			    double x = circuitMatrix[i][j];
@@ -3346,7 +3346,7 @@ MouseOutHandler, MouseWheelHandler {
 		    console("done");
 		}
 		if (circuitNonLinear) {
-		    // stop if converged (elements check for convergence in doStep())
+		    // 若已收敛则停止（元件在 doStep() 中检查收敛）
 		    if (converged && subiter > 0)
 			break;
 		    if (!lu_factor(circuitMatrix, circuitMatrixSize,
@@ -3362,7 +3362,7 @@ MouseOutHandler, MouseWheelHandler {
 		    break;
 	    }
 	    if (subiter == subiterCount) {
-		// convergence failed
+		// 收敛失败
 		goodIterations = 0;
 		if (adjustTimeStep) {
 		    timeStep /= 2;
@@ -3373,7 +3373,7 @@ MouseOutHandler, MouseWheelHandler {
 		    stop("Convergence failed!", null);
 		    break;
 		}
-		// we reduced the timestep.  reset circuit state to the way it was at start of iteration
+		// 我们减小了时间步长。将电路状态重置为迭代开始时的状态
 		setNodeVoltages(lastNodeVoltages);
 		stampCircuit();
 		continue;
@@ -3399,15 +3399,15 @@ MouseOutHandler, MouseWheelHandler {
 	    for (i=0; i != scopeElmArr.length; i++)
 		scopeElmArr[i].stepScope();
 	    callTimeStepHook();
-	    // save last node voltages so we can restart the next iteration if necessary
+	    // 保存上一次的节点电压，以便必要时能重启下一次迭代
 	    for (i = 0; i != lastNodeVoltages.length; i++)
 		lastNodeVoltages[i] = nodeVoltages[i];
 //	    console("set lastrightside at " + t + " " + lastNodeVoltages);
 		
 	    tm = System.currentTimeMillis();
 	    lit = tm;
-	    // Check whether enough time has elapsed to perform an *additional* iteration after
-	    // those we have already completed.  But limit total computation time to 50ms (20fps) by default
+	    // 检查是否已过去足够的时间，以便在已完成迭代之后
+	    // 再执行一次*额外*迭代。但默认将总计算时间限制在 50ms（20fps）内
 	    if ((timeStepCount-timeStepCountAtFrameStart)*1000 >= steprate*(tm-lastIterTime) || (tm-lastFrameTime > frameTimeLimit))
 		break;
 	    if (!simRunning)
@@ -3419,7 +3419,7 @@ MouseOutHandler, MouseWheelHandler {
 //	System.out.println((System.currentTimeMillis()-lastFrameTime)/(double) iter);
     }
 
-    // set node voltages given right side found by solving matrix
+    // 根据求解矩阵得到的右侧值设置节点电压
     void applySolvedRightSide(double rs[]) {
 //	console("setvoltages " + rs);
 	int j;
@@ -3445,7 +3445,7 @@ MouseOutHandler, MouseWheelHandler {
 	setNodeVoltages(nodeVoltages);
     }
     
-    // set node voltages in each element given an array of node voltages
+    // 给定节点电压数组，在每个元件中设置节点电压
     void setNodeVoltages(double nv[]) {
 	int j, k;
 	for (j = 0; j != nv.length; j++) {
@@ -3458,12 +3458,12 @@ MouseOutHandler, MouseWheelHandler {
 	}
     }
     
-    // we removed wires from the matrix to speed things up.  in order to display wire currents,
-    // we need to calculate them now.
+    // 为了加快速度，我们从矩阵中移除了导线。为了显示导线电流，
+    // 我们现在需要计算它们。
     void calcWireCurrents() {
 	int i;
 	
-	// for debugging
+	// 用于调试
 	//for (i = 0; i != wireInfoList.size(); i++)
 	 //   wireInfoList.get(i).wire.setCurrent(-1, 1.23);
 	
@@ -3477,8 +3477,8 @@ MouseOutHandler, MouseWheelHandler {
 		int n = ce.getNodeAtPoint(p.x, p.y);
 		cur += ce.getCurrentIntoNode(n);
 	    }
-	    // get correct current polarity
-	    // (LabeledNodes may have wi.post == 1, in which case we flip the current sign)
+	    // 获取正确的电流极性
+	    //（LabeledNode 的 wi.post 可能为 1，此时我们需要翻转电流符号）
 	    if (wi.post == 0 || (wi.wire instanceof LabeledNodeElm))
 		wi.wire.setCurrent(-1, cur);
 	    else
@@ -3529,7 +3529,7 @@ MouseOutHandler, MouseWheelHandler {
 		$doc.body.appendChild(saveasInput);
 		saveasInput.click();
 		saveasInput.addEventListener('cancel', function(){
-		// oncancel don't work. The element will not be deleted but we can still work with this
+		// oncancel 事件不起作用。元素不会被删除，但我们仍然可以使用它
 		// https://github.com/nwjs/nw.js/issues/7658
 			saveasInput.remove()
 		});
@@ -3621,7 +3621,7 @@ MouseOutHandler, MouseWheelHandler {
     	}
     	if (item=="newwindow") {
     	    //Window.open(Document.get().getURL(), "_blank", "");
-    	    //Maybe this can help with lags:
+    	    //也许这有助于减少卡顿：
     	    executeJS("nw.Window.open('circuitjs.html', {new_instance: true, mixed_context: false});");
     	}
     	if (item=="save"){
@@ -3696,7 +3696,7 @@ MouseOutHandler, MouseWheelHandler {
     	if (item=="redo")
     		doRedo();
     	
-    	// if the mouse is hovering over an element, and a shortcut key is pressed, operate on that element (treat it like a context menu item selection)
+    	// 如果鼠标悬停在某个元件上且按下了快捷键，则对该元件执行操作（将其视为右键菜单项的选择）
     	if (menu == "key" && mouseElm != null) {
     	    menuElm = mouseElm;
     	    menu = "elm";
@@ -3790,7 +3790,7 @@ MouseOutHandler, MouseWheelHandler {
     	    elmList.addElement(newScope);
     	    newScope.setScopeElm(menuElm);
     	    
-    	    // need to rebuild scopeElmArr
+    	    // 需要重建 scopeElmArr
     	    needAnalyze();
 	}
     	
@@ -3830,15 +3830,15 @@ MouseOutHandler, MouseWheelHandler {
     	    	    newScope.setElmScope(scopes[menuScope]);
     	    	    
     	    	    int i;
-    	    	    // remove scope from list.  setupScopes() will fix the positions
+    	    	    // 从列表中移除示波器。setupScopes() 会修正位置
     	    	    for (i = menuScope; i < scopeCount; i++)
     	    		scopes[i] = scopes[i+1];
     	    	    scopeCount--;
 
-    	            needAnalyze();      // need to rebuild scopeElmArr
+    	            needAnalyze();      // 需要重建 scopeElmArr
     		}
     		if (item=="remove")
-    		    	s.setElm(null);  // setupScopes() will clean this up
+    		    	s.setElm(null);  // setupScopes() 会清理此项
     		if (item=="removeplot")
 			s.removePlot(menuPlot);
     		if (item=="speed2")
@@ -3879,7 +3879,7 @@ MouseOutHandler, MouseWheelHandler {
     	//			  ((MenuItem) e.getSource()).getLabel());
     	//	}
 
-    	// IES: Moved from itemStateChanged()
+    	// IES：从 itemStateChanged() 移来
     	if (menu=="main") {
     		if (contextPanel!=null)
     			contextPanel.hide();
@@ -3971,7 +3971,7 @@ MouseOutHandler, MouseWheelHandler {
 	if (s==0)
 	    s=1;
     	if (scopes[s].position != scopes[s-1].position) {
-        	if ( s + 1 < scopeCount && scopes[s+1].position == scopes[s].position) // Allow you to unstack by selecting the top scope in the stack
+        	if ( s + 1 < scopeCount && scopes[s+1].position == scopes[s].position) // 允许你通过选择堆栈中最顶部的示波器来取消堆叠
         	    return true;
         	else
         	    return false;
@@ -3998,7 +3998,7 @@ MouseOutHandler, MouseWheelHandler {
     	if (s == 0) {
     		s = 1;
     	}
-    	if (scopes[s].position != scopes[s-1].position) // Allow you to unstack by selecting the top scope in the stack
+    	if (scopes[s].position != scopes[s-1].position) // 允许你通过选择堆栈中最顶部的示波器来取消堆叠
     	    s++;
     	for (; s < scopeCount; s++)
     		scopes[s].position++;
@@ -4147,7 +4147,7 @@ MouseOutHandler, MouseWheelHandler {
 	f |= (voltsCheckItem.getState()) ? 0 : 4;
 	f |= (powerCheckItem.getState()) ? 8 : 0;
 	f |= (showValuesCheckItem.getState()) ? 0 : 16;
-	// 32 = linear scale in afilter
+	// 32 = afilter 中的线性刻度
 	f |= adjustTimeStep ? 64 : 0;
 	String dump = "$ " + f + " " +
 	    maxTimeStep + " " + getIterCount() + " " +
@@ -4200,11 +4200,11 @@ MouseOutHandler, MouseWheelHandler {
 				}
 
 				public void onResponseReceived(Request request, Response response) {
-					// processing goes here
+					// 在此处进行处理
 					if (response.getStatusCode()==Response.SC_OK) {
 					String text = response.getText();
 					processSetupList(text.getBytes(), openDefault);
-					// end or processing
+					// 处理结束
 					}
 					else { 
 						Window.alert(Locale.LS("Can't load circuit list!"));
@@ -4320,7 +4320,7 @@ MouseOutHandler, MouseWheelHandler {
     
 	void readSetupFile(String str, String title) {
 		System.out.println(str);
-		// don't avoid caching here, it's unnecessary and makes offline PWA's not work
+		// 这里不要禁用缓存，没必要，而且会使离线 PWA 无法工作
 		String url=GWT.getModuleBaseURL()+"circuits/"+str; // +"?v="+random.nextInt(); 
 		loadFileFromURL(url);
 		if (title != null)
@@ -4401,7 +4401,7 @@ MouseOutHandler, MouseWheelHandler {
 	int p;
 	for (p = 0; p < len; ) {
 	    int l;
-	    int linelen = len-p; // IES - changed to allow the last line to not end with a delim.
+	    int linelen = len-p; // IES - 修改为允许最后一行不以分隔符结尾。
 	    for (l = 0; l != len-p; l++)
 		if (b[l+p] == '\n' || b[l+p] == '\r') {
 		    linelen = l++;
@@ -4437,12 +4437,12 @@ MouseOutHandler, MouseWheelHandler {
 			break;
 		    }
 		    if (tint == '%' || tint == '?' || tint == 'B') {
-			// ignore afilter-specific stuff
+			// 忽略 afilter 特有的内容
 			break;
 		    }
-		    // do not add new symbols here without testing export as link
+		    // 未经“导出为链接”测试，不要在此添加新符号
 		    
-		    // if first character is a digit then parse the type as a number
+		    // 如果第一个字符是数字，则将类型解析为数字
 		    if (tint >= '0' && tint <= '9')
 			tint = new Integer(type).intValue();
 		    
@@ -4476,8 +4476,8 @@ MouseOutHandler, MouseWheelHandler {
 			break;
 		    }
 		    /*
-		     * debug code to check if allocNodes() is called in constructor.  It gets called in
-		     * setPoints() but that doesn't get called for subcircuits.
+		     * 调试代码，用于检查构造函数中是否调用了 allocNodes()。它在
+		     * setPoints() 中被调用，但 setPoints() 不会为子电路调用。
 		    double vv[] = newce.volts;
 		    int vc = newce.getPostCount() + newce.getInternalNodeCount();
 		    if (vv.length != vc)
@@ -4498,7 +4498,7 @@ MouseOutHandler, MouseWheelHandler {
 	setPowerBarEnable();
 	enableItems();
 	if ((flags & RC_RETAIN) == 0) {
-	    // create sliders as needed
+	    // 按需创建滑块
 	    for (i = 0; i < adjustables.size(); i++) {
 		if (!adjustables.get(i).createSlider(this))
 		    adjustables.remove(i--);
@@ -4512,11 +4512,11 @@ MouseOutHandler, MouseWheelHandler {
 	if ((flags & RC_SUBCIRCUITS) != 0)
 	    updateModels();
 	
-	AudioInputElm.clearCache();  // to save memory
-	DataInputElm.clearCache();  // to save memory
+	AudioInputElm.clearCache();  // 以节省内存
+	DataInputElm.clearCache();  // 以节省内存
     }
 
-    // delete sliders for an element
+    // 删除某个元件的滑块
     void deleteSliders(CircuitElm elm) {
 	int i;
 	if (adjustables == null)
@@ -4540,7 +4540,7 @@ MouseOutHandler, MouseWheelHandler {
 	int flags = new Integer(st.nextToken()).intValue();
 	
 	if ((importFlags & RC_RETAIN) != 0) {
-            // need to set small grid if pasted circuit uses it
+            // 如果粘贴的电路使用小网格，则需要设置小网格
 	    if ((flags & 2) != 0)
 		smallGridCheckItem.setState(true);
 	    return;
@@ -4597,7 +4597,7 @@ MouseOutHandler, MouseWheelHandler {
     }
     
     public void mouseDragged(MouseMoveEvent e) {
-    	// ignore right mouse button with no modifiers (needed on PC)
+    	// 忽略不带修饰键的鼠标右键（在 PC 上需要）
     	if (e.getNativeButton()==NativeEvent.BUTTON_RIGHT) {
     		if (!(e.isMetaKeyDown() ||
     				e.isShiftKeyDown() ||
@@ -4640,8 +4640,8 @@ MouseOutHandler, MouseWheelHandler {
     		if (mouseElm == null)
     		    selectArea(gx, gy, e.isShiftKeyDown());
     		else if (!noEditCheckItem.getState()) {
-    		    // wait short delay before dragging.  This is to fix problem where switches were accidentally getting
-    		    // dragged when tapped on mobile devices
+    		    // 拖动前稍作延迟。这是为了修复在移动设备上点按时
+    		    // 开关被意外拖动的问题
     		    if (System.currentTimeMillis()-mouseDownTime < 150)
     			return;
     		
@@ -4757,14 +4757,14 @@ MouseOutHandler, MouseWheelHandler {
   //  	console("dx="+dx+"dragGridx="+dragGridX);
     	int dy = y-dragGridY;
     	if (dx == 0 && dy == 0) {
-    	    // don't leave mouseElm selected if we selected it above
+    	    // 如果上面选中了 mouseElm，则不要让它保持选中状态
     	    if (me)
     		mouseElm.setSelected(false);
     	    return false;
     	}
     	boolean allowed = true;
 
-    	// check if moves are allowed
+    	// 检查移动是否允许
     	for (i = 0; allowed && i != elmList.size(); i++) {
     	    CircuitElm ce = getElm(i);
     	    if (ce.isSelected() && !ce.allowMove(dx, dy))
@@ -4780,7 +4780,7 @@ MouseOutHandler, MouseWheelHandler {
     	    needAnalyze();
     	}
 
-    	// don't leave mouseElm selected if we selected it above
+    	// 如果上面选中了 mouseElm，则不要让它保持选中状态
     	if (me)
     		mouseElm.setSelected(false);
 
@@ -4799,12 +4799,12 @@ MouseOutHandler, MouseWheelHandler {
     		return;
     	
     	if (all) {
-    	    // go through all elms
+    	    // 遍历所有元件
     	    int i;
     	    for (i = 0; i != elmList.size(); i++) {
     		CircuitElm e = elmList.get(i);
     		
-    		// which post do we move?
+    		// 我们要移动哪个端点？
     		int p = 0;
     		if (e.x == dragGridX && e.y == dragGridY)
     		    p = 0;
@@ -4834,7 +4834,7 @@ MouseOutHandler, MouseWheelHandler {
 	else
 	    y = ce.y;
 	
-	// don't create zero-length wire
+	// 不要创建零长度导线
 	if (x == ce.x && y == ce.y || x == ce.x2 && y == ce.y2)
 	    return;
 	
@@ -4935,7 +4935,7 @@ MouseOutHandler, MouseWheelHandler {
     	scopeMenuSelected = -1;
     }
     
-    // convert screen coordinates to grid coordinates by inverting circuit transform
+    // 通过反转电路变换，将屏幕坐标转换为网格坐标
     int inverseTransformX(double x) {
 	return (int) ((x-transform[4])/transform[0]);
     }
@@ -4944,7 +4944,7 @@ MouseOutHandler, MouseWheelHandler {
 	return (int) ((y-transform[5])/transform[3]);
     }
     
-    // convert grid coordinates to screen coordinates
+    // 将网格坐标转换为屏幕坐标
     int transformX(double x) {
 	return (int) ((x*transform[0]) + transform[4]);
     }
@@ -4955,10 +4955,10 @@ MouseOutHandler, MouseWheelHandler {
     
     
 
-    // need to break this out into a separate routine to handle selection,
-    // since we don't get mouse move events on mobile
+    // 需要把它拆分为一个单独的过程来处理选择，
+    // 因为在移动设备上我们收不到鼠标移动事件
     public void mouseSelect(MouseEvent<?> e) {
-    	//	The following is in the original, but seems not to work/be needed for GWT
+    	//	以下内容在原始版本中存在，但在 GWT 中似乎不工作/不需要
     	//    	if (e.getNativeButton()==NativeEvent.BUTTON_LEFT)
     	//	    return;
     	CircuitElm newMouseElm=null;
@@ -5015,8 +5015,8 @@ MouseOutHandler, MouseWheelHandler {
     		    scopeSelected = i;
     		}
     	    }
-    		//	    // the mouse pointer was not in any of the bounding boxes, but we
-    		//	    // might still be close to a post
+    		//	    // 鼠标指针不在任何边界框内，但我们
+    		//	    // 可能仍然靠近某个端点
     		for (i = 0; i != elmList.size(); i++) {
     			CircuitElm ce = getElm(i);
     			if (mouseMode==MODE_DRAG_POST ) {
@@ -5040,7 +5040,7 @@ MouseOutHandler, MouseWheelHandler {
     		}
     	} else {
     		mousePost = -1;
-    		// look for post close to the mouse pointer
+    		// 查找靠近鼠标指针的端点
     		for (i = 0; i != newMouseElm.getPostCount(); i++) {
     			Point pt = newMouseElm.getPost(i);
     			if (Graphics.distanceSq(pt.x, pt.y, gx, gy) < 26)
@@ -5151,11 +5151,11 @@ MouseOutHandler, MouseWheelHandler {
 	return false;
     }
     
-    // check if the user can create sliders for this element
+    // 检查用户能否为此元件创建滑块
     boolean sliderItemEnabled(CircuitElm elm) {
 	int i;
 	
-	// prevent confusion
+	// 防止混淆
 	if (elm instanceof VarRailElm || elm instanceof PotElm)
 	    return false;
 	
@@ -5181,7 +5181,7 @@ MouseOutHandler, MouseWheelHandler {
 //    public void mouseClicked(MouseEvent e) {
     public void onClick(ClickEvent e) {
     	e.preventDefault();
-//    	//IES - remove inteaction
+//    	//IES - 移除交互
 ////	if ( e.getClickCount() == 2 && !didSwitch )
 ////	    doEditMenu(e);
 //	if (e.getNativeButton() == NativeEvent.BUTTON_LEFT) {
@@ -5219,22 +5219,22 @@ MouseOutHandler, MouseWheelHandler {
 //    public void mousePressed(MouseEvent e) {
     	e.preventDefault();
     	
-    	// make sure canvas has focus, not stop button or something else, so all shortcuts work
+    	// 确保画布获得焦点，而不是停止按钮或其他控件，这样所有快捷键才能生效
     	cv.setFocus(true);
     	
-	stopElm = null; // if stopped, allow user to select other elements to fix circuit 
+	stopElm = null; // 如果已停止，允许用户选择其他元件来修复电路 
     	menuX = menuClientX = e.getX();
     	menuY = menuClientY = e.getY();
     	mouseDownTime = System.currentTimeMillis();
     	
-    	// maybe someone did copy in another window?  should really do this when
-    	// window receives focus
+    	// 也许有人在另一个窗口执行了复制？其实应该在
+    	// 窗口获得焦点时做这件事
     	enablePaste();
     	
     	if (e.getNativeButton() != NativeEvent.BUTTON_LEFT && e.getNativeButton() != NativeEvent.BUTTON_MIDDLE)
     		return;
     	
-    	// set mouseElm in case we are on mobile
+    	// 设置 mouseElm，以防我们在移动设备上
     	mouseSelect(e);
     	
     	mouseDragging=true;
@@ -5245,7 +5245,7 @@ MouseOutHandler, MouseWheelHandler {
     		return;
     	}
 	if (e.getNativeButton() == NativeEvent.BUTTON_LEFT) {
-//	    // left mouse
+//	    // 鼠标左键
 	    tempMouseMode = mouseMode;
 	    if (e.isAltKeyDown() && e.isMetaKeyDown())
 		tempMouseMode = MODE_DRAG_COLUMN;
@@ -5282,13 +5282,13 @@ MouseOutHandler, MouseWheelHandler {
 	int gx = inverseTransformX(e.getX());
 	int gy = inverseTransformY(e.getY());
 	if (doSwitch(gx, gy)) {
-	    // do this BEFORE we change the mouse mode to MODE_DRAG_POST!  Or else logic inputs
-	    // will add dots to the whole circuit when we click on them!
+	    // 在把鼠标模式改为 MODE_DRAG_POST 之前先做这件事！否则点击逻辑输入
+	    // 会给整个电路加上电流点！
             didSwitch = true;
 	    return;
 	}
 	
-	// IES - Grab resize handles in select mode if they are far enough apart and you are on top of them
+	// IES - 在选择模式下，如果调整大小手柄相距足够远且鼠标位于其上，则抓取手柄
 	if (tempMouseMode == MODE_SELECT && mouseElm!=null && !noEditCheckItem.getState() &&
 		mouseElm.getHandleGrabbedClose(gx, gy, POSTGRABSQ, MINPOSTGRABSIZE) >=0 &&
 		!anySelectedButMouse())
@@ -5318,8 +5318,8 @@ MouseOutHandler, MouseWheelHandler {
 
     static int lastSubcircuitMenuUpdate;
     
-    // check/uncheck/enable/disable menu items as appropriate when menu bar clicked on, or when
-    // right mouse menu accessed.  also displays shortcuts as a side effect
+    // 当菜单栏被点击或右键菜单被打开时，相应地勾选/取消勾选/启用/禁用菜单项。
+    // 副作用是还会显示快捷键
     void doMainMenuChecks() {
     	int c = mainMenuItems.size();
     	int i;
@@ -5327,8 +5327,8 @@ MouseOutHandler, MouseWheelHandler {
     	    	String s = mainMenuItemNames.get(i);
     		mainMenuItems.get(i).setState(s==mouseModeStr);
 
-	        // Code to disable draw menu items when cct is not editable, but no used in this version as it
-	        // puts up a dialog box instead (see menuPerformed).
+	        // 当电路不可编辑时禁用 Draw 菜单项的代码，但本版本中未使用，
+	        // 因为取而代之的是弹出对话框（见 menuPerformed）。
     		//if (s.length() > 3 && s.substring(s.length()-3)=="Elm")
     		    //mainMenuItems.get(i).setEnabled(!noEditCheckItem.getState());
     	}
@@ -5337,7 +5337,7 @@ MouseOutHandler, MouseWheelHandler {
     	combineAllItem.setEnabled(scopeCount > 1);
     	separateAllItem.setEnabled(scopeCount > 0);
     	
-    	// also update the subcircuit menu if necessary
+    	// 如有必要，同时更新子电路菜单
     	if (lastSubcircuitMenuUpdate != CustomCompositeModel.sequenceNumber)
     	    composeSubcircuitMenu();
     }
@@ -5347,11 +5347,11 @@ MouseOutHandler, MouseWheelHandler {
     	e.preventDefault();
     	mouseDragging=false;
     	
-    	// click to clear selection
+    	// 单击以清除选择
     	if (tempMouseMode == MODE_SELECT && selectedArea == null)
     	    clearSelection();
 
-    	// cmd-click = split wire
+    	// cmd-单击 = 拆分导线
     	if (tempMouseMode == MODE_DRAG_POST && draggingPost == -1)
     	    doSplit(mouseElm);
     	
@@ -5365,8 +5365,8 @@ MouseOutHandler, MouseWheelHandler {
     		circuitChanged = true;
     	}
     	if (dragElm != null) {
-    		// if the element is zero size then don't create it
-    		// IES - and disable any previous selection
+    		// 如果元件尺寸为零，则不创建它
+    		// IES - 并取消之前的任何选择
     	    	if (dragElm.creationFailed()) {
     			dragElm.delete();
     			if (mouseMode == MODE_SELECT || mouseMode == MODE_DRAG_SELECTED)
@@ -5395,8 +5395,8 @@ MouseOutHandler, MouseWheelHandler {
     public void onMouseWheel(MouseWheelEvent e) {
     	e.preventDefault();
     	
-    	// once we start zooming, don't allow other uses of mouse wheel for a while
-    	// so we don't accidentally edit a resistor value while zooming
+    	// 一旦开始缩放，短时间内不允许鼠标滚轮的其他用途，
+    	// 以免在缩放时意外修改电阻值
     	boolean zoomOnly = System.currentTimeMillis() < zoomTime+1000;
     	
     	if (noEditCheckItem.getState() || !mouseWheelEditCheckItem.getState())
@@ -5436,8 +5436,8 @@ MouseOutHandler, MouseWheelHandler {
 	int cy = inverseTransformY(constY);
 	transform[0] = transform[3] = newScale;
 
-	// adjust translation to keep center of screen constant
-	// inverse transform = (x-t4)/t0
+	// 调整平移量，使屏幕中心保持不变
+	// 逆变换 = (x-t4)/t0
 	transform[4] = constX - cx*newScale;
 	transform[5] = constY - cy*newScale;
     }
@@ -5631,9 +5631,9 @@ MouseOutHandler, MouseWheelHandler {
     	clipboard = "";
     	for (i = elmList.size()-1; i >= 0; i--) {
     		CircuitElm ce = getElm(i);
-    		// ScopeElms don't cut-paste well because their reference to a parent
-    		// elm by number get's messed up in the dump. For now we will just ignore them
-    		// until I can be bothered to come up with something better
+    		// ScopeElm 不太适合剪切-粘贴，因为它们对父元件的数字引用
+    		// 在导出（dump）中会被打乱。目前我们先忽略它们，
+    		// 直到我想到更好的办法
     		if (willDelete(ce) && !(ce instanceof ScopeElm) ) {
     			clipboard += ce.dump() + "\n";
     		}
@@ -5675,14 +5675,14 @@ MouseOutHandler, MouseWheelHandler {
 
 
     void deleteUnusedScopeElms() {
-	// Remove any scopeElms for elements that no longer exist
+	// 移除指向已不存在元件的所有 ScopeElm
 	for (int i = elmList.size()-1; i >= 0; i--) {
     		CircuitElm ce = getElm(i);
     		if (ce instanceof ScopeElm && (((ScopeElm) ce).elmScope.needToRemove() )) {
     			ce.delete();
     			elmList.removeElementAt(i);
     			
-    			// need to rebuild scopeElmArr
+    			// 需要重建 scopeElmArr
     			needAnalyze();
     		}
     	}
@@ -5715,13 +5715,13 @@ MouseOutHandler, MouseWheelHandler {
     }
     
     boolean willDelete( CircuitElm ce ) {
-	// Is this element in the list to be deleted.
-	// This changes the logic from the previous version which would initially only
-	// delete selected elements (which could include the mouseElm) and then delete the 
-	// mouseElm if there were no selected elements. Not really sure this added anything useful
-	// to the user experience.
+	// 该元件是否在要删除的列表中。
+	// 这与以前版本的逻辑不同：旧版本起初只
+	// 删除选中的元件（可能包含 mouseElm），如果没有选中的元件，
+	// 则再删除 mouseElm。不确定这对用户体验
+	// 有什么实际帮助。
 	//
-	// BTW, the old logic could also leave mouseElm pointing to a deleted element.
+	// 顺便说一句，旧逻辑还可能让 mouseElm 指向已被删除的元件。
 	return ce.isSelected() || ce.isMouseElm();
     }
     
@@ -5736,7 +5736,7 @@ MouseOutHandler, MouseWheelHandler {
 	    String m = ce.dumpModel();
 	    if (m != null && !m.isEmpty())
 		r += m + "\n";
-	    // See notes on do cut why we don't copy ScopeElms.
+	    // 为什么我们不复制 ScopeElm，请参阅 doCut 中的说明。
 	    if (ce.isSelected() && !(ce instanceof ScopeElm))
 		r += ce.dump() + "\n";
 	}
@@ -5744,7 +5744,7 @@ MouseOutHandler, MouseWheelHandler {
     }
     
     void doCopy() {
-    	// clear selection when we're done if we're copying a single element using the context menu
+    	// 如果使用右键菜单复制单个元件，完成后清除选择
     	boolean clearSel = (menuElm != null && !menuElm.selected);
     	
     	setMenuSelection();
@@ -5776,7 +5776,7 @@ MouseOutHandler, MouseWheelHandler {
     	int i;
     	Rectangle oldbb = null;
     	
-    	// get old bounding box
+    	// 获取旧的包围盒
     	for (i = 0; i != elmList.size(); i++) {
     		CircuitElm ce = getElm(i);
     		Rectangle bb = ce.getBoundingBox();
@@ -5786,14 +5786,14 @@ MouseOutHandler, MouseWheelHandler {
     			oldbb = bb;
     	}
     	
-    	// add new items
+    	// 添加新元件
     	int oldsz = elmList.size();
     	int flags = RC_RETAIN;
     	
-    	// don't recenter circuit if we're going to paste in place because that will change the transform
+    	// 如果我们要在原位置粘贴，则不要重新居中电路，因为那会改变变换矩阵
 //	if (mouseCursorX > 0 && circuitArea.contains(mouseCursorX, mouseCursorY))
     	
-    	// in fact, don't ever recenter circuit, unless old circuit was empty
+    	// 事实上，永远不要重新居中电路，除非原电路为空
     	if (oldsz > 0)
     	    flags |= RC_NO_CENTER;
 	
@@ -5804,7 +5804,7 @@ MouseOutHandler, MouseWheelHandler {
     	    readCircuit(clipboard, flags);
     	}
 
-    	// select new items and get their bounding box
+    	// 选中新元件并获取它们的包围盒
     	Rectangle newbb = null;
     	for (i = oldsz; i != elmList.size(); i++) {
     		CircuitElm ce = getElm(i);
@@ -5817,13 +5817,13 @@ MouseOutHandler, MouseWheelHandler {
     	}
     	
     	if (oldbb != null && newbb != null /*&& oldbb.intersects(newbb)*/) {
-    		// find a place on the edge for new items
+    		// 在边缘为新元件找一个位置
     		int dx = 0, dy = 0;
     		int spacew = circuitArea.width - oldbb.width - newbb.width;
     		int spaceh = circuitArea.height - oldbb.height - newbb.height;
     		
     		if (!oldbb.intersects(newbb)) {
-    		    // old coordinates may be really far away so move them to same origin as current circuit
+    		    // 旧坐标可能非常远，因此把它们移动到与当前电路相同的原点
     		    dx = snapGrid(oldbb.x - newbb.x);
     		    dy = snapGrid(oldbb.y - newbb.y);
     		}
@@ -5834,7 +5834,7 @@ MouseOutHandler, MouseWheelHandler {
     			dy = snapGrid(oldbb.y + oldbb.height - newbb.y + gridSize);
     		}
     		
-    		// move new items near the mouse if possible
+    		// 如果可能，将新元件移动到鼠标附近
     		if (mouseCursorX > 0 && circuitArea.contains(mouseCursorX, mouseCursorY)) {
     	    	    int gx = inverseTransformX(mouseCursorX);
     	    	    int gy = inverseTransformY(mouseCursorY);
@@ -5850,13 +5850,13 @@ MouseOutHandler, MouseWheelHandler {
     	    	    }
     		}
     		
-    		// move the new items
+    		// 移动新元件
     		for (i = oldsz; i != elmList.size(); i++) {
     			CircuitElm ce = getElm(i);
     			ce.move(dx, dy);
     		}
     		
-    		// center circuit
+    		// 居中电路
     	//	handleResize();
     	}
     	needAnalyze();
@@ -5930,8 +5930,8 @@ MouseOutHandler, MouseWheelHandler {
     				scrollValuePopup.close(true);
     		}
     		
-    		// process escape/enter for dialogs
-    		// multiple edit dialogs could be displayed at once, pick the one in front
+    		// 处理对话框的 Esc/回车键
+    		// 可能同时显示多个编辑对话框，选择最前面的一个
     		Dialog dlg = editDialog;
     		if (diodeModelEditDialog != null)
     		    dlg = diodeModelEditDialog;
@@ -5968,14 +5968,14 @@ MouseOutHandler, MouseWheelHandler {
 		}
     	}
     	
-    	// all other shortcuts are ignored when editing disabled
+    	// 禁用编辑时，忽略所有其他快捷键
     	if (noEditCheckItem.getState())
     	    return;
 
     	if ((t & Event.ONKEYDOWN)!=0) {
     		if (code==KEY_BACKSPACE || code==KEY_DELETE) {
     		    if (scopeSelected != -1) {
-    			// Treat DELETE key with scope selected as "remove scope", not delete
+    			// 将选中示波器时的 DELETE 键视为“移除示波器”，而不是删除
     			scopes[scopeSelected].setElm(null);
     			scopeSelected = -1;
     		    } else {
@@ -6071,15 +6071,15 @@ MouseOutHandler, MouseWheelHandler {
 	return classToLabelMap.get(cls);
     }
 
-    // factors a matrix into upper and lower triangular matrices by
-    // gaussian elimination.  On entry, a[0..n-1][0..n-1] is the
-    // matrix to be factored.  ipvt[] returns an integer vector of pivot
-    // indices, used in the lu_solve() routine.
+    // 通过高斯消元法把矩阵分解为上下三角矩阵。
+    // 进入时，a[0..n-1][0..n-1] 是要分解的
+    // 矩阵。ipvt[] 返回主元索引的整数向量，
+    // 供 lu_solve() 例程使用。
     static boolean lu_factor(double a[][], int n, int ipvt[]) {
 	int i,j,k;
 	
-	// check for a possible singular matrix by scanning for rows that
-	// are all zeroes
+	// 通过扫描是否有全为零的行，
+	// 检查是否存在奇异矩阵
 	for (i = 0; i != n; i++) { 
 	    boolean row_all_zeros = true;
 	    for (j = 0; j != n; j++) {
@@ -6088,15 +6088,15 @@ MouseOutHandler, MouseWheelHandler {
 		    break;
 		}
 	    }
-	    // if all zeros, it's a singular matrix
+	    // 如果全为零，则为奇异矩阵
 	    if (row_all_zeros)
 		return false;
 	}
 	
-        // use Crout's method; loop through the columns
+        // 使用 Crout 方法；逐列循环
 	for (j = 0; j != n; j++) {
 	    
-	    // calculate upper triangular elements for this column
+	    // 计算该列的上三角元素
 	    for (i = 0; i != j; i++) {
 		double q = a[i][j];
 		for (k = 0; k != i; k++)
@@ -6104,7 +6104,7 @@ MouseOutHandler, MouseWheelHandler {
 		a[i][j] = q;
 	    }
 
-	    // calculate lower triangular elements for this column
+	    // 计算该列的下三角元素
 	    double largest = 0;
 	    int largestRow = -1;
 	    for (i = j; i != n; i++) {
@@ -6119,7 +6119,7 @@ MouseOutHandler, MouseWheelHandler {
 		}
 	    }
 	    
-	    // pivoting
+	    // 选主元
 	    if (j != largestRow) {
 		if (largestRow == -1) {
 		    console("largestRow == -1");
@@ -6133,13 +6133,13 @@ MouseOutHandler, MouseWheelHandler {
 		}
 	    }
 
-	    // keep track of row interchanges
+	    // 记录行交换情况
 	    ipvt[j] = largestRow;
 
-	    // check for zeroes; if we find one, it's a singular matrix.
-	    // we used to avoid them, but that caused weird bugs.  For example,
-	    // two inverters with outputs connected together should be flagged
-	    // as a singular matrix, but it was allowed (with weird currents)
+	    // 检查零元素；如果发现一个，则矩阵为奇异矩阵。
+	    // 我们过去曾设法避免它们，但那导致了奇怪的 bug。例如，
+	    // 两个输出连在一起的反相器应被标记为
+	    // 奇异矩阵，但过去却允许这种情况（并产生奇怪的电流）
 	    if (a[j][j] == 0.0) {
 		console("didn't avoid zero");
 //		a[j][j]=1e-18;
@@ -6155,13 +6155,13 @@ MouseOutHandler, MouseWheelHandler {
 	return true;
     }
 
-    // Solves the set of n linear equations using a LU factorization
-    // previously performed by lu_factor.  On input, b[0..n-1] is the right
-    // hand side of the equations, and on output, contains the solution.
+    // 使用先前由 lu_factor 完成的 LU 分解
+    // 求解 n 个线性方程组。输入时，b[0..n-1] 是方程组的右
+    // 端向量，输出时包含解。
     static void lu_solve(double a[][], int n, int ipvt[], double b[]) {
 	int i;
 
-	// find first nonzero b element
+	// 找到第一个非零的 b 元素
 	for (i = 0; i != n; i++) {
 	    int row = ipvt[i];
 
@@ -6179,7 +6179,7 @@ MouseOutHandler, MouseWheelHandler {
 	    double tot = b[row];
 	    
 	    b[row] = b[i];
-	    // forward substitution using the lower triangular matrix
+	    // 使用下三角矩阵进行前向代入
 	    for (j = bi; j < i; j++)
 		tot -= a[i][j]*b[j];
 	    b[i] = tot;
@@ -6187,7 +6187,7 @@ MouseOutHandler, MouseWheelHandler {
 	for (i = n-1; i >= 0; i--) {
 	    double tot = b[i];
 	    
-	    // back-substitution using the upper triangular matrix
+	    // 使用上三角矩阵进行回代
 	    int j;
 	    for (j = i+1; j != n; j++)
 		tot -= a[i][j]*b[j];
@@ -6197,9 +6197,9 @@ MouseOutHandler, MouseWheelHandler {
 
     
     void createNewLoadFile() {
-    	// This is a hack to fix what IMHO is a bug in the <INPUT FILE element
-    	// reloading the same file doesn't create a change event so importing the same file twice
-    	// doesn't work unless you destroy the original input element and replace it with a new one
+    	// 这是一个权宜之计，用来修复我认为是 <INPUT FILE 元素中的 bug：
+    	// 重新加载同一文件不会触发 change 事件，因此两次导入同一文件
+    	// 无法工作，除非销毁原始 input 元素并用新元素替换它
     	int idx=verticalPanel.getWidgetIndex(loadFileInput);
     	filePath = loadFileInput.getPath();
     	console("filePath: " + filePath);
@@ -6508,8 +6508,8 @@ MouseOutHandler, MouseWheelHandler {
     	if (n=="CounterElm")
     		return (CircuitElm) new CounterElm(x1, y1);
     	
-	// if you take out RingCounterElm, it will break subcircuits
-    	// if you take out DecadeElm, it will break the menus and people's saved shortcuts
+	// 如果移除 RingCounterElm，会破坏子电路
+    	// 如果移除 DecadeElm，会破坏菜单和用户保存的快捷键
     	if (n=="DecadeElm" || n=="RingCounterElm")
     		return (CircuitElm) new RingCounterElm(x1, y1);
     	
@@ -6544,7 +6544,7 @@ MouseOutHandler, MouseWheelHandler {
     	if (n=="LabeledNodeElm")
     		return (CircuitElm) new LabeledNodeElm(x1, y1);
     	
-    	// if you take out UserDefinedLogicElm, it will break people's saved shortcuts
+    	// 如果移除 UserDefinedLogicElm，会破坏用户保存的快捷键
     	if (n=="UserDefinedLogicElm" || n=="CustomLogicElm")
     	    	return (CircuitElm) new CustomLogicElm(x1, y1);
     	
@@ -6627,7 +6627,7 @@ MouseOutHandler, MouseWheelHandler {
     	if (n=="CrossSwitchElm")
 		return (CircuitElm) new CrossSwitchElm(x1, y1);
     	
-    	// handle CustomCompositeElm:modelname
+    	// 处理 CustomCompositeElm:modelname 形式
     	if (n.startsWith("CustomCompositeElm:")) {
     	    int ix = n.indexOf(':')+1;
     	    String name = n.substring(ix);
@@ -6667,7 +6667,7 @@ MouseOutHandler, MouseWheelHandler {
     }
     }-*/;
     
-    // For debugging
+    // 用于调试
     void dumpNodelist() {
 
 	CircuitNode nd;
@@ -6732,7 +6732,7 @@ MouseOutHandler, MouseWheelHandler {
 	boolean loadedCanvas2SVG = false;
 
 	boolean initializeSVGScriptIfNecessary(final String followupAction) {
-		// load canvas2svg if we haven't already
+		// 如果尚未加载 canvas2svg，则加载它
 		if (!loadedCanvas2SVG) {
 			ScriptInjector.fromUrl("canvas2svg.js").setCallback(new Callback<Void,Exception>() {
 				public void onFailure(Exception reason) {
@@ -6773,11 +6773,11 @@ MouseOutHandler, MouseWheelHandler {
 	static final int CAC_SVG   = 2;
 	
 	public Canvas getCircuitAsCanvas(int type) {
-	    	// create canvas to draw circuit into
+	    	// 创建用于绘制电路的画布
 	    	Canvas cv = Canvas.createIfSupported();
 	    	Rectangle bounds = getCircuitBounds();
 	    	
-		// add some space on edges because bounds calculation is not perfect
+		// 在边缘留出一些空间，因为边界计算并不精确
 	    	int wmargin = 140;
 	    	int hmargin = 100;
 	    	int w = (bounds.width*2+wmargin) ;
@@ -6790,7 +6790,7 @@ MouseOutHandler, MouseWheelHandler {
 		return cv;
 	}
 	
-	// create SVG context using canvas2svg
+	// 使用 canvas2svg 创建 SVG 上下文
 	native static Context2d createSVGContext(int w, int h) /*-{
 	    return new C2S(w, h);
 	}-*/;
@@ -6802,7 +6802,7 @@ MouseOutHandler, MouseWheelHandler {
 	public String getCircuitAsSVG() {
 	    Rectangle bounds = getCircuitBounds();
 
-	    // add some space on edges because bounds calculation is not perfect
+	    // 在边缘留出一些空间，因为边界计算并不精确
 	    int wmargin = 140;
 	    int hmargin = 100;
 	    int w = (bounds.width+wmargin) ;
@@ -6819,7 +6819,7 @@ MouseOutHandler, MouseWheelHandler {
 	        
 	        double scale = 1;
 	        
-		// turn on white background, turn off current display
+		// 开启白色背景，关闭电流显示
 		boolean p = printableCheckItem.getState();
 		boolean c = dotsCheckItem.getState();
 		boolean print = (type == CAC_PRINT);
@@ -6843,7 +6843,7 @@ MouseOutHandler, MouseWheelHandler {
 	            scale = Math.min(w /(double)(bounds.width+wmargin),
 	                             h/(double)(bounds.height+hmargin));
 	        
-	        // ScopeElms need the transform array to be updated
+	        // ScopeElm 需要更新变换数组
 		transform[0] = transform[3] = scale;
 		transform[4] = -(bounds.x-wmargin/2);
 		transform[5] = -(bounds.y-hmargin/2);
@@ -6851,7 +6851,7 @@ MouseOutHandler, MouseWheelHandler {
 		context.translate(transform[4], transform[5]);
 		context.setLineCap(Context2d.LineCap.ROUND);
 		
-		// draw elements
+		// 绘制元件
 		int i;
 		for (i = 0; i != elmList.size(); i++) {
 		    getElm(i).draw(g);
@@ -6860,7 +6860,7 @@ MouseOutHandler, MouseWheelHandler {
 		    CircuitElm.drawPost(g, postDrawList.get(i));
 		}
 
-		// restore everything
+		// 恢复所有设置
 		printableCheckItem.setState(p);
 		dotsCheckItem.setState(c);
 		transform = oldTransform;
@@ -6891,11 +6891,11 @@ MouseOutHandler, MouseWheelHandler {
 	    boolean used[] = new boolean[nodeList.size()];
 	    boolean extnodes[] = new boolean[nodeList.size()];
 	    
-	    // redo node allocation to avoid auto-assigning ground
+	    // 重新进行节点分配，以避免自动分配地线
 	    if (!preStampCircuit(true))
 		return null;
 
-	    // find all the labeled nodes, get a list of them, and create a node number map
+	    // 找出所有带标签节点，获取它们的列表，并创建节点编号映射
 	    for (i = 0; i != elmList.size(); i++) {
 		CircuitElm ce = getElm(i);
 		if (sel && !ce.isSelected())
@@ -6906,7 +6906,7 @@ MouseOutHandler, MouseWheelHandler {
 		    if (lne.isInternal())
 			continue;
 		    
-		    // already added to list?
+		    // 已经添加到列表中了？
 		    if (extnodes[ce.getNode(0)])
 			continue;
 		    
@@ -6915,7 +6915,7 @@ MouseOutHandler, MouseWheelHandler {
                     if (Math.abs(ce.dx) <= Math.abs(ce.dy) && ce.dy < 0) side = ChipElm.SIDE_N;
                     if (Math.abs(ce.dx) <= Math.abs(ce.dy) && ce.dy > 0) side = ChipElm.SIDE_S;
                     
-		    // create ext list entry for external nodes
+		    // 为外部节点创建外部端子列表条目
                     sideLabels[side].add(lne);
 		    extnodes[ce.getNode(0)] = true;
 		    if (ce.getNode(0) == 0) {
@@ -6938,12 +6938,12 @@ MouseOutHandler, MouseWheelHandler {
                 }
             }
 
-	    // output all the elements
+	    // 输出所有元件
 	    for (i = 0; i != elmList.size(); i++) {
 		CircuitElm ce = getElm(i);
 		if (sel && !ce.isSelected())
 		    continue;
-		// don't need these elements dumped
+		// 不需要导出这些元件
 		if (ce instanceof WireElm || ce instanceof LabeledNodeElm || ce instanceof ScopeElm)
 		    continue;
 		if (ce instanceof GraphicElm || ce instanceof GroundElm)
@@ -6958,17 +6958,17 @@ MouseOutHandler, MouseWheelHandler {
 		    nodeDump += " " + n;
 		}
 		
-	        // save positions
+	        // 保存位置
                 int x1 = ce.x;  int y1 = ce.y;
                 int x2 = ce.x2; int y2 = ce.y2;
                 
-                // set them to 0 so they're easy to remove
+                // 将它们设为 0，便于后续移除
                 ce.x = ce.y = ce.x2 = ce.y2 = 0;
 
                 String tstring = ce.dump();
-                tstring = tstring.replaceFirst("[A-Za-z0-9]+ 0 0 0 0 ", ""); // remove unused tint_x1 y1 x2 y2 coords for internal components
+                tstring = tstring.replaceFirst("[A-Za-z0-9]+ 0 0 0 0 ", ""); // 移除内部元件未使用的 tint_x1 y1 x2 y2 坐标
                 
-                // restore positions
+                // 恢复位置
                 ce.x = x1; ce.y = y1; ce.x2 = x2; ce.y2 = y2;
                 if (dump.length() > 0)
                     dump += " ";
@@ -7010,7 +7010,7 @@ MouseOutHandler, MouseWheelHandler {
 	    double b[] = new double[n];
 	    double inva[][] = new double[n][n];
 	    
-	    // solve for each column of identity matrix
+	    // 为单位矩阵的每一列求解
 	    for (i = 0; i != n; i++) {
 		for (j = 0; j != n; j++)
 		    b[j] = 0;
@@ -7020,7 +7020,7 @@ MouseOutHandler, MouseWheelHandler {
 		    inva[j][i] = b[j];
 	    }
 	    
-	    // return in original matrix
+	    // 结果返回到原矩阵中
 	    for (i = 0; i != n; i++)
 		for (j = 0; j != n; j++)
 		    a[i][j] = inva[i][j];
@@ -7030,7 +7030,7 @@ MouseOutHandler, MouseWheelHandler {
 	    Integer node = LabeledNodeElm.getByName(name);
 	    if (node == null || node == 0)
 		return 0;
-	    // subtract one because ground is not included in nodeVoltages[]
+	    // 减一是因为 nodeVoltages[] 中不包含地线
 	    return nodeVoltages[node.intValue()-1];
 	}
 	
@@ -7065,7 +7065,7 @@ MouseOutHandler, MouseWheelHandler {
 	        setSimRunning: $entry(function(run) { that.@com.lushprojects.circuitjs1.client.CirSim::setSimRunning(Z)(run); } ),
 	        getTime: $entry(function() { return that.@com.lushprojects.circuitjs1.client.CirSim::t; } ),
 	        getTimeStep: $entry(function() { return that.@com.lushprojects.circuitjs1.client.CirSim::timeStep; } ),
-	        setTimeStep: $entry(function(ts) { that.@com.lushprojects.circuitjs1.client.CirSim::timeStep = ts; } ), // don't use this, see #843
+	        setTimeStep: $entry(function(ts) { that.@com.lushprojects.circuitjs1.client.CirSim::timeStep = ts; } ), // 不要使用此项，参见 #843
 	        getMaxTimeStep: $entry(function() { return that.@com.lushprojects.circuitjs1.client.CirSim::maxTimeStep; } ),
 	        setMaxTimeStep: $entry(function(ts) { that.@com.lushprojects.circuitjs1.client.CirSim::maxTimeStep = 
                                                       that.@com.lushprojects.circuitjs1.client.CirSim::timeStep = ts; } ),

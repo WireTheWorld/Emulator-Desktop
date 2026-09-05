@@ -94,25 +94,25 @@ package com.lushprojects.circuitjs1.client;
 		setVoltageColor(g, volts[i*3+2]);
 		drawThickLine(g, throwPosts[i*2+1], throwLeads[i*4+1]);
 		
-	        // draw line
+	        // 绘制连线
 		if (!needsHighlight())
 		    g.setColor(Color.lightGray);
 		
 	        if (i < poleCount-1) {
 	            int offset = -i*openhs*3;
-	            interpPoint(point1, point2, linePoints[0], .5, offset-openhs*(.5-position)-4*position); // top
+	            interpPoint(point1, point2, linePoints[0], .5, offset-openhs*(.5-position)-4*position); // 顶部
 	            interpPoint(point1, point2, linePoints[1], .5, offset-openhs*3-openhs*(.5-position)+3+8*(1-position));
 	            g.setLineDash(4, 4);
 	            g.drawLine(linePoints[0], linePoints[1]);
 	            g.setLineDash(0,  0);
 	        }
 		
-		// draw switch
+		// 绘制开关
 		if (!needsHighlight())
 		    g.setColor(whiteColor);
 		drawThickLine(g, poleLeads[i], throwLeads[i*4+3-position*2]);
 		
-		// current
+		// 电流
 		curcounts[i] = updateDotCount(currents[i], curcounts[i]);
 		drawDots(g, polePosts[i], poleLeads[i], curcounts[i]);
 		drawDots(g, throwLeads[i*4+position], throwPosts[i*2+position], curcounts[i]);
@@ -172,7 +172,7 @@ package com.lushprojects.circuitjs1.client;
 	
 	boolean isWireEquivalent() { return true; }
 	
-	// optimizing out this element is too complicated to be worth it (see #646)
+	// 优化掉此元件过于复杂，不值得（参见 #646）
 	boolean isRemovableWire() { return false; }
 
 	void getInfo(String arr[]) {

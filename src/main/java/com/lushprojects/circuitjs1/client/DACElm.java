@@ -53,7 +53,7 @@ class DACElm extends ChipElm {
     int getPostCount() { return bits+2; }
     int getDumpType() { return 166; }
 
-    // there's already a V+ pin, how does that relate to high logic voltage?  figure out later
+    // 已经有一个 V+ 引脚，它与高逻辑电压有什么关系？以后再研究
     @Override boolean isDigitalChip() { return false; }
 
     public EditInfo getChipEditInfo(int n) {

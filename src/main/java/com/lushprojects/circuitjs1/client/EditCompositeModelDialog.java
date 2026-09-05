@@ -252,7 +252,7 @@ public class EditCompositeModelDialog extends Dialog implements MouseDownHandler
 	    }
 	    model.setSaved(saveCheck.getState());
 	    CirSim.theSim.updateModels();
-	    CirSim.theSim.needAnalyze(); // will get singular matrix if we don't do this
+	    CirSim.theSim.needAnalyze(); // 不这样做会得到奇异矩阵
 	    closeDialog();
 	}
 
@@ -321,7 +321,7 @@ public class EditCompositeModelDialog extends Dialog implements MouseDownHandler
 		ExtListEntry p = model.extList.get(selectedPin);
 		int pn = chip.getOverlappingPin(pos[0], pos[1], selectedPin);
 		if (pn != -1) {
-		    // swap positions with overlapping pin
+		    // 与重叠的引脚交换位置
 		    ExtListEntry p2 = model.extList.get(pn);
 		    p2.pos = p.pos;
 		    p2.side = p.side;

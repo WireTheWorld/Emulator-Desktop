@@ -19,16 +19,16 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// contributed by Edward Calver
+// 由 Edward Calver 贡献
 
 class PisoShiftElm extends ChipElm {
-	final int FLAG_NEW_BEHAVIOR = 2; //SER and no extra output register
+	final int FLAG_NEW_BEHAVIOR = 2; //SER 且无额外输出寄存器
 	
 	boolean[] data = new boolean[0];
 	int dataIndex = 0;
 	boolean clockState = false;
 	boolean loadState = false;
-	int dataPinIndex; // the register pins' starting index
+	int dataPinIndex; // 寄存器引脚的起始索引
 	
 	public PisoShiftElm(int xx, int yy) {
 		super(xx, yy);
@@ -44,7 +44,7 @@ class PisoShiftElm extends ChipElm {
 	}
 	
 	String dump() {
-		//Normalize the circular array before exporting
+		//导出前先将环形数组规范化
 		boolean[] newData = new boolean[data.length];
 		for (int i = 0; i < data.length; i++)
 			newData[i] = data[(i + dataIndex) % data.length];
@@ -96,12 +96,12 @@ class PisoShiftElm extends ChipElm {
 	int getVoltageSourceCount() { return 1; }
 	
 	void execute() {
-		//LOAD raised
+		//LOAD 拉高
 		if (pins[0].value != loadState) {
 			loadState = pins[0].value;
 			if (loadState && data.length > 0) {
 				if (hasNewBhvr()) {
-					pins[2].value = pins[dataPinIndex].value; //Set output immediately
+					pins[2].value = pins[dataPinIndex].value; //立即设置输出
 					dataIndex = 0;
 				} else {
 					dataIndex = -1;
@@ -111,18 +111,18 @@ class PisoShiftElm extends ChipElm {
 			}
 		}
 		
-		//CLK raised: Rotate the circular array
+		//CLK 拉高：旋转环形数组
 		if (pins[1].value != clockState) {
 			clockState = pins[1].value;
 			if (clockState) {
-				//Shift
+				//移位
 				if (dataIndex >= 0)
 					data[dataIndex] = hasNewBhvr() && pins[3].value;
 				dataIndex++;
 				if (dataIndex >= data.length)
 					dataIndex = 0;
 				
-				//Write
+				//写入
 				pins[2].value = data[dataIndex];
 			}
 		}

@@ -49,7 +49,7 @@ class SliderDialog extends Dialog  {
 	NumberFormat noCommaFormat;
 
 	SliderDialog(CircuitElm ce, CirSim f) {
-		super(); // Do we need this?
+		super(); // 需要这个吗？
 		setText(Locale.LS("Add Sliders"));
 		sim = f;
 		elm = ce;
@@ -100,7 +100,7 @@ class SliderDialog extends Dialog  {
 			String name = Locale.LS(ei.name);
 			idx = vp.getWidgetIndex(hp);
 
-			// remove HTML
+			// 移除 HTML
 			name = name.replaceAll("<[^>]*>", "");
 			ei.checkbox = new Checkbox(name, adj != null);
 			vp.insert(ei.checkbox, idx++);
@@ -112,7 +112,7 @@ class SliderDialog extends Dialog  {
 
 			if (adj != null) {
 			    if (!adj.sliderBeingShared()) {
-				// add popup to select which slider to share
+				// 添加下拉菜单以选择要共享的滑块
 				Choice ch = ei.choice = new Choice();
 				ei.choice.addChangeHandler( new ChangeHandler() {
 				    public void onChange(ChangeEvent e){
@@ -123,10 +123,10 @@ class SliderDialog extends Dialog  {
 				int j;
 				for (j = 0; j != sim.adjustables.size(); j++) {
 				    Adjustable adji = sim.adjustables.get(j);
-				    // don't share with an object sharing with someone else
+				    // 不要与正在与他人共享的对象共享
 				    if (adji.sharedSlider != null)
 					break;
-				    // don't share with ourselves
+				    // 不要与我们自己共享
 				    if (adji == adj)
 					continue;
 				    ch.add("Share Slider: " + adji.sliderText);
@@ -142,7 +142,7 @@ class SliderDialog extends Dialog  {
 			    ei.maxBox = new TextBox();
 			    vp.insert(ei.maxBox, idx++);
 			    if (adj.sharedSlider == null) {
-				// select label if this is a new slider
+				// 如果是新滑块，则选择标签
 				vp.insert(new Label(Locale.LS("Label")), idx++);
 				ei.labelBox = new TextBox();
 				ei.labelBox.setText(adj.sliderText);
@@ -207,7 +207,7 @@ class SliderDialog extends Dialog  {
 		    apply();
 		    Adjustable adj = findAdjustable(i);
 		    if (ei.choice.getSelectedIndex() == 0) {
-			// new slider
+			// 新滑块
 			adj.sharedSlider = null;
 			if (adj.sliderText == null || adj.sliderText.length() == 0)
 			    adj.sliderText = ei.name.replaceAll(" \\(.*\\)$", "");

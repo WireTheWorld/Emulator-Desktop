@@ -49,7 +49,7 @@ public class AudioOutputElm extends CircuitElm {
 	    setTimeStep();
 	}
 	
-	// get next unused labelNum value
+	// 获取下一个未使用的 labelNum 值
 	int getNextLabelNum() {
 	    int i;
 	    int num = 1;
@@ -286,8 +286,8 @@ public class AudioOutputElm extends CircuitElm {
         	intBuffer[0] = 0x4952; // "RI"
         	intBuffer[1] = 0x4646; // "FF"
         	
-        	intBuffer[2] = (2*buffer.length + 15) & 0x0000ffff; // RIFF size
-        	intBuffer[3] = ((2*buffer.length + 15) & 0xffff0000) >> 16; // RIFF size
+        	intBuffer[2] = (2*buffer.length + 15) & 0x0000ffff; // RIFF 大小
+        	intBuffer[3] = ((2*buffer.length + 15) & 0xffff0000) >> 16; // RIFF 大小
         	
         	intBuffer[4] = 0x4157; // "WA"
         	intBuffer[5] = 0x4556; // "VE"
@@ -295,25 +295,25 @@ public class AudioOutputElm extends CircuitElm {
         	intBuffer[6] = 0x6d66; // "fm"
         	intBuffer[7] = 0x2074; // "t "
         		
-        	intBuffer[8] = 0x0012; // fmt chunksize: 18
+        	intBuffer[8] = 0x0012; // fmt 块大小：18
         	intBuffer[9] = 0x0000; //
         		
-        	intBuffer[10] = 0x0001; // format tag : 1 
-        	intBuffer[11] = this._channels; // channels: 1
+        	intBuffer[10] = 0x0001; // 格式标签：1 
+        	intBuffer[11] = this._channels; // 声道数：1
         	
-        	intBuffer[12] = this._sampleRate & 0x0000ffff; // sample per sec
-        	intBuffer[13] = (this._sampleRate & 0xffff0000) >> 16; // sample per sec
+        	intBuffer[12] = this._sampleRate & 0x0000ffff; // 每秒采样数
+        	intBuffer[13] = (this._sampleRate & 0xffff0000) >> 16; // 每秒采样数
         	
-        	intBuffer[14] = (2*this._channels*this._sampleRate) & 0x0000ffff; // byte per sec
-        	intBuffer[15] = ((2*this._channels*this._sampleRate) & 0xffff0000) >> 16; // byte per sec
+        	intBuffer[14] = (2*this._channels*this._sampleRate) & 0x0000ffff; // 每秒字节数
+        	intBuffer[15] = ((2*this._channels*this._sampleRate) & 0xffff0000) >> 16; // 每秒字节数
         	
-        	intBuffer[16] = 2*this._channels; // block align
-        	intBuffer[17] = 0x0010; // bit per sample
-        	intBuffer[18] = 0x0000; // cb size
+        	intBuffer[16] = 2*this._channels; // 块对齐
+        	intBuffer[17] = 0x0010; // 每采样位数
+        	intBuffer[18] = 0x0000; // cb 大小
         	intBuffer[19] = 0x6164; // "da"
         	intBuffer[20] = 0x6174; // "ta"
-        	intBuffer[21] = (2*buffer.length) & 0x0000ffff; // data size[byte]
-        	intBuffer[22] = ((2*buffer.length) & 0xffff0000) >> 16; // data size[byte]	
+        	intBuffer[21] = (2*buffer.length) & 0x0000ffff; // 数据大小[字节]
+        	intBuffer[22] = ((2*buffer.length) & 0xffff0000) >> 16; // 数据大小[字节]	
 
         	for (var i = 0; i < buffer.length; i++)
         	    intBuffer[i+23] = buffer[i];
@@ -331,7 +331,7 @@ public class AudioOutputElm extends CircuitElm {
 
 	var oldblob = $doc.audioBlob;
 	var oldobj = $doc.audioObject;
-	// remove old blob and audio obj if any.  We should do this when audio is done playing, but this is easier
+	// 移除旧的 blob 和音频对象（如果有）。我们本应在音频播放完毕后执行此操作，但这样更简单
 	if (oldblob) {
 	    oldobj.parentNode.removeChild(oldobj);
             URL.revokeObjectURL(oldblob);
@@ -368,7 +368,7 @@ public class AudioOutputElm extends CircuitElm {
         	return;
             }
             
-            // rescale data to maximize
+            // 重新缩放数据以最大化
             double max = -1e8;
             double min =  1e8;
             for (i = 0; i != ct; i++) {
@@ -379,7 +379,7 @@ public class AudioOutputElm extends CircuitElm {
             double adj = -(max+min)/2;
             double mult = (.25*32766)/(max+adj);
             
-            // fade in over 1/20 sec
+            // 在 1/20 秒内淡入
 	    int fadeLen = samplingRate/20;
 	    int fadeOut = ct-fadeLen;
 	    

@@ -16,7 +16,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
     String name, description;
     double saturationCurrent, seriesResistance, emissionCoefficient, breakdownVoltage;
     
-    // used for UI code, not guaranteed to be set
+    // 用于 UI 代码，不保证会被设置
     double forwardVoltage, forwardCurrent;
     
     boolean dumped;
@@ -26,13 +26,13 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
     boolean internal;
     static final int FLAGS_SIMPLE = 1; 
     
-    // Electron thermal voltage at SPICE's default temperature of 27 C (300.15 K):
+    // SPICE 默认温度 27°C (300.15 K) 下的电子热电压：
     static final double vt = 0.025865;
-    // The diode's "scale voltage", the voltage increase which will raise current by a factor of e.
+    // 二极管的"标度电压"，即使电流增大 e 倍所需的电压增量。
     double vscale;
-    // The multiplicative equivalent of dividing by vscale (for speed).
+    // 除以 vscale 的乘法等价形式（为了速度）。
     double vdcoef;
-    // voltage drop @ 1A
+    // 1A 时的压降
     double fwdrop;
     
     protected DiodeModel(double sc, double sr, double ec, double bv, String d) {
@@ -81,17 +81,17 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
 	addDefaultModel("default", new DiodeModel(1.7143528192808883e-7, 0, 2, 0, null));
 	addDefaultModel("default-zener", new DiodeModel(1.7143528192808883e-7, 0, 2, 5.6, null));
 	
-	// old default LED with saturation current that is way too small (causes numerical errors)
+	// 旧的默认 LED 模型，饱和电流太小（会导致数值误差）
 	addDefaultModel("old-default-led", new DiodeModel(2.2349907006671927e-18, 0, 2, 0, null).setInternal());
 	
-	// default for newly created LEDs, https://www.diyaudio.com/forums/software-tools/25884-spice-models-led.html
+	// 新建 LED 的默认模型，https://www.diyaudio.com/forums/software-tools/25884-spice-models-led.html
 	addDefaultModel("default-led", new DiodeModel(93.2e-12, .042, 3.73, 0, null));
 
 	// https://www.allaboutcircuits.com/textbook/semiconductors/chpt-3/spice-models/
 	addDefaultModel("1N5711", new DiodeModel(315e-9, 2.8, 2.03, 70, "Schottky"));
 	addDefaultModel("1N5712", new DiodeModel(680e-12, 12, 1.003, 20, "Schottky"));
 
-	// model is inaccurate
+	// 模型不准确
 	addDefaultModel("1N34", new DiodeModel(200e-12, 84e-3, 2.19, 60, "germanium").setInternal());
 
 	addDefaultModel("1N4004", new DiodeModel(18.8e-9, 28.6e-3, 2, 400, "general purpose"));
@@ -101,10 +101,10 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
 	addDefaultModel("1N4148", new DiodeModel(4.352e-9, .6458, 1.906, 75, "switching"));
 	addDefaultModel("x2n2646-emitter", new DiodeModel(2.13e-11, 0, 1.8, 0, null).setInternal());
 	
-	// for TL431
+	// 用于 TL431
 	loadInternalModel("~tl431ed-d_ed 0 1e-14 5 1 0 0");
 	
-	// for LM317
+	// 用于 LM317
 	loadInternalModel("~lm317-dz 0 1e-14 0 1 6.3 0");
     }
 
@@ -119,15 +119,15 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
 	return this;
     }
     
-    // create a new model using given parameters, keeping backward compatibility.  The method we use has problems, but we don't want to
-    // change circuit behavior.  We don't do this anymore because we discovered that changing the leakage current to get a given fwdrop
-    // does not work well; the leakage currents can be way too high or low.
+    // 使用给定参数创建新模型，保持向后兼容。我们使用的方法存在问题，但我们不想
+    // 改变电路行为。我们不再这样做，因为我们发现通过改变漏电流来获得给定的压降
+    // 效果不佳；漏电流可能过高或过低。
     static DiodeModel getModelWithParameters(double fwdrop, double zvoltage) {
 	createModelMap();
 	
 	final double emcoef = 2;
 
-	// look for existing model with same parameters
+	// 查找具有相同参数的现有模型
 	Iterator it = modelMap.entrySet().iterator();
 	while (it.hasNext()) {
 	    Map.Entry<String,DiodeModel> pair = (Map.Entry)it.next();
@@ -136,7 +136,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
 		return dm;
 	}
 
-	// create a new one, converting to new parameter values
+	// 创建一个新模型，转换为新的参数值
 	final double vscale = emcoef * vt;
 	final double vdcoef = 1 / vscale;
 	double leakage = 1 / (Math.exp(fwdrop * vdcoef) - 1);
@@ -289,7 +289,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
 	CirSim.theSim.updateModels();
     }
 
-    // set emission coefficient for simple mode if we have enough data  
+    // 如果有足够的数据，为简单模式设置发射系数  
     void setEmissionCoefficient() {
 	if (forwardCurrent > 0 && forwardVoltage > 0)
 	    emissionCoefficient = (forwardVoltage/Math.log(forwardCurrent/saturationCurrent+1)) / vt;

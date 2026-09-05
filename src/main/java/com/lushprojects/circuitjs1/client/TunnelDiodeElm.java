@@ -57,12 +57,12 @@ class TunnelDiodeElm extends CircuitElm {
 
 	draw2Leads(g);
 
-	// draw arrow thingy
+	// 绘制箭头状物
 	setPowerColor(g, true);
 	setVoltageColor(g, v1);
 	g.fillPolygon(poly);
 
-	// draw thing arrow is pointing to
+	// 绘制箭头所指的部分
 	setVoltageColor(g, v2);
 	drawThickLine(g, cathode[0], cathode[1]);
 	drawThickLine(g, cathode[2], cathode[0]);
@@ -78,8 +78,8 @@ class TunnelDiodeElm extends CircuitElm {
 	
     double lastvoltdiff;
     double limitStep(double vnew, double vold) {
-	// Prevent voltage changes of more than 1V when iterating.  Wow, I thought it would be
-	// much harder than this to prevent convergence problems.
+	// 迭代时防止电压变化超过 1V。哇，我原以为防止收敛问题
+	// 会比这难得多。
 	if (vnew > vold+1)
 	    return vold+1;
 	if (vnew < vold-1)

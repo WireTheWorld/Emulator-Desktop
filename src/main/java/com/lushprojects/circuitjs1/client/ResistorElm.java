@@ -107,7 +107,7 @@ import com.lushprojects.circuitjs1.client.util.Locale;
 	    return Locale.LS("resistor") + ", " + getUnitText(resistance, Locale.ohmString);
 	}
 	public EditInfo getEditInfo(int n) {
-	    // ohmString doesn't work here on linux
+	    // ohmString 在 linux 上不起作用
 	    if (n == 0)
 		return new EditInfo("Resistance (ohms)", resistance, 0, 0);
 	    return null;

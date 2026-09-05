@@ -59,7 +59,7 @@ public class ImportFromDropboxDialog extends Dialog {
 			Window.alert("Dropbox links must start https://www.dropbox.com/");
 			return;
 		}
-		// Work-around to allow CORS access to dropbox links - see
+		// 变通方案：允许对 dropbox 链接进行 CORS 访问 - 参见
 		// https://www.dropboxforum.com/t5/API-support/CORS-issue-when-trying-to-download-shared-file/m-p/82466
 		link=link.replace("www.dropbox.com", "dl.dropboxusercontent.com");
 		doDropboxImport(link);

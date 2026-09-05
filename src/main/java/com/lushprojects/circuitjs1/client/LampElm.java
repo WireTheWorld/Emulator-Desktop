@@ -32,7 +32,7 @@ class LampElm extends CircuitElm {
 	    nom_v = 120;
 	    warmTime = .4;
 	    coolTime = .4;
-	    startIteration(); // set resistance
+	    startIteration(); // 设置电阻
 	}
 	public LampElm(int xa, int ya, int xb, int yb, int f,
 		    StringTokenizer st) {
@@ -44,7 +44,7 @@ class LampElm extends CircuitElm {
 	    nom_v = new Double(st.nextToken()).doubleValue();
 	    warmTime = new Double(st.nextToken()).doubleValue();
 	    coolTime = new Double(st.nextToken()).doubleValue();
-	    startIteration(); // set resistance
+	    startIteration(); // 设置电阻
 	}
 	String dump() {
 	    return super.dump() + " " + temp + " " + nom_pow + " " + nom_v +
@@ -59,7 +59,7 @@ class LampElm extends CircuitElm {
 	    super.reset();
 	    temp = roomTemp;
 	    
-	    startIteration(); // set resistance
+	    startIteration(); // 设置电阻
 	}
 	final int filament_len = 24;
 	void setPoints() {
@@ -145,9 +145,9 @@ class LampElm extends CircuitElm {
 	}
 	boolean nonLinear() { return true; }
 	void startIteration() {
-	    // based on http://www.intusoft.com/nlpdf/nl11.pdf
+	    // 基于 http://www.intusoft.com/nlpdf/nl11.pdf
 	    double nom_r = nom_v*nom_v/nom_pow;
-	    // this formula doesn't work for values over 5390
+	    // 该公式对超过 5390 的值不适用
 	    double tp = (temp > 5390) ? 5390 : temp;
 	    resistance = nom_r*(1.26104 -
 				4.90662*Math.sqrt(17.1839/tp - 0.00318794) -
@@ -172,7 +172,7 @@ class LampElm extends CircuitElm {
 	    arr[5] = "T = " + ((int) temp) + " K";
 	}
 	public EditInfo getEditInfo(int n) {
-	    // ohmString doesn't work here on linux
+	    // ohmString 在 linux 下不起作用
 	    if (n == 0)
 		return new EditInfo("Nominal Power", nom_pow, 0, 0);
 	    if (n == 1)

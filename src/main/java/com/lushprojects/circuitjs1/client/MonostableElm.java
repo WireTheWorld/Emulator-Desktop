@@ -21,7 +21,7 @@ package com.lushprojects.circuitjs1.client;
 
     class MonostableElm extends ChipElm {
 
-	//Used to detect rising edge
+	//用于检测上升沿
 	private boolean prevInputValue=false;
 	private boolean retriggerable=false;
 	private boolean triggered=false;

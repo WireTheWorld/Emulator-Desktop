@@ -126,8 +126,8 @@ class DelayBufferElm extends CircuitElm {
 	    if (n == 2)
 		highVoltage = ei.value;
 	}
-	// there is no current path through the inverter input, but there
-	// is an indirect path through the output to ground.
+	// 缓冲器输入端没有直接的电流通路，但存在
+	// 经由输出端到地的间接通路。
 	boolean getConnection(int n1, int n2) { return false; }
 	boolean hasGroundConnection(int n1) {
 	    return (n1 == 1);

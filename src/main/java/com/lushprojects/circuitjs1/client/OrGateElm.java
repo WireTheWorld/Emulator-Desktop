@@ -78,8 +78,8 @@ package com.lushprojects.circuitjs1.client;
 		createEuroGatePolygon();
 		linePoints = null;
 	    } else {
-		// 0 - top left, 1 - start of top curve, 2 - control point for top curve
-		// 3 - right, 4 - control point for bottom curve, 5 - start of bottom curve, 6 - bottom right, 7 - control point for left curve
+		// 0 - 左上角，1 - 顶部曲线的起点，2 - 顶部曲线的控制点
+		// 3 - 右侧，4 - 底部曲线的控制点，5 - 底部曲线的起点，6 - 右下角，7 - 左侧曲线的控制点
 //		if (this instanceof XorGateElm)
 //		    linePoints = new Point[5];
 		
@@ -88,7 +88,7 @@ package com.lushprojects.circuitjs1.client;
 		interpPoint2(lead1, lead2, triPoints[1], triPoints[5], .3, hs2);
 		triPoints[3] = lead2;
 		interpPoint2(lead1, lead2, triPoints[2], triPoints[4], .7, hs2*.81);
-		interpPoint(lead1, lead2, triPoints[7], .08); // was .15
+		interpPoint(lead1, lead2, triPoints[7], .08); // 原为 .15
 		
 		if (this instanceof XorGateElm) {
 		    double ww2 = (ww == 0) ? dn*2 : ww*2;

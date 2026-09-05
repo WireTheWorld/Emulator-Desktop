@@ -4,7 +4,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 
 import com.lushprojects.circuitjs1.client.util.Locale;
 
-// based on https://ctms.engin.umich.edu/CTMS/index.php?example=MotorPosition&section=SystemModeling
+// 基于 https://ctms.engin.umich.edu/CTMS/index.php?example=MotorPosition&section=SystemModeling
 
 
 class ThreePhaseMotorElm extends CircuitElm {
@@ -53,7 +53,7 @@ class ThreePhaseMotorElm extends CircuitElm {
     }
     int getDumpType() { return 427; }
     String dump() {
-	// dump: inductance; resistance, K, Kb, J, b, gearRatio, tau
+	// 转储：电感；电阻, K, Kb, J, b, gearRatio, tau
 	return super.dump() + " " +  Rs + " " + Rr + " " + Ls + " " +  Lr + " " + Lm + " " + b + " " + J;
     }
     public double getAngle(){ return(angle);}
@@ -98,7 +98,7 @@ class ThreePhaseMotorElm extends CircuitElm {
     
     final int coilCount = 5;
     
-    // based on https://forum.kicad.info/t/ac-motors-simulation-1-phase-3-phase/14188/3
+    // 基于 https://forum.kicad.info/t/ac-motors-simulation-1-phase-3-phase/14188/3
     
     void stamp() {
 	int i;
@@ -122,9 +122,9 @@ class ThreePhaseMotorElm extends CircuitElm {
 	double couplingCoefs[][] = new double[coilCount][coilCount];
         xformMatrix = new double[coilCount][coilCount];
 
-        // see CustomTransformerElm.java
+        // 参见 CustomTransformerElm.java
         
-        // fill diagonal
+        // 填充对角线
         for (i = 0; i != coilCount; i++)
             xformMatrix[i][i] = coilInductances[i];
         
@@ -136,7 +136,7 @@ class ThreePhaseMotorElm extends CircuitElm {
         couplingCoefs[2][4] = couplingCoefs[4][2] = -k0*Math.sqrt(3)/2;
                 
         int j;
-        // fill off-diagonal
+        // 填充非对角线
         for (i = 0; i != coilCount; i++)
             for (j = 0; j != i; j++)
                 xformMatrix[i][j] = xformMatrix[j][i] = couplingCoefs[i][j]*Math.sqrt(coilInductances[i]*coilInductances[j]);
@@ -146,7 +146,7 @@ class ThreePhaseMotorElm extends CircuitElm {
         double ts = sim.timeStep;
         for (i = 0; i != coilCount; i++)
             for (j = 0; j != coilCount; j++) {
-                // multiply in dt/2 (or dt for backward euler)
+                // 乘以 dt/2（向后欧拉法时为 dt）
                 xformMatrix[i][j] *= ts;
                 int ni1 = coilNodes[i*2];
                 int nj1 = coilNodes[j*2];
@@ -337,7 +337,7 @@ class ThreePhaseMotorElm extends CircuitElm {
         NumberFormat nf = NumberFormat.getFormat("####.##");
         double va = Math.abs(v);
         if (va < 1e-14)
-            // this used to return null, but then wires would display "null" with 0V
+            // 之前这里返回 null，但那样电压为 0V 的导线会显示 "null"
             return "0" + sp + u;
         if (va < 1e-9)
             return nf.format(v*1e12) + sp + "p" + u;

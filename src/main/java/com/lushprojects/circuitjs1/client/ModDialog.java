@@ -45,7 +45,7 @@ public class ModDialog extends DialogBox {
 	VerticalPanel vp;
 	Storage lstor = Storage.getLocalStorageIfSupported();
 	
-	//for "UI scale:"
+	//用于“UI 缩放：”
 	HorizontalPanel scaleButtons;
 	Button setScale100Button;
 	Button setDefaultScaleButton;
@@ -61,12 +61,12 @@ public class ModDialog extends DialogBox {
 			"style=\"vertical-align:super\">"+scale+"%</span></b>";
 	}
 
-	//for "Top menu bar:"
+	//用于“顶部菜单栏：”
 	HorizontalPanel topMenuBarVars;
 	CheckBox setStandartTopMenu;
 	CheckBox setSmallTopMenu;
 
-	//for "Start/Stop and Reset buttons:"
+	//用于“启动/停止和复位按钮：”
 	HorizontalPanel btnsPreview;
 	HTML previewText;
 	Button resetPrevBtn;
@@ -146,12 +146,12 @@ public class ModDialog extends DialogBox {
 			}));
 		vp.add(new HTML("<p>* - the default UI scale for your monitor is set to "+
 			(int)(CirSim.getDefaultScale()*100+100)+"%</p>"));
-		// Styling buttons:
+		// 设置按钮样式：
 		setScaleButton.addStyleName("modButtons"); //.setHeight("20px");
 		setScaleButton.addStyleName("modSetButtons");
 		setScale100Button.addStyleName("modButtons");
 		setDefaultScaleButton.addStyleName("modButtons");
-		//remove "gwt-Button" style:
+		//移除“gwt-Button”样式：
 		setScaleButton.removeStyleName("gwt-Button");
 		setScale100Button.removeStyleName("gwt-Button");
 		setDefaultScaleButton.removeStyleName("gwt-Button");
@@ -199,7 +199,7 @@ public class ModDialog extends DialogBox {
 			}
 		});
 
-		// Styling checkboxes:
+		// 设置复选框样式：
 		topMenuBarVars.setCellHorizontalAlignment(setStandartTopMenu, HasHorizontalAlignment.ALIGN_CENTER);
 		topMenuBarVars.setCellHorizontalAlignment(setSmallTopMenu, HasHorizontalAlignment.ALIGN_CENTER);
 		
@@ -251,7 +251,7 @@ public class ModDialog extends DialogBox {
 
 		/*if (CirSim.absRunStopBtn.getElement().getInnerText() == "&#xE800;")
 			setStopIcon.setValue(true);
-		else setPauseIcon.setValue(true);*/ //try to get info from localstorage
+		else setPauseIcon.setValue(true);*/ //尝试从本地存储获取信息
 
 		if (lstor.getItem("MOD_absBtnIcon")=="stop") setStopIcon.setValue(true);
 		else setPauseIcon.setValue(true);
@@ -263,19 +263,19 @@ public class ModDialog extends DialogBox {
 					if (setClassicSRBtns.getValue()) {
 						setClassicSRBtns.setValue(false);
 						setDefaultSRBtns.setValue(true);
-						//Buttons for preview:
+						//预览按钮：
 						stopPrevBtn.removeStyleName("gwt-Button");
 						stopPrevBtn.addStyleName("modDefaultRunStopBtn");
 						resetPrevBtn.removeStyleName("gwt-Button");
 						resetPrevBtn.addStyleName("modDefaultResetBtn");
-						//Absolute buttons:
+						//绝对定位按钮：
 						CirSim.absRunStopBtn.removeStyleName("gwt-Button");
 						CirSim.absRunStopBtn.removeStyleName("modClassicButton");
 						CirSim.absRunStopBtn.addStyleName("modDefaultRunStopBtn");
 						CirSim.absResetBtn.removeStyleName("gwt-Button");
 						CirSim.absResetBtn.removeStyleName("modClassicButton");
 						CirSim.absResetBtn.addStyleName("modDefaultResetBtn");
-						//save:
+						//保存：
 						lstor.setItem("MOD_absBtnTheme", "default");
 					} else {
 						setDefaultSRBtns.setValue(true);
@@ -287,19 +287,19 @@ public class ModDialog extends DialogBox {
 					if (setDefaultSRBtns.getValue()) {
 						setDefaultSRBtns.setValue(false);
 						setClassicSRBtns.setValue(true);
-						//Buttons for preview:
+						//预览按钮：
 						stopPrevBtn.removeStyleName("modDefaultRunStopBtn");
 						stopPrevBtn.addStyleName("gwt-Button");
 						resetPrevBtn.removeStyleName("modDefaultResetBtn");
 						resetPrevBtn.addStyleName("gwt-Button");
-						//Absolute buttons:
+						//绝对定位按钮：
 						CirSim.absRunStopBtn.removeStyleName("modDefaultRunStopBtn");
 						CirSim.absRunStopBtn.addStyleName("gwt-Button");
 						CirSim.absRunStopBtn.addStyleName("modClassicButton");
 						CirSim.absResetBtn.removeStyleName("modDefaultResetBtn");
 						CirSim.absResetBtn.addStyleName("gwt-Button");
 						CirSim.absResetBtn.addStyleName("modClassicButton");
-						//save:
+						//保存：
 						lstor.setItem("MOD_absBtnTheme", "classic");
 					} else {
 						setClassicSRBtns.setValue(true);
@@ -314,7 +314,7 @@ public class ModDialog extends DialogBox {
 						stopPrevBtn.getElement().setInnerHTML("&#xE800;");
 						if (CirSimIsRunning())
 							CirSim.absRunStopBtn.getElement().setInnerHTML("&#xE800;");
-						//save:
+						//保存：
 						lstor.setItem("MOD_absBtnIcon", "stop");
 					} else {
 						setStopIcon.setValue(true);
@@ -329,7 +329,7 @@ public class ModDialog extends DialogBox {
 						stopPrevBtn.getElement().setInnerHTML("&#xE802;");
 						if (CirSimIsRunning())
 							CirSim.absRunStopBtn.getElement().setInnerHTML("&#xE802;");
-						//save:
+						//保存：
 						lstor.setItem("MOD_absBtnIcon", "pause");
 					} else {
 						setPauseIcon.setValue(true);
@@ -341,12 +341,12 @@ public class ModDialog extends DialogBox {
 					if (hideSRBtns.getValue()){
 						CirSim.absRunStopBtn.setVisible(false);
 						CirSim.absResetBtn.setVisible(false);
-						//save:
+						//保存：
 						lstor.setItem("MOD_hideAbsBtns", "true");
 					}else{
 						CirSim.absRunStopBtn.setVisible(true);
 						CirSim.absResetBtn.setVisible(true);
-						//save:
+						//保存：
 						lstor.setItem("MOD_hideAbsBtns", "false");
 					}
 				}

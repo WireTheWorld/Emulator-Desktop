@@ -110,18 +110,18 @@ class Counter2Elm extends ChipElm {
 		    int i;
 		    int value = 0;
 
-		    // get current value
+		    // 获取当前值
 		    int lastBit = bits-1;
 		    for (i = 0; i != bits; i++)
 			if (pins[lastBit-i].value)
 			    value |= 1<<i;
 
-		    // update value
+		    // 更新数值
 		    value++;
 		    int realmod = (modulus == 0) ? (1<<bits) : modulus;
 		    value %= realmod;
 
-		    // convert value to binary
+		    // 将数值转换为二进制
 		    for (i = 0; i != bits; i++)
 			writeOutput(lastBit-i, (value & (1<<i)) != 0);
 
@@ -135,7 +135,7 @@ class Counter2Elm extends ChipElm {
 
 		    int value = 0;
 
-		    // get current value
+		    // 获取当前值
 		    int lastBit = bits-1;
 		    for (i = 0; i != bits; i++)
 			if (pins[lastBit-i].value)

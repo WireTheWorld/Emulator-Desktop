@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// Zener code contributed by J. Mike Rollins
+// Zener 代码由 J. Mike Rollins 贡献
 // http://www.camotruck.net/rollins/simulator.html
 class ZenerElm extends DiodeElm {
     static String lastZenerModelName = "default-zener";
@@ -68,16 +68,16 @@ class ZenerElm extends DiodeElm {
 
 	draw2Leads(g);
 
-	// draw arrow thingy
+	// 绘制箭头状物
 	setPowerColor(g, true);
 	setVoltageColor(g, v1);
 	g.fillPolygon(poly);
 
-	// draw thing arrow is pointing to
+	// 绘制箭头所指的部分
 	setVoltageColor(g, v2);
 	drawThickLine(g, cathode[0], cathode[1]);
 
-	// draw wings on cathode
+	// 绘制阴极上的翅膀状线条
 	drawThickLine(g, wing[0], cathode[0]);
 	drawThickLine(g, wing[1], cathode[1]);
 	    

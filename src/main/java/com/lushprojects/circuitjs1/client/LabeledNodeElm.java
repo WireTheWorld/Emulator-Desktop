@@ -35,11 +35,11 @@ class LabeledNodeElm extends CircuitElm {
 	super(xa, ya, xb, yb, f);
 	text = st.nextToken();
 	if ((flags & FLAG_ESCAPE) == 0) {
-	    // old-style dump before escape/unescape
+	    // 转义/反转义之前的旧式转储
 	    while (st.hasMoreTokens())
 		text += ' ' + st.nextToken();
 	} else {
-	    // new-style dump
+	    // 新式转储
 	    text = CustomLogicModel.unescape(text); 
 	}
     }
@@ -72,15 +72,15 @@ class LabeledNodeElm extends CircuitElm {
 	lead1 = interpPoint(point1, point2, 1-circleSize/dn);
     }
     
-    // get post we're connected to
+    // 获取我们连接的接线柱
     Point getConnectedPost() {
 	LabelEntry le = labelList.get(text);
 	if (le != null)
 	    return le.point;
 	
-	// this is the first time calcWireClosure() encountered this label.  so save point1 and
-	// return null for now, but return point1 the next time we see this label so that all nodes
-	// with the same label are connected
+	// 这是 calcWireClosure() 第一次遇到此标签。因此保存 point1 并
+	// 暂时返回 null，但下次看到此标签时返回 point1，以便所有
+	// 具有相同标签的节点都能连接起来
 	le = new LabelEntry();
 	le.point = point1;
 	labelList.put(text, le);
@@ -90,16 +90,16 @@ class LabeledNodeElm extends CircuitElm {
     void setNode(int p, int n) {
 	super.setNode(p, n);
 	
-	// save node number so we can return it in getByName()
+	// 保存节点编号，以便在 getByName() 中返回它
 	LabelEntry le = labelList.get(text);
-	if (le != null) // should never happen
+	if (le != null) // 不应该发生
 	    le.node = n;
     }
     
     int getDumpType() { return 207; }
     int getPostCount() { return 1; }
     
-    // this is basically a wire, since it just connects two or more nodes together
+    // 这基本上是一根导线，因为它只是把两个或更多节点连接在一起
     boolean isWireEquivalent() { return true; }
     boolean isRemovableWire() { return true; }
     

@@ -21,14 +21,14 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// contributed by Edward Calver
+// 由 Edward Calver 贡献
 
 class TriStateElm extends CircuitElm {
     double resistance, r_on, r_off, r_off_ground, highVoltage;
 
-    // Unfortunately we need all three flags to keep track of flipping.
-    // FLAG_FLIP_X/Y affect the rounding direction if the elm is an odd grid length.
-    // FLAG_FLIP does not.
+    // 不幸的是，我们需要全部三个标志来跟踪翻转。
+    // 如果元件长度为奇数个网格，FLAG_FLIP_X/Y 会影响取整方向。
+    // FLAG_FLIP 不会。
     final int FLAG_FLIP = 1;
     final int FLAG_FLIP_X = 2;
     final int FLAG_FLIP_Y = 4;
@@ -40,7 +40,7 @@ class TriStateElm extends CircuitElm {
 	r_off_ground = 1e8;
 	noDiagonal = true;
             
-        // copy defaults from last gate edited
+        // 从上次编辑的门电路复制默认值
         highVoltage = GateElm.lastHighVoltage;
     }
 
@@ -113,13 +113,13 @@ class TriStateElm extends CircuitElm {
     }
 
     void calculateCurrent() {
-	// current from node 3 to node 1
+	// 从节点 3 到节点 1 的电流
 	double current31 = (volts[3]-volts[1])/resistance;
 	
-	// current from node 1 through pulldown
+	// 从节点 1 经下拉电阻的电流
 	double current10 = (r_off_ground == 0) ? 0 : volts[1]/r_off_ground;
 
-	// output current is difference of these
+	// 输出电流是这两者的差值
 	current = current31-current10;
     }
 
@@ -129,17 +129,17 @@ class TriStateElm extends CircuitElm {
 	return 0;
     }
 
-    // we need this to be able to change the matrix for each step
+    // 我们需要这个以便能在每一步更改矩阵
     boolean nonLinear() {
 	return true;
     }
 
-    // node 0: input
-    // node 1: output
-    // node 2: control input
-    // node 3: internal node
-    // there is a voltage source connected to node 3, and a resistor (r_off or r_on) from node 3 to 1.
-    // then there is a pulldown resistor from node 1 to ground.
+    // 节点 0：输入
+    // 节点 1：输出
+    // 节点 2：控制输入
+    // 节点 3：内部节点
+    // 有一个电压源连接到节点 3，还有一个电阻（r_off 或 r_on）从节点 3 连接到节点 1。
+    // 然后有一个下拉电阻从节点 1 连接到地。
     void stamp() {
 	sim.stampVoltageSource(0, nodes[3], voltSource);
 	sim.stampNonLinear(nodes[3]);
@@ -151,8 +151,8 @@ class TriStateElm extends CircuitElm {
 	resistance = (open) ? r_off : r_on;
 	sim.stampResistor(nodes[3], nodes[1], resistance);
 	
-	// Add pulldown resistor for output, so that disabled tristate has output near ground if nothing
-	// else is driving the output.  Otherwise people get confused.
+	// 为输出添加下拉电阻，这样当没有其他器件驱动输出时，
+	// 禁用的三态缓冲器输出会接近地电位。否则会让人困惑。
 	if (r_off_ground > 0)
 	    sim.stampResistor(nodes[1], 0, r_off_ground);
 	
@@ -160,7 +160,7 @@ class TriStateElm extends CircuitElm {
     }
 
     void drag(int xx, int yy) {
-	// use mouse to select which side the buffer enable should be on
+	// 用鼠标选择缓冲器使能端应位于哪一侧
 	boolean flip = (xx < x) == (yy < y);
 	
 	xx = sim.snapGrid(xx);
@@ -199,8 +199,8 @@ class TriStateElm extends CircuitElm {
 	arr[4] = "Vc = " + getVoltageText(volts[2]);
     }
 
-    // there is no current path through the input, but there
-    // is an indirect path through the output to ground.
+    // 输入没有电流通路，但存在
+    // 一条经过输出到地的间接通路。
     boolean getConnection(int n1, int n2) {
 	return false;
     }

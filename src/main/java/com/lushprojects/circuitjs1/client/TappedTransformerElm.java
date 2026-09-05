@@ -83,12 +83,12 @@ package com.lushprojects.circuitjs1.client;
 	    for (i = 0; i != 4; i++)
 		curcount[i] = updateDotCount(current[i], curcount[i]);
 
-	    // primary dots
+	    // 初级绕组圆点
 	    drawDots(g, ptEnds[0], ptCoil[0], curcount[0]);
 	    drawDots(g, ptCoil[0], ptCoil[1], curcount[0]);
 	    drawDots(g, ptCoil[1], ptEnds[1], curcount[0]);
 
-	    // secondary dots
+	    // 次级绕组圆点
 	    drawDots(g, ptEnds[2], ptCoil[2], curcount[1]);
 	    drawDots(g, ptCoil[2], ptCoil[3], curcount[1]);
 	    drawDots(g, ptCoil[3], ptEnds[3], curcount[3]);
@@ -132,44 +132,44 @@ package com.lushprojects.circuitjs1.client;
 	void reset() {
 	    current[0] = current[1] = current[2] = current[3] = volts[0] = volts[1] = volts[2] =
 		volts[3] = volts[4] = curcount[0] = curcount[1] = curcount[2] = 0;
-	    // need to set current-source values here in case one of the nodes is node 0.  In that case
-	    // calculateCurrent() may get called (from setNodeVoltage()) when analyzing circuit, before
-	    // startIteration() gets called
+	    // 需要在此设置电流源值，以防某个节点是节点 0。在这种情况下，
+	    // 分析电路时可能会（从 setNodeVoltage()）调用 calculateCurrent()，而
+	    // startIteration() 尚未被调用
 	    curSourceValue[0] = curSourceValue[1] = curSourceValue[2] = 0;
 	}
 	double a[];
 	void stamp() {
-	    // equations for transformer:
+	    // 变压器的方程：
 	    //   v1 = L1 di1/dt + M1 di2/dt + M1 di3/dt
 	    //   v2 = M1 di1/dt + L2 di2/dt + M2 di3/dt
 	    //   v3 = M1 di1/dt + M2 di2/dt + L2 di3/dt
-	    // we invert that to get:
+	    // 我们对其求逆得到：
 	    //   di1/dt = a1 v1 + a2 v2 + a3 v3
 	    //   di2/dt = a4 v1 + a5 v2 + a6 v3
 	    //   di3/dt = a7 v1 + a8 v2 + a9 v3
-	    // integrate di1/dt using trapezoidal approx and we get:
+	    // 使用梯形法近似对 di1/dt 积分，得到：
 	    //   i1(t2) = i1(t1) + dt/2 (i1(t1) + i1(t2))
 	    //          = i1(t1) + a1 dt/2 v1(t1)+a2 dt/2 v2(t1)+a3 dt/2 v3(t1) +
 	    //                     a1 dt/2 v1(t2)+a2 dt/2 v2(t2)+a3 dt/2 v3(t2)
-	    // the norton equivalent of this for i1 is:
-	    //  a. current source, I = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1)
+	    // 其 i1 的诺顿等效为：
+	    //  a. 电流源，I = i1(t1) + a1 dt/2 v1(t1) + a2 dt/2 v2(t1)
 	    //                                + a3 dt/2 v3(t1)
-	    //  b. resistor, G = a1 dt/2
-	    //  c. current source controlled by voltage v2, G = a2 dt/2
-	    //  d. current source controlled by voltage v3, G = a3 dt/2
-	    // and similarly for i2, i3
+	    //  b. 电阻，G = a1 dt/2
+	    //  c. 由电压 v2 控制的电流源，G = a2 dt/2
+	    //  d. 由电压 v3 控制的电流源，G = a3 dt/2
+	    // i2、i3 同理
 	    // 
-	    // first winding goes from node 0 to 1, second is from 2 to 3 to 4
+	    // 第一个绕组从节点 0 到 1，第二个绕组从 2 到 3 再到 4
 	    double l1 = inductance;
-	    // second winding is split in half, so each part has half the turns;
-	    // we square the 1/2 to divide by 4
+	    // 第二个绕组被分成两半，因此每部分只有一半的匝数；
+	    // 我们将 1/2 平方，即除以 4
 	    double l2 = inductance*ratio*ratio/4;
 	    double m1 = couplingCoef*Math.sqrt(l1*l2);
-	    // mutual inductance between two halves of the second winding
-	    // is equal to self-inductance of either half (slightly less
-	    // because the coupling is not perfect)
+	    // 第二个绕组两半之间的互感
+	    // 等于其中任何一半的自感（略小，
+	    // 因为耦合不是理想的）
 	    double m2 = couplingCoef*l2;
-	    // load pre-inverted matrix
+	    // 加载预求逆的矩阵
 	    a[0] = l2+m2;
 	    a[1] = a[2] = a[3] = a[6] = -m1;
 	    a[4] = a[8] = (l1*l2-m1*m1)/(l2-m2);
@@ -222,7 +222,7 @@ package com.lushprojects.circuitjs1.client;
 		for (j = 0; j != 3; j++)
 		    current[i] += a[i*3+j]*voltdiff[j];
 	    }
-	    // calc current of tap wire
+	    // 计算抽头引线的电流
 	    current[3] = current[1]-current[2];
 	}
 	void getInfo(String arr[]) {

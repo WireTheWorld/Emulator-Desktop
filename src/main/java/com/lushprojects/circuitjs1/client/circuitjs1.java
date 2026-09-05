@@ -38,16 +38,16 @@ public class circuitjs1 implements EntryPoint {
 
     public static final String versionString = "3.1.3js";
 
-    // Set to true if the server runs the shortrelay.php file in the same directory
-    // as the circuit simulator
+    // 如果服务器在与电路模拟器相同的目录中
+    // 运行 shortrelay.php 文件，则设为 true
     public static final boolean shortRelaySupported = false;
 
     static CirSim mysim;
 
-    // This is the program entrypoint! 
-    // Called by gtw automagically (see circuitjs1.gwt.xml)
+    // 这是程序入口点！ 
+    // 由 gtw 自动调用（参见 circuitjs1.gwt.xml）
     public void onModuleLoad() {
-        // loadLocale() launches the sim after determining the language (see below)
+        // loadLocale() 在确定语言后启动模拟器（见下文）
         loadLocale();
     }
 
@@ -56,7 +56,7 @@ public class circuitjs1 implements EntryPoint {
             if (navigator.languages.length > 0) {
                 return navigator.languages[0];
             } else {
-                // In Electron, navigator.languages returns an empty array
+                // 在 Electron 中，navigator.languages 返回一个空数组
                 return "en-US";
             }
         } else {
@@ -78,14 +78,14 @@ public class circuitjs1 implements EntryPoint {
 
         GWT.log("got language " + lang);
 
-        // check for Taiwan Chinese. Otherwise, strip the region code
+        // 检查台湾中文。否则，去掉地区代码
         if (lang.equalsIgnoreCase("zh-tw") || lang.equalsIgnoreCase("zh-cht"))
             lang = "zh-tw";
         else
             lang = lang.replaceFirst("-.*", "");
 
         if (lang.startsWith("en")) {
-            // no need to load locale file for English
+            // 英文无需加载语言文件
             HashMap<String, String> localizationMap = new HashMap<String, String>();
             loadSimulator(localizationMap);
             return;
@@ -106,8 +106,8 @@ public class circuitjs1 implements EntryPoint {
                         localizationMap = processLocale(text);
                     } else {
                         GWT.log("Bad file server response: " + response.getStatusText());
-                        // if there was an error in retrieving the 
-                        // language, default to English (empty map)
+                        // 如果获取语言时出现错误， 
+                        // 则默认使用英文（空映射）
                         localizationMap = new HashMap<String, String>();
                     }
                     loadSimulator(localizationMap);
@@ -128,20 +128,20 @@ public class circuitjs1 implements EntryPoint {
 
         while (i < length) {
             if (i + 5 < length && input.charAt(i) == '\\' && input.charAt(i + 1) == 'u') {
-                // Found a Unicode escape sequence
+                // 找到 Unicode 转义序列
                 String hexCode = input.substring(i + 2, i + 6);
                 try {
-                    // Convert hex code to a Unicode character
+                    // 将十六进制代码转换为 Unicode 字符
                     int codePoint = Integer.parseInt(hexCode, 16);
                     result.append((char) codePoint);
-                    i += 6;  // Skip past the escape sequence
+                    i += 6;  // 跳过转义序列
                 } catch (NumberFormatException e) {
-                    // If the hex code is invalid, append as is
+                    // 如果十六进制代码无效，则按原样追加
                     result.append("\\u").append(hexCode);
                     i += 6;
                 }
             } else {
-                // Normal character, just append it
+                // 普通字符，直接追加
                 result.append(input.charAt(i));
                 i++;
             }

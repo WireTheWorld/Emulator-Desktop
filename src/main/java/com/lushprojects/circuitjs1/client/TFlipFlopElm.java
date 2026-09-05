@@ -63,11 +63,11 @@ package com.lushprojects.circuitjs1.client;
 	void execute() {
 	    if (pins[3].value && !lastClock)
 	    {
-	    	if(pins[0].value) //if T = 1
+	    	if(pins[0].value) //如果 T = 1
 	    	{
 	    		pins[1].value = !pins[1].value;
 	    	}
-	    	//else no change
+	    	//否则不变
 			
 	    }
 	    if(hasSet() && pins[5].value)

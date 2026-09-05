@@ -71,19 +71,19 @@ package com.lushprojects.circuitjs1.client;
 	    drawPosts(g);
 	}
 	
-	// analyzeCircuit determines if current source has a path or if it's broken
+	// analyzeCircuit 判断电流源是否有通路或是否已断开
 	void setBroken(boolean b) {
 	    broken = b;
 	}
 	
-	// we defer stamping current sources until we can tell if they have a current path or not
+	// 我们推迟对电流源的标记，直到能判断它们是否有电流通路
 	void stamp() {
 	    if (broken) {
-		// no current path; stamping a current source would cause a matrix error.
+		// 无电流通路；标记电流源会导致矩阵错误。
 		sim.stampResistor(nodes[0], nodes[1], 1e8);
 		current = 0;
 	    } else {
-		// ok to stamp a current source
+		// 可以标记电流源
 		sim.stampCurrentSource(nodes[0], nodes[1], currentValue);
 		current = currentValue;
 	    }

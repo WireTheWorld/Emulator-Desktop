@@ -66,10 +66,10 @@ class TimerElm extends ChipElm {
     @Override boolean isDigitalChip() { return false; }
     void stamp() {
 	ground = hasGroundPin() ? nodes[N_GND] : 0;
-	// stamp voltage divider to put ctl pin at 2/3 V
+	// 添加分压电阻，使 ctl 引脚处于 2/3 V
 	sim.stampResistor(nodes[N_VCC], nodes[N_CTL],  5000);
 	sim.stampResistor(nodes[N_CTL], ground,        10000);
-	// discharge, output, and Vcc pins change in doStep()
+	// 放电、输出和 Vcc 引脚在 doStep() 中变化
 	sim.stampNonLinear(nodes[N_DIS]);
 	sim.stampNonLinear(nodes[N_OUT]);
 	sim.stampNonLinear(nodes[N_VCC]);
@@ -77,8 +77,8 @@ class TimerElm extends ChipElm {
 	    sim.stampNonLinear(nodes[N_GND]);
     }
     void calculateCurrent() {
-	// need current for V, discharge, control, ground; output current is
-	// calculated for us, and other pins have no current.
+	// 需要 V、放电、控制、接地引脚的电流；输出电流由
+	// 系统为我们计算，其他引脚没有电流。
 	pins[N_VCC].current = (volts[N_CTL]-volts[N_VCC])/5000;
 	double groundVolts = hasGroundPin() ? volts[N_GND] : 0;
 	pins[N_CTL].current = -(volts[N_CTL]-groundVolts)/10000 - pins[N_VCC].current;
@@ -98,32 +98,32 @@ class TimerElm extends ChipElm {
     void startIteration() {
 	double groundVolts = hasGroundPin() ? volts[N_GND] : 0;	
 	out = volts[N_OUT] > (volts[N_VCC]+groundVolts)/2;
-	// check comparators
+	// 检查比较器
 	if (volts[N_THRES] > volts[N_CTL])
 	    out = false;
 	
-	// trigger overrides threshold
-	// (save triggered flag in case reset and trigger pins are tied together)
+	// 触发器优先于阈值
+	// （保存触发标志，以防复位和触发引脚连接在一起）
 	boolean triggered = ((volts[N_CTL]+groundVolts)/2 > volts[N_TRIG]);
 	if (triggered || triggerSuppressed)
 	    out = true;
 	
-	// reset overrides trigger
+	// 复位优先于触发
 	if (hasReset() && volts[N_RST] < .7+groundVolts) {
 	    out = false;
-	    // if trigger is overriden, save it
+	    // 如果触发器被覆盖，则保存它
 	    triggerSuppressed = triggered;
 	} else
 	    triggerSuppressed = false;
     }
     void doStep() {
-	// if output is low, discharge pin 0.  we use a small
-	// resistor because it's easier, and sometimes people tie
-	// the discharge pin to the trigger and threshold pins.
+	// 如果输出为低电平，将放电引脚置 0。我们使用一个小
+	// 电阻，因为这样更简单，而且有时人们会把
+	// 放电引脚与触发和阈值引脚连接在一起。
 	if (!out)
 	    sim.stampResistor(nodes[N_DIS], ground, 10);
 	
-	// if output is high, connect Vcc to output with a small resistor.  Otherwise connect output to ground.
+	// 如果输出为高电平，通过一个小电阻将 Vcc 连接到输出。否则将输出连接到地。
 	sim.stampResistor(out ? nodes[N_VCC] : ground, nodes[N_OUT], 1); 
     }
     int getPostCount() { return hasGroundPin() ? 8 : hasReset() ? 7 : 6; }

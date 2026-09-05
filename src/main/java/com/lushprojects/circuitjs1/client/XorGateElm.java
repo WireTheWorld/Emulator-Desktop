@@ -36,7 +36,7 @@ package com.lushprojects.circuitjs1.client;
 	}
 	
 	public EditInfo getEditInfo(int n) {
-	    // no invert inputs option
+	    // 无反转输入选项
 	    if (n == 3)
 		return null;
 	    return super.getEditInfo(n);

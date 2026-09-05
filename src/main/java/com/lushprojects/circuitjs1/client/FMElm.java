@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// contributed by Edward Calver
+// 由 Edward Calver 贡献
 
 class FMElm extends CircuitElm {
     static final int FLAG_COS = 2;

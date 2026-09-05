@@ -74,24 +74,24 @@ class AmmeterElm extends CircuitElm {
     Point center;
     Point mid;
     static final int FLAG_SHOWCURRENT = 1;
-    static final int FLAG_CIRCLE = 2;  // Add this line
+    static final int FLAG_CIRCLE = 2;  // 添加此行
 
     void stepFinished(){
-        count++;//how many counts are in a cycle    
-        total += current*current; //sum of squares
+        count++;// 一个周期内的计数次数    
+        total += current*current; // 平方和
         if (current>maxI && increasingI){
             maxI = current;
             increasingI = true;
             decreasingI = false;
         }
-        if (current<maxI && increasingI){//change of direction I now going down - at start of waveform
-            lastMaxI=maxI; //capture last maximum 
-            //capture time between
-            minI=current; //track minimum value 
+        if (current<maxI && increasingI){// 方向改变，电流现在开始下降——位于波形起始处
+            lastMaxI=maxI; // 记录上一次最大值 
+            // 记录时间间隔
+            minI=current; // 跟踪最小值 
             increasingI=false;
             decreasingI=true;
             
-            //rms data
+            // rms 数据
             total = total/count;
             rmsI = Math.sqrt(total);
             if (Double.isNaN(rmsI))
@@ -100,20 +100,20 @@ class AmmeterElm extends CircuitElm {
             total=0;
             
         }
-        if (current<minI && decreasingI){ //I going down, track minimum value
+        if (current<minI && decreasingI){ // 电流下降，跟踪最小值
             minI=current;
             increasingI=false;
             decreasingI=true;
         }
 
-        if (current>minI && decreasingI){ //change of direction I now going up
-            lastMinI=minI; //capture last minimum
+        if (current>minI && decreasingI){ // 方向改变，电流现在开始上升
+            lastMinI=minI; // 记录上一次最小值
 
             maxI = current;
             increasingI = true;
             decreasingI = false;
             
-            //rms data
+            // rms 数据
             total = total/count;
             rmsI = Math.sqrt(total);
             if (Double.isNaN(rmsI))
@@ -123,7 +123,7 @@ class AmmeterElm extends CircuitElm {
 
             
         }
-        //need to zero the rms value if it stays at 0 for a while
+        // 如果 rms 值在一段时间内保持为 0，需要将其清零
         if (current==0){
             zerocount++;
             if (zerocount > 5){
@@ -147,7 +147,7 @@ class AmmeterElm extends CircuitElm {
     
     Polygon arrowPoly;
     void draw(Graphics g) {
-        super.draw(g);//BC required for highlighting
+        super.draw(g);// 高亮显示所需（BC）
         setVoltageColor(g, volts[0]);
 	double width = 4;
         if (!drawAsCircle()) {
@@ -216,8 +216,8 @@ class AmmeterElm extends CircuitElm {
     double getPower() { return 0; }
     double getVoltageDiff() { return volts[0]; }
     
-    // do not optimize out, even though isWireEquivalent() is true
-    // (because we need current calculated every timestep)    
+    // 即使 isWireEquivalent() 返回 true 也不要将其优化掉
+    // （因为我们需要每个时间步都计算电流）    
     boolean isWireEquivalent() { return true; }
     
     boolean drawAsCircle() {

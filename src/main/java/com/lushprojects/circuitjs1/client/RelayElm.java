@@ -22,13 +22,13 @@ package com.lushprojects.circuitjs1.client;
 import com.google.gwt.user.client.ui.Button;
 import com.lushprojects.circuitjs1.client.util.Locale;
 
-// 0 = switch
-// 1 = switch end 1
-// 2 = switch end 2
+// 0 = 开关
+// 1 = 开关端 1
+// 2 = 开关端 2
 // ...
-// 3n   = coil
-// 3n+1 = coil
-// 3n+2 = end of coil resistor
+// 3n   = 线圈
+// 3n+1 = 线圈
+// 3n+2 = 线圈电阻端
 
 class RelayElm extends CircuitElm {
     final int FLAG_SWAP_COIL = 1;
@@ -44,15 +44,15 @@ class RelayElm extends CircuitElm {
     Point outline[] = newPointArray(4);
     double coilCurrent, switchCurrent[], coilCurCount, switchCurCount[];
     
-    // fractional position, between 0 and 1 inclusive
+    // 分数位置，介于 0 到 1 之间（含）
     double d_position;
     
-    // integer position, can be 0 (off), 1 (on), 2 (in between)
+    // 整数位置，可为 0（断开）、1（接通）、2（中间状态）
     int i_position;
     
     double coilR;
     
-    // time to switch in seconds, or 0 for old model where switching time was not constant
+    // 切换时间（秒），旧模型的切换时间不是恒定的，此时为 0
     double switchingTime;
     
     int poleCount;
@@ -100,7 +100,7 @@ class RelayElm extends CircuitElm {
 	} catch (Exception e) {}	
 	if (i_position == 1)
 	    onState = true;
-	// intermediate state?
+	// 中间状态？
 	if (i_position == 2)
 	    d_position = .5;
 	noDiagonal = true;
@@ -139,7 +139,7 @@ class RelayElm extends CircuitElm {
 	drawCoil(g, dflip*6, coilLeads[x], coilLeads[1-x],
 		 volts[nCoil1+x], volts[nCoil2-x]);
 
-	// draw rectangle
+	// 绘制矩形
 	if ((flags & FLAG_SHOW_BOX) != 0) {
 		g.setColor(needsHighlight() ? selectColor : lightGrayColor);
 		drawThickLine(g, outline[0], outline[1]);
@@ -148,7 +148,7 @@ class RelayElm extends CircuitElm {
 		drawThickLine(g, outline[3], outline[0]);
 	}
 	
-	// draw lines
+	// 绘制线条
 	g.setColor(Color.darkGray);
 	for (i = 0; i != poleCount; i++) {
 	    if (i == 0) {
@@ -168,7 +168,7 @@ class RelayElm extends CircuitElm {
 	for (p = 0; p != poleCount; p++) {
 	    int po = p*3;
 	    for (i = 0; i != 3; i++) {
-		// draw lead
+		// 绘制引线
 		setVoltageColor(g, volts[nSwitch0+po+i]);
 		drawThickLine(g, swposts[p][i], swpoles[p][i]);
 	    }
@@ -222,7 +222,7 @@ class RelayElm extends CircuitElm {
 	dflip = hasFlag(FLAG_FLIP) ? -dsign : dsign;
 	openhs = -dflip*16;
 
-	// switch
+	// 开关
 	calcLeads(32);
 	swposts = new Point[poleCount][3];
 	swpoles = new Point[poleCount][3];
@@ -240,7 +240,7 @@ class RelayElm extends CircuitElm {
 	    interpPoint(point1, point2, swposts[i][2], 1, -openhs*3*i+openhs);
 	}
 
-	// coil
+	// 线圈
 	coilPosts = newPointArray(2);
 	coilLeads   = newPointArray(2);
 	ptSwitch = newPointArray(poleCount);
@@ -261,10 +261,10 @@ class RelayElm extends CircuitElm {
 	    boxSize = 40;
 	}
 
-	// lines
+	// 线条
 	lines = newPointArray(poleCount*2);
 	
-	// outline
+	// 轮廓
 	double boxWScale = Math.min(0.4, 25.0 / dn);
 	interpPoint(point1, point2, outline[0], 0.5 - boxWScale, -boxSize * dflip);
 	interpPoint(point1, point2, outline[1], 0.5 + boxWScale, -boxSize * dflip);
@@ -291,14 +291,14 @@ class RelayElm extends CircuitElm {
 	    switchCurrent[i] = switchCurCount[i] = 0;
 	d_position = i_position = 0;
 
-	// preserve onState because if we don't, Relay Flip-Flop gets left in a weird state on reset.
+	// 保留 onState，否则复位时继电器触发器会处于异常状态。
 	// onState = false;
     }
     double a1, a2, a3, a4;
     void stamp() {
-	// inductor from coil post 1 to internal node
+	// 从线圈端 1 到内部节点的电感
 	ind.stamp(nodes[nCoil1], nodes[nCoil3]);
-	// resistor from internal node to coil post 2
+	// 从内部节点到线圈端 2 的电阻
 	sim.stampResistor(nodes[nCoil3], nodes[nCoil2], coilR);
 
 	int i;
@@ -307,7 +307,7 @@ class RelayElm extends CircuitElm {
     }
     
     void startIteration() {
-	// using old model?
+	// 使用旧模型？
 	if (switchingTime == 0) {
 	    startIterationOld();
 	    return;
@@ -316,9 +316,9 @@ class RelayElm extends CircuitElm {
 	double absCurrent = Math.abs(coilCurrent);
 	
 	if (onState) {
-	    // on or turning on.  check if we need to turn off
+	    // 已接通或正在接通。检查是否需要断开
 	    if (absCurrent < offCurrent) {
-		// turning off, set switch to intermediate position
+		// 正在断开，将开关置于中间位置
 		onState = false;
 		i_position = 2;
 	    } else {
@@ -327,9 +327,9 @@ class RelayElm extends CircuitElm {
 		    d_position = i_position = 1;
 	    }
 	} else {
-	    // off or turning off.  check if we need to turn on
+	    // 已断开或正在断开。检查是否需要接通
 	    if (absCurrent > onCurrent) {
-		// turning on, set switch to intermediate position
+		// 正在接通，将开关置于中间位置
 		onState = true;
 		i_position = 2;
 	    } else {
@@ -344,7 +344,7 @@ class RelayElm extends CircuitElm {
     void startIterationOld() {
 	ind.startIteration(volts[nCoil1]-volts[nCoil3]);
 
-	// magic value to balance operate speed with reset speed not at all realistically
+	// 用于平衡动作速度与复位速度的魔数，并不完全符合实际
 	double magic = 1.3;
 	double pmult = Math.sqrt(magic+1);
 	double c = onCurrent;
@@ -363,7 +363,7 @@ class RelayElm extends CircuitElm {
 	//System.out.println("ind " + this + " " + current + " " + voltdiff);
     }
     	
-    // we need this to be able to change the matrix for each step
+    // 需要此方法以便能够每一步都修改矩阵
     boolean nonLinear() { return true; }
 
     void doStep() {
@@ -381,8 +381,8 @@ class RelayElm extends CircuitElm {
 	double voltdiff = volts[nCoil1]-volts[nCoil3];
 	coilCurrent = ind.calculateCurrent(voltdiff);
 
-	// actually this isn't correct, since there is a small amount
-	// of current through the switch when off
+	// 实际上这并不正确，因为开关断开时仍有少量
+	// 电流流过开关
 	int p;
 	for (p = 0; p != poleCount; p++) {
 	    if (i_position == 2)
@@ -419,8 +419,8 @@ class RelayElm extends CircuitElm {
 	    return new EditInfo("On Current (A)", onCurrent, 0, 0);
 	if (n == 4) {
 	    if (switchingTime == 0) {
-		// still using old model, so hide off current which won't work.
-		// make button to switch to new model
+		// 仍在使用旧模型，因此隐藏不起作用的断开电流。
+		// 创建切换到新模型的按钮
                 EditInfo ei = new EditInfo("", 0, -1, -1);
                 ei.button = new Button(Locale.LS("Use New Model"));
                 return ei;
@@ -452,7 +452,7 @@ class RelayElm extends CircuitElm {
 	    return ei;
 	}
 	
-	// show switching time only for new model, since it is meaningless for old one
+	// 仅对新模型显示切换时间，因为对旧模型没有意义
 	if (n == 9 && switchingTime > 0)
 	    return new EditInfo("Switching Time (s)", switchingTime, 0, 0);
 	return null;
@@ -470,9 +470,9 @@ class RelayElm extends CircuitElm {
 	if (n == 3 && ei.value > 0)
 	    onCurrent = ei.value;
 	if (n == 4) {
-	    // this could be a button or a text box for off current
+	    // 这里可能是“断开电流”的按钮或文本框
 	    if (ei.button != null) {
-		// upgrading to new model
+		// 升级到新模型
 		switchingTime = 5e-3;
 		ei.newDialog = true;
 	    } else if (ei.value > 0)

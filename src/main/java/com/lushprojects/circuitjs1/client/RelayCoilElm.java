@@ -34,25 +34,25 @@ class RelayCoilElm extends CircuitElm {
     double coilCurrent, coilCurCount;
     double avgCurrent;
     
-    // fractional position, between 0 and 1 inclusive
+    // 分数位置，介于 0 到 1 之间（含）
     double d_position;
     
-    // integer position, can be 0 (off), 1 (on), 2 (in between)
+    // 整数位置，可为 0（断开）、1（接通）、2（中间状态）
     int i_position;
     
     double coilR;
     
-    // time to switch in seconds
+    // 切换时间（秒）
     double switchingTime;
     double switchingTimeOn, switchingTimeOff;
     double lastTransition;
     
     int openhs;
     
-    // 0 = waiting for onCurrent
-    // 1 = waiting to turn on
-    // 2 = waiting for offCurrent
-    // 3 = waiting to turn off
+    // 0 = 等待 onCurrent
+    // 1 = 等待接通
+    // 2 = 等待 offCurrent
+    // 3 = 等待断开
     int state;
     int switchPosition;
     
@@ -124,7 +124,7 @@ class RelayCoilElm extends CircuitElm {
 	}
 	setPowerColor(g, coilCurrent * (volts[nCoil1]-volts[nCoil2]));
 
-	// draw rectangle
+	// 绘制矩形
 	g.setColor(needsHighlight() ? selectColor : lightGrayColor);
 	drawThickLine(g, outline[0], outline[1]);
 	drawThickLine(g, outline[1], outline[2]);
@@ -164,7 +164,7 @@ class RelayCoilElm extends CircuitElm {
 	setBbox(outline[0], outline[2], 0);
 	adjustBbox(coilPosts[0], coilPosts[1]);
 
-	// this never gets called for subcircuits
+	// 对于子电路，此方法永远不会被调用
 	//setSwitchPositions();
     }
 	
@@ -180,7 +180,7 @@ class RelayCoilElm extends CircuitElm {
 	allocNodes();
 	openhs = -dsign*16;
 
-	// coil
+	// 线圈
 	coilPosts = newPointArray(2);
 	coilLeads   = newPointArray(2);
 
@@ -189,7 +189,7 @@ class RelayCoilElm extends CircuitElm {
 	coilPosts[1] = point2;
 	boxSize = 32;
 
-	// outline
+	// 轮廓
 	double boxWScale = Math.min(0.4, 12.0 / dn);
 	interpPoint(point1, point2, coilLeads[0], 0.5-boxWScale);
 	interpPoint(point1, point2, coilLeads[1], 0.5+boxWScale);
@@ -230,14 +230,14 @@ class RelayCoilElm extends CircuitElm {
 	d_position = i_position = 0;
 	avgCurrent = 0;
 
-	// preserve onState because if we don't, Relay Flip-Flop gets left in a weird state on reset.
+	// 保留 onState，否则复位时继电器触发器会处于异常状态。
 	// onState = false;
     }
     double a1, a2, a3, a4;
     void stamp() {
-	// inductor from coil post 1 to internal node
+	// 从线圈端 1 到内部节点的电感
 	ind.stamp(nodes[nCoil1], nodes[nCoil3]);
-	// resistor from internal node to coil post 2
+	// 从内部节点到线圈端 2 的电阻
 	sim.stampResistor(nodes[nCoil3], nodes[nCoil2], coilR);
 	
 	if (type == TYPE_ON_DELAY) {

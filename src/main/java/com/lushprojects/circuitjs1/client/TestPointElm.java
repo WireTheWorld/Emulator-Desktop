@@ -33,7 +33,7 @@ class TestPointElm extends CircuitElm {
     final int TP_FRQ = 6;
     final int TP_PER = 7;
     final int TP_PWI = 8;
-    final int TP_DUT = 9; //mark to space ratio
+    final int TP_DUT = 9; //占空比（高电平与低电平之比）
     final int FLAG_LABEL = 1;
     int zerocount=0;
     double rmsV=0, total, count;
@@ -41,7 +41,7 @@ class TestPointElm extends CircuitElm {
     double minV=0, lastMinV;
     double frequency=0;
     double period=0;
-    double binaryLevel=0;//0 or 1 - double because we only pass doubles back to the web page
+    double binaryLevel=0;//0 或 1 - 用 double 是因为我们只向网页传递 double 值
     double pulseWidth=0;
     double dutyCycle=0;
     double selectedValue=0;
@@ -49,7 +49,7 @@ class TestPointElm extends CircuitElm {
     
     double voltages[];
     boolean increasingV=true, decreasingV=true;
-    long periodStart, periodLength, pulseStart;//time between consecutive max values
+    long periodStart, periodLength, pulseStart;//连续最大值之间的时间
     String label;
     
     public TestPointElm(int xx, int yy) { 
@@ -60,7 +60,7 @@ class TestPointElm extends CircuitElm {
     public TestPointElm(int xa, int ya, int xb, int yb, int f,
              StringTokenizer st) {
         super(xa, ya, xb, yb, f);
-        meter = new Integer(st.nextToken()).intValue(); //get meter type from saved dump
+        meter = new Integer(st.nextToken()).intValue(); //从保存的转储中获取仪表类型
 	if ((flags & FLAG_LABEL) != 0)
 	    label = CustomLogicModel.unescape(st.nextToken());
 	else
@@ -139,13 +139,13 @@ class TestPointElm extends CircuitElm {
         Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
         g.setFont(f);
         g.setColor(selected ? selectColor : whiteColor);
-        //depending upon flags show voltage or TP
+        //根据标志显示电压或测试点
         
         String s = label;
         interpPoint(point1, point2, lead1, 1-((int)g.context.measureText("TP").getWidth()/2+8)/dn);
         setBbox(point1, lead1, 0);
         
-        //draw selected value
+        //绘制所选值
         switch (meter) {
             case TP_VOL:
                 s = getUnitText(volts[0],"V");
@@ -193,8 +193,8 @@ class TestPointElm extends CircuitElm {
 	if (sim.timeStepCount == lastStepCount)
 	    return;
 	lastStepCount = sim.timeStepCount;
-        count++;//how many counts are in a cycle    
-        total += volts[0]*volts[0]; //sum of squares
+        count++;//一个周期内有多少个计数    
+        total += volts[0]*volts[0]; //平方和
 
         if (volts[0]<2.5)
             binaryLevel = 0;
@@ -202,25 +202,25 @@ class TestPointElm extends CircuitElm {
             binaryLevel = 1;
         
         
-        //V going up, track maximum value with 
+        //电压上升，跟踪最大值
         if (volts[0]>maxV && increasingV){
             maxV = volts[0];
             increasingV = true;
             decreasingV = false;
         }
-        if (volts[0]<maxV && increasingV){//change of direction V now going down - at start of waveform
-            lastMaxV=maxV; //capture last maximum 
-            //capture time between
+        if (volts[0]<maxV && increasingV){//方向改变，V 现在下降——波形起点
+            lastMaxV=maxV; //记录上一个最大值
+            //记录间隔时间
             periodLength = System.currentTimeMillis() - periodStart;
             periodStart = System.currentTimeMillis();
             period = periodLength;
             pulseWidth = System.currentTimeMillis() - pulseStart;
             dutyCycle = pulseWidth / periodLength;
-            minV=volts[0]; //track minimum value with V
+            minV=volts[0]; //随 V 跟踪最小值
             increasingV=false;
             decreasingV=true;
             
-            //rms data
+            //rms 数据
             total = total/count;
             rmsV = Math.sqrt(total);
             if (Double.isNaN(rmsV))
@@ -229,20 +229,20 @@ class TestPointElm extends CircuitElm {
             total=0;
             
         }
-        if (volts[0]<minV && decreasingV){ //V going down, track minimum value with V
+        if (volts[0]<minV && decreasingV){ //V 下降，随 V 跟踪最小值
             minV=volts[0];
             increasingV=false;
             decreasingV=true;
         }
 
-        if (volts[0]>minV && decreasingV){ //change of direction V now going up
-            lastMinV=minV; //capture last minimum
+        if (volts[0]>minV && decreasingV){ //方向改变，V 现在上升
+            lastMinV=minV; //记录上一个最小值
             pulseStart =  System.currentTimeMillis();
             maxV = volts[0];
             increasingV = true;
             decreasingV = false;
             
-            //rms data
+            //rms 数据
             total = total/count;
             rmsV = Math.sqrt(total);
             if (Double.isNaN(rmsV))
@@ -252,7 +252,7 @@ class TestPointElm extends CircuitElm {
 
             
         }
-        //need to zero the rms value if it stays at 0 for a while
+        //如果 rms 值长时间保持为 0，需要将其清零
         if (volts[0]==0){
             zerocount++;
             if (zerocount > 5){
@@ -299,7 +299,7 @@ class TestPointElm extends CircuitElm {
 
     }
     
-    //alert the user
+    //提醒用户
     public static native void alert(String msg) /*-{
       $wnd.alert(msg);
     }-*/;

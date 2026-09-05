@@ -107,10 +107,10 @@ labelledGridManager gridLabels;
 	    double d = getManualScaleValue();
 	    if (d==0)
 		return;
-	    d=d*0.999; // Go just below last check point
+	    d=d*0.999; // 略低于上一个检查点
 	    s=Scope.MIN_MAN_SCALE;
 	    lasts=s;
-	    for(int a=0; s<d; a++) { // Iterate until we go over the target and then use the last value
+	    for(int a=0; s<d; a++) { // 循环直到超过目标值，然后使用最后一个值
 		lasts = s;
 		s*=Scope.multa[a%3];
 	    }
@@ -140,10 +140,10 @@ labelledGridManager gridLabels;
     }
     
     static double nextHighestScale(double d) {
-	    d=d*1.001; // Go just above last check point
+	    d=d*1.001; // 略高于上一个检查点
 	    double s;
 	    s=Scope.MIN_MAN_SCALE;
-	    for(int a=0; s<d; a++) { // Iterate until we go over the target
+	    for(int a=0; s<d; a++) { // 循环直到超过目标值
 		s*=Scope.multa[a%3];
 	    }
 	    return s;
@@ -180,12 +180,12 @@ labelledGridManager gridLabels;
     void updateChannelButtons() {
 	if (plotSelection >= scope.visiblePlots.size())
 	    plotSelection = 0;
-	// More buttons than plots - remove extra buttons
+	// 按钮多于曲线 - 移除多余的按钮
 	for (int i = chanButtons.size()-1; i >= scope.visiblePlots.size(); i--) {
 	    channelButtonsp.remove(chanButtons.get(i));
 	    chanButtons.remove(i);
 	}
-	// Now go though all the channels, adding new buttons if necessary
+	// 现在遍历所有通道，必要时添加新按钮
 	for (int i=0; i<scope.visiblePlots.size(); i++) {
 	    if (i>=chanButtons.size()) {
 		Button b = new Button();
@@ -236,10 +236,10 @@ labelledGridManager gridLabels;
 
 	public ScopePropertiesDialog ( CirSim asim, Scope s) {
 		super();
-		// We are going to try and keep the panel below the target height (defined to give some space)
+		// 我们将尽量让面板保持在目标高度以下（该高度定义时留出了空间）
 		int allowedHeight = Window.getClientHeight()*4/5;
-		boolean displayAll = allowedHeight > 600; // We can display everything as maximum height can be shown
-		boolean displayScales = allowedHeight > 470; // We can display the scales and any one other section. So expand scales and collapse rest
+		boolean displayAll = allowedHeight > 600; // 最大高度可以全部显示，因此我们可以显示所有内容
+		boolean displayScales = allowedHeight > 470; // 可以显示刻度区以及任意一个其他分区。因此展开刻度并折叠其余部分
 		sim=asim;
 		scope = s;
 		Button okButton, applyButton2;
@@ -247,8 +247,8 @@ labelledGridManager gridLabels;
 		setWidget(fp);
 		setText(Locale.LS("Scope Properties"));
 
-// *************** VERTICAL SCALE ***********************************************************
-		Grid vSLG = new Grid(1,1); // Stupid grid to force labels to align without diving deep in to table CSS
+// *************** 垂直刻度 ***********************************************************
+		Grid vSLG = new Grid(1,1); // 用简易网格强制标签对齐，避免深入研究表格 CSS
 		vScaleLabel = new expandingLabel(Locale.LS("Vertical Scale"), displayScales);
 		vSLG.setWidget(0,0,vScaleLabel.p);
 		fp.add(vSLG);
@@ -361,7 +361,7 @@ labelledGridManager gridLabels;
 		vScaleGrid.getCellFormatter().setVerticalAlignment(1, 1, HasVerticalAlignment.ALIGN_MIDDLE);
 		fp.add(vScaleGrid);
 
-		// *************** HORIZONTAL SCALE ***********************************************************
+		// *************** 水平刻度 ***********************************************************
 
 		
 		hScaleGrid = new Grid(2,4);
@@ -381,7 +381,7 @@ labelledGridManager gridLabels;
 	//	speedGrid.getColumnFormatter().setWidth(0, "40%");
 		fp.add(hScaleGrid);
 		
-		// *************** PLOTS ***********************************************************
+		// *************** 曲线图 ***********************************************************
 		
 		CircuitElm elm = scope.getSingleElm();
 		boolean transistor = elm != null && elm instanceof TransistorElm;
@@ -597,7 +597,7 @@ labelledGridManager gridLabels;
 	    
 	    
 
-	    // if you add more here, make sure it still works with transistor scopes
+	    // 如果在这里继续添加内容，请确保它仍能与晶体管示波器正常配合
 	}
 	
 	void updateManualScaleUi() {
@@ -651,8 +651,8 @@ labelledGridManager gridLabels;
 	}
 	
 	void refreshDraw() {
-	    // Redraw for every step of the simulation (the simulation may run in the background of this
-	    // dialog and the scope may automatically rescale
+	    // 仿真每一步都重绘（仿真可能在此对话框的后台运行，
+	    // 且示波器可能会自动重新缩放
 	    if (! scope.isManualScale() )
 		updateManualScaleUi();
 	}

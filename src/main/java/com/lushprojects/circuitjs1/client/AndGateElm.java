@@ -62,8 +62,8 @@ import com.google.gwt.canvas.dom.client.Context2d;
 	    if (useEuroGates()) {
 		createEuroGatePolygon();
 	    } else {
-		// 0=topleft, 1 = top of curve, 2 = center, 3=bottom of curve,
-		// 4 = bottom left
+		// 0=左上角，1=曲线顶部，2=中心，3=曲线底部，
+		// 4=左下角
 		Point triPoints[] = newPointArray(5);
 		interpPoint2(lead1, lead2, triPoints[0], triPoints[4], 0, hs2);
 		interpPoint2(lead1, lead2, triPoints[1], triPoints[3], .5, hs2);

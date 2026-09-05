@@ -1,102 +1,102 @@
-# CircuitJS1 Desktop Mod
+# CircuitJS1 桌面版 Mod
 
-**Circuit Simulator is renamed CircuitJS1 Desktop Mod**
+**Circuit Simulator 更名为 CircuitJS1 Desktop Mod**
 
 ![](screenshot.png)
 
-The source code for offline version of the **Circuit Simulator** with minor modifications based on [modified NW.js](https://github.com/SEVA77/nw.js_mod). It was originally written by Paul Falstad as a Java Applet. It was adapted by Iain Sharp to run in the browser using GWT. The program was modified and compiled to offline version for Windows (x32, x64), Linux (x32, x64) and MacOS (x64, arm64) by Usevalad Khatkevich.
+这是 **Circuit Simulator** 的离线版源码，基于[修改版 NW.js](https://github.com/SEVA77/nw.js_mod)做了一些小改动。它最初由 Paul Falstad 以 Java Applet 的形式编写，由 Iain Sharp 移植为基于 GWT 的浏览器版本。该程序由 Usevalad Khatkevich 修改并编译为适用于 Windows (x32, x64)、Linux (x32, x64) 和 MacOS (x64, arm64) 的离线版本。
 
-This program is distributed by me as a program for education. It is not recommended to use the program for modeling real circuits, since many components in the program are idealized.
+本程序由我作为教育用途的程序分发。不建议使用该程序对真实电路进行建模，因为程序中的许多元件都是理想化的。
 
-The program supports the following languages: English, Russian, Danish, German, Polish, Spanish, French, Italian, Portuguese, Czech, Norwegian, Chinese, Japanese.
+该程序支持以下语言：英语、俄语、丹麦语、德语、波兰语、西班牙语、法语、意大利语、葡萄牙语、捷克语、挪威语、中文、日语。
 
-For a web version of the application see:
+Web 版应用程序参见：
 
-Paul's Page: https://www.falstad.com/circuit/ \
-Source code: https://github.com/pfalstad/circuitjs1
+Paul 的页面：https://www.falstad.com/circuit/ \
+源码：https://github.com/pfalstad/circuitjs1
 
-Iain's Page: https://lushprojects.com/circuitjs/ \
-Source code: https://github.com/sharpie7/circuitjs1
+Iain 的页面：https://lushprojects.com/circuitjs/ \
+源码：https://github.com/sharpie7/circuitjs1
 
-## Downloads:
+## 下载：
 
-You can download this program for Windows (x32, x64), Linux (x32, x64) and Mac OS X (x64, arm64):
-- [Latest release](https://github.com/SEVA77/circuitjs1/releases/latest)
-- [All Releases](https://github.com/SEVA77/circuitjs1/releases)
+你可以为 Windows (x32, x64)、Linux (x32, x64) 和 Mac OS X (x64, arm64) 下载此程序：
+- [最新版本](https://github.com/SEVA77/circuitjs1/releases/latest)
+- [所有版本](https://github.com/SEVA77/circuitjs1/releases)
 
-> If you have problems with this application, you can try to use [this offline application of the main developer](http://www.falstad.com/circuit/offline/) based on Electron.
+> 如果你在使用此应用程序时遇到问题，可以尝试[主开发者的此离线应用程序](http://www.falstad.com/circuit/offline/)，它基于 Electron。
 
-## Building the program
+## 构建程序
 
-The tools you will need to build the project are:
+构建该项目需要的工具：
 
 * JDK 8+
 * Maven 3+
-* Node.js with npm
+* 带 npm 的 Node.js
 
-Install the dependencies in the local `node_modules` folder:
+在本地 `node_modules` 文件夹中安装依赖：
 ```
 npm install
 ```
 
-For full build for all platforms without rebuilding GWT app run:
+在不需要重建 GWT 应用的情况下，为所有平台进行完整构建：
 ```
 npm run build
 ```
 
-For full build with rebuilding GWT app run:
+重建 GWT 应用的完整构建：
 ```
 npm run full
 ```
 
-*Output folder:* `./out/`
+*输出文件夹：* `./out/`
 
-Also you can build only the GWT application:
+你也可以只构建 GWT 应用程序：
 ```
 npm run buildgwt
 ```
 
-and run it in NW.js SDK version:
+并在 NW.js SDK 版本中运行它：
 ```
 npm start
 ```
 
-*Output folder:* `./target/site/`
+*输出文件夹：* `./target/site/`
 
-## Development
+## 开发
 
-Various build options, checker and devmod are available in the development menu:
+在开发菜单中有各种构建选项、检查器和 devmod：
 
 ```
 npm run dev
 ```
 
-***Separate commands:***
+***单独的命令：***
 
-Check the build steps:
+检查构建步骤：
 ```
 npm run check
 ```
 
-Run devmode:
+运行 devmode：
 ```
 npm run devmode
 ```
 
-Devmode works directly in the `war` directory separate from the `target/site` directory.
+Devmode 直接在 `war` 目录中工作，与 `target/site` 目录分开。
 
-## License
+## 许可证
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+本程序是自由软件；你可以根据自由软件基金会发布的 GNU 通用公共许可证的条款（许可证第 2 版，或（由你选择）任何更高版本）重新分发和/或修改它。
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+分发本程序是希望它有用，但不提供任何保证；甚至没有对适销性或特定用途适用性的默示保证。参见 GNU 通用公共许可证了解更多详情。
 
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+你应该已经收到一份 GNU 通用公共许可证的副本，随本程序一同分发；如果没有，请写信给自由软件基金会，地址：51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA。
 
 © Usevalad Khatkevich 2025
 
-## Credits
+## 致谢
 
-* [Paul Falstad](https://github.com/pfalstad) - Creator
-* [Iain Sharp](https://github.com/sharpie7) - JavaScript conversion, so there are more opportunities for the development of this application.
-* [Brian Gordon](https://github.com/briangordon) - Mavenized version of circuitjs1
+* [Paul Falstad](https://github.com/pfalstad) - 创作者
+* [Iain Sharp](https://github.com/sharpie7) - JavaScript 转换，因此该应用程序有了更多发展机会。
+* [Brian Gordon](https://github.com/briangordon) - circuitjs1 的 Maven 化版本

@@ -45,8 +45,8 @@ import com.google.gwt.user.client.ui.TextArea;
 	    dataBits    = Integer.parseInt(st.nextToken());
 	    setupPins();
 	    try {
-		// load contents
-		// format: addr val(addr) val(addr+1) val(addr+2) ... -1 addr val val ... -1 ... -2
+		// 加载内容
+		// 格式：地址 值(地址) 值(地址+1) 值(地址+2) ... -1 地址 值 值 ... -1 ... -2
 		while (true) {
 		    int a = Integer.parseInt(st.nextToken());
 		    if (a < 0)
@@ -66,7 +66,7 @@ import com.google.gwt.user.client.ui.TextArea;
 	String dump() {
 	    String s = super.dump() + " " + addressBits + " " + dataBits;
 	    
-	    // dump contents
+	    // 转储内容
 	    int maxI = 1<<addressBits;
 	    int i;
 	    for (i = 0; i < maxI; i++) {
@@ -220,7 +220,7 @@ import com.google.gwt.user.client.ui.TextArea;
 	    boolean writeEnabled = volts[0] < getThreshold();
 	    boolean outputEnabled = (volts[1] < getThreshold()) && !writeEnabled;
 	    
-	    // get address
+	    // 获取地址
 	    address = 0;
 	    for (i = 0; i != addressBits; i++) {
 		address |= (volts[addressNodes+i] > getThreshold()) ? 1<<(addressBits-1-i) : 0;
@@ -232,8 +232,8 @@ import com.google.gwt.user.client.ui.TextArea;
 		Pin p = pins[i+dataNodes];
 		sim.updateVoltageSource(0, nodes[internalNodes+i], p.voltSource, (data & (1<<(dataBits-1-i))) == 0 ? 0 : 5);
 		
-		// stamp resistor from internal voltage source to data pin.
-		// if output enabled, make it a small resistor.  otherwise large.
+		// 在内部电压源与数据引脚之间添加电阻。
+		// 如果输出使能，则使用小电阻，否则使用大电阻。
 		sim.stampResistor(nodes[internalNodes+i], nodes[dataNodes+i], outputEnabled ? 1 : 1e8);
 	    }
 	}
@@ -245,7 +245,7 @@ import com.google.gwt.user.client.ui.TextArea;
 	    if (!writeEnabled)
 		return;
 	    
-	    // store data in RAM
+	    // 将数据存储到 RAM 中
 	    for (i = 0; i != dataBits; i++) {
 		data |= (volts[dataNodes+i] > getThreshold()) ? 1<<(dataBits-1-i) : 0;
 	    }

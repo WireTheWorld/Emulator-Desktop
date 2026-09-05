@@ -19,10 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// contributed by Edward Calver
+// 由 Edward Calver 贡献
 
 class SipoShiftElm extends ChipElm {
-	final int DATA_PIN_INDEX = 2; // the initial index of the register pins in the "pins" array
+	final int DATA_PIN_INDEX = 2; // "pins" 数组中寄存器引脚的初始索引
 	
 	boolean clockstate = false;
 	
@@ -77,9 +77,9 @@ class SipoShiftElm extends ChipElm {
 			clockstate = pins[1].value;
 			if (clockstate && bits > 0) {
 				for (int i = bits - 2; i >= 0; i--)
-					pins[DATA_PIN_INDEX + i + 1].value = pins[DATA_PIN_INDEX + i].value; //Shift
+					pins[DATA_PIN_INDEX + i + 1].value = pins[DATA_PIN_INDEX + i].value; //移位
 				
-				pins[2].value = pins[0].value; //Load
+				pins[2].value = pins[0].value; //载入
 			}
 		}
 	}

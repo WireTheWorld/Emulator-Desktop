@@ -69,7 +69,7 @@ package com.lushprojects.circuitjs1.client;
 	void execute() {
 	    int i;
 	    
-	    // if we just loaded then the volts[] array is likely to be all zeroes, which might force us to do a reset, so defer execution until the next iteration
+	    // 如果刚刚加载，volts[] 数组很可能全为零，这可能迫使我们执行复位，因此将执行推迟到下一次迭代
 	    if (justLoaded) {
 		justLoaded = false;
 		return;
@@ -79,7 +79,7 @@ package com.lushprojects.circuitjs1.client;
 	    if (hasClockInhibit() && pins[clockInhibit].value)
 		running = false;
 
-	    // find which output is high
+	    // 找出哪个输出为高电平
 	    for (i = 0; i != bits; i++)
 		if (pins[i+2].value)
 		    break;
@@ -91,7 +91,7 @@ package com.lushprojects.circuitjs1.client;
 		pins[i+2].value = true;
 	    }
 	    
-	    // reset if requested, or if all outputs are low
+	    // 如果请求复位，或所有输出都为低电平，则复位
 	    if (pins[1].value != hasInvertReset() || i == bits) {
 		for (i = 1; i != bits; i++)
 		    pins[i+2].value = false;

@@ -44,19 +44,19 @@ class AnalogSwitch2Elm extends AnalogSwitchElm {
     void draw(Graphics g) {
 	setBbox(point1, point2, openhs);
 
-	// draw first lead
+	// 绘制第一根引线
 	setVoltageColor(g, volts[0]);
 	drawThickLine(g, point1, lead1);
 
-	// draw second lead
+	// 绘制第二根引线
 	setVoltageColor(g, volts[1]);
 	drawThickLine(g, swpoles[0], swposts[0]);
 	    
-	// draw third lead
+	// 绘制第三根引线
 	setVoltageColor(g, volts[2]);
 	drawThickLine(g, swpoles[1], swposts[1]);
 
-	// draw switch
+	// 绘制开关
 	g.setColor(lightGrayColor);
 	int position = (open) ? 1 : 0;
 	drawThickLine(g, lead1, swpoles[position]);

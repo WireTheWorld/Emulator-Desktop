@@ -23,9 +23,9 @@ class AnalogSwitchElm extends CircuitElm {
     final int FLAG_INVERT = 1;
     final int FLAG_PULLDOWN = 2;
 
-    // Unfortunately we need all three flags to keep track of flipping.
-    // FLAG_FLIP_X/Y affect the rounding direction if the elm is an odd grid length.
-    // FLAG_FLIP does not.
+    // 不幸的是，我们需要全部三个标志来跟踪翻转。
+    // 如果元件长度为奇数个网格，FLAG_FLIP_X/Y 会影响取整方向。
+    // FLAG_FLIP 不会。
     final int FLAG_FLIPPED_X = 4;
     final int FLAG_FLIPPED_Y = 8;
     final int FLAG_FLIPPED = 16;
@@ -114,7 +114,7 @@ class AnalogSwitchElm extends CircuitElm {
 	    current = (volts[0]-volts[1])/resistance;
     }
 	
-    // we need this to be able to change the matrix for each step
+    // 我们需要这个以便能在每一步更改矩阵
     boolean nonLinear() { return true; }
 
     boolean needsPulldown() { return hasFlag(FLAG_PULLDOWN); }
@@ -123,7 +123,7 @@ class AnalogSwitchElm extends CircuitElm {
 	sim.stampNonLinear(nodes[0]);
 	sim.stampNonLinear(nodes[1]);
 	if (needsPulldown()) {
-	    // pulldown resistor on each side
+	    // 每一侧都加下拉电阻
 	    sim.stampResistor(nodes[0], 0, r_off);
 	    sim.stampResistor(nodes[1], 0, r_off);
 	}
@@ -133,8 +133,8 @@ class AnalogSwitchElm extends CircuitElm {
 	if (hasFlag(FLAG_INVERT))
 	    open = !open;
 
-	// if pulldown flag is set, resistance is r_on.  Otherwise, no connection.
-	// if pulldown flag is unset, resistance is r_on for on, r_off for off.
+	// 如果设置了下拉标志，电阻为 r_on，否则不连接。
+	// 如果未设置下拉标志，导通时电阻为 r_on，断开时为 r_off。
 	if (!(needsPulldown() && open)) {
 	    resistance = (open) ? r_off : r_on;
 	    sim.stampResistor(nodes[0], nodes[1], resistance);
@@ -152,8 +152,8 @@ class AnalogSwitchElm extends CircuitElm {
 	arr[4] = "Vc = " + getVoltageText(volts[2]);
     }
 
-    // we have to just assume current will flow either way, even though that
-    // might cause singular matrix errors
+    // 我们只能假定电流会沿任一方向流动，尽管这样
+    // 可能会导致奇异矩阵错误
     boolean getConnection(int n1, int n2) {
 	if (n1 == 2 || n2 == 2)
 	    return false;

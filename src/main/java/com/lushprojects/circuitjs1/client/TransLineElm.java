@@ -39,7 +39,7 @@ class TransLineElm extends CircuitElm {
 	delay = new Double(st.nextToken()).doubleValue();
 	imped = new Double(st.nextToken()).doubleValue();
 	width = new Integer(st.nextToken()).intValue();
-	// next slot is for resistance (losses), which is not implemented
+	// 下一个槽位是电阻（损耗），尚未实现
 	st.nextToken();
 	noDiagonal = true;
 	reset();
@@ -94,10 +94,9 @@ class TransLineElm extends CircuitElm {
 	Point p7 = interpPoint(point1, point2, 0, -(width/2+sep)*ds);
 	Point p8 = interpPoint(point1, point2, 1, -(width/2+sep)*ds);
 	    
-	// we number the posts like this because we want the lower-numbered
-	// points to be on the bottom, so that if some of them are unconnected
-	// (which is often true) then the bottom ones will get automatically
-	// attached to ground.
+	// 我们这样给端点编号，是因为希望编号较小的端点位于底部，
+	// 这样如果其中一些端点未连接（这种情况很常见），
+	// 底部的端点会自动接地。
 	posts = new Point[] { p3, p4, point1, point2 };
 	inner = new Point[] { p7, p8, p5, p6 };
     }
@@ -164,7 +163,7 @@ class TransLineElm extends CircuitElm {
     }
 
     void startIteration() {
-	// calculate voltages, currents sent over wire
+	// 计算通过导线传输的电压、电流
 	if (voltageL == null) {
 	    sim.stop("Transmission line delay too large!", this);
 	    return;
@@ -215,7 +214,7 @@ class TransLineElm extends CircuitElm {
     void getInfo(String arr[]) {
 	arr[0] = "transmission line";
 	arr[1] = getUnitText(imped, Locale.ohmString);
-	// use velocity factor for RG-58 cable (65%)
+	// 使用 RG-58 电缆的速度因子（65%）
 	arr[2] = "length = " + getUnitText(.65*2.9979e8*delay, "m");
 	arr[3] = "delay = " + getUnitText(delay, "s");
     }

@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// diode that can be embedded in other elements.  series resistance is handled in DiodeElm, not here.
+// 可嵌入其他元件中的二极管。串联电阻在 DiodeElm 中处理，不在这里处理。
 class Diode {
     int nodes[];
     CirSim sim;
@@ -36,16 +36,16 @@ class Diode {
 	
 //	sim.console("setup " + leakage + " " + zvoltage + " " + model.emissionCoefficient + " " +  vdcoef);
 
-	// critical voltage for limiting; current is vscale/sqrt(2) at
-	// this voltage
+	// 用于限制的临界电压；在此电压下
+	// 电流为 vscale/sqrt(2)
 	vcrit = vscale * Math.log(vscale/(Math.sqrt(2)*leakage));
-	// translated, *positive* critical voltage for limiting in Zener breakdown region;
-	// limitstep() uses this with translated voltages in an analogous fashion to vcrit.
+	// 平移后的、用于齐纳击穿区限制的*正*临界电压；
+	// limitstep() 以类似于 vcrit 的方式将其用于平移后的电压。
 	vzcrit = vt * Math.log(vt/(Math.sqrt(2)*leakage));
 	if (zvoltage == 0)
 	    zoffset = 0;
 	else {
-	    // calculate offset which will give us 5mA at zvoltage
+	    // 计算在 zvoltage 下产生 5mA 电流所需的偏移量
 	    double i = -.005;
 	    zoffset = zvoltage-Math.log(-(1+i/leakage))/vzcoef;
 	}
@@ -59,24 +59,24 @@ class Diode {
 	lastvoltdiff = 0;
     }
 	
-    // Electron thermal voltage at SPICE's default temperature of 27 C (300.15 K):
+    // SPICE 默认温度 27 C (300.15 K) 下的电子热电压：
     static final double vt = 0.025865;
-    // The diode's "scale voltage", the voltage increase which will raise current by a factor of e.
+    // 二极管的“标度电压”，即使电流增大 e 倍所需的电压增量。
     double vscale;
-    // The multiplicative equivalent of dividing by vscale (for speed).
+    // 除以 vscale 的乘法等效形式（为了速度）。
     double vdcoef;
-    // The Zener breakdown curve is represented by a steeper exponential, one like the ideal
-    // Shockley curve, but flipped and translated. This curve removes the moderating influence
-    // of emcoef, replacing vscale and vdcoef with vt and vzcoef.
-    // vzcoef is the multiplicative equivalent of dividing by vt (for speed).
+    // 齐纳击穿曲线用一条更陡的指数曲线表示，类似于理想的
+    // Shockley 曲线，但经过翻转和平移。该曲线消除了 emcoef 的调节影响，
+    // 用 vt 和 vzcoef 取代 vscale 和 vdcoef。
+    // vzcoef 是除以 vt 的乘法等效形式（为了速度）。
     static final double vzcoef = 1 / vt;
-    // User-specified diode parameters for forward voltage drop and Zener voltage.
+    // 用户指定的二极管正向压降和齐纳电压参数。
     double fwdrop, zvoltage;
-    // The diode current's scale factor, calculated from the user-specified forward voltage drop.
+    // 二极管电流的标度因子，由用户指定的正向压降计算得出。
     double leakage;
-    // Voltage offset for Zener breakdown exponential, calculated from user-specified Zener voltage.
+    // 齐纳击穿指数曲线的电压偏移量，由用户指定的齐纳电压计算得出。
     double zoffset;
-    // Critical voltages for limiting the normal diode and Zener breakdown exponentials.
+    // 用于限制普通二极管和齐纳击穿指数曲线的临界电压。
     double vcrit, vzcrit;
     double lastvoltdiff;
     
@@ -84,30 +84,30 @@ class Diode {
 	double arg;
 	double oo = vnew;
 
-	// check new voltage; has current changed by factor of e^2?
+	// 检查新电压；电流是否改变了 e^2 倍？
 	if (vnew > vcrit && Math.abs(vnew - vold) > (vscale + vscale)) {
 	    if(vold > 0) {
 		arg = 1 + (vnew - vold) / vscale;
 		if(arg > 0) {
-		    // adjust vnew so that the current is the same
-		    // as in linearized model from previous iteration.
-		    // current at vnew = old current * arg
+		    // 调整 vnew，使电流与上一次迭代的
+		    // 线性化模型中的电流相同。
+		    // vnew 处的电流 = 旧电流 * arg
 		    vnew = vold + vscale * Math.log(arg);
 		} else {
 		    vnew = vcrit;
 		}
 	    } else {
-		// adjust vnew so that the current is the same
-		// as in linearized model from previous iteration.
-		// (1/vscale = slope of load line)
+		// 调整 vnew，使电流与上一次迭代的
+		// 线性化模型中的电流相同。
+		// (1/vscale = 负载线斜率)
 		vnew = vscale *Math.log(vnew/vscale);
 	    }
 	    sim.converged = false;
 	    //System.out.println(vnew + " " + oo + " " + vold);
 	} else if (vnew < 0 && zoffset != 0) {
-	    // for Zener breakdown, use the same logic but translate the values,
-	    // and replace the normal values with the Zener-specific ones to
-	    // account for the steeper exponential of our Zener breakdown curve.
+	    // 对于齐纳击穿，使用相同的逻辑但平移这些值，
+	    // 并用齐纳专用值替换普通值，以
+	    // 适应我们齐纳击穿曲线更陡的指数形式。
 	    vnew = -vnew - zoffset;
 	    vold = -vold - zoffset;
 	    
@@ -138,42 +138,42 @@ class Diode {
     }
     
     void doStep(double voltdiff) {
-	// used to have .1 here, but needed .01 for peak detector
+	// 这里原来用 .1，但峰值检测器需要 .01
 	if (Math.abs(voltdiff-lastvoltdiff) > .01)
 	    sim.converged = false;
 	voltdiff = limitStep(voltdiff, lastvoltdiff);
 	lastvoltdiff = voltdiff;
 
-	// To prevent a possible singular matrix or other numeric issues, put a tiny conductance
-	// in parallel with each P-N junction.
+	// 为防止可能出现奇异矩阵或其他数值问题，在每个 P-N 结上
+	// 并联一个极小的电导。
 	double gmin = leakage * 0.01;
 	if (sim.subIterations > 100) {
-	    // if we have trouble converging, put a conductance in parallel with the diode.
-	    // Gradually increase the conductance value for each iteration.
+	    // 如果收敛困难，就在二极管上并联一个电导。
+	    // 每次迭代逐渐增大电导值。
 	    gmin = Math.exp(-9*Math.log(10)*(1-sim.subIterations/3000.));
 	    if (gmin > .1)
 		gmin = .1;
 	}
 
 	if (voltdiff >= 0 || zvoltage == 0) {
-	    // regular diode or forward-biased zener
+	    // 普通二极管或正向偏置的齐纳二极管
 	    double eval = Math.exp(voltdiff*vdcoef);
 	    double geq = vdcoef*leakage*eval + gmin;
 	    double nc = (eval-1)*leakage - geq*voltdiff;
 	    sim.stampConductance(nodes[0], nodes[1], geq);
 	    sim.stampCurrentSource(nodes[0], nodes[1], nc);
 	} else {
-	    // Zener diode
+	    // 齐纳二极管
 	    
-	    // For reverse-biased Zener diodes, mimic the Zener breakdown curve with an
-	    // exponential similar to the ideal Shockley curve. (The real breakdown curve
-	    // isn't a simple exponential, but this approximation should be OK.)
+	    // 对于反向偏置的齐纳二极管，用与理想 Shockley 曲线类似的
+	    // 指数曲线来模拟齐纳击穿曲线。（真实的击穿曲线
+	    // 不是简单的指数曲线，但这个近似应该没问题。）
 
 	    /* 
 	     * I(Vd) = Is * (exp[Vd*C] - exp[(-Vd-Vz)*Cz] - 1 )
 	     *
-	     * geq is I'(Vd)
-	     * nc is I(Vd) + I'(Vd)*(-Vd)
+	     * geq 是 I'(Vd)
+	     * nc 是 I(Vd) + I'(Vd)*(-Vd)
 	     */
 
 	    double geq = leakage* ( 

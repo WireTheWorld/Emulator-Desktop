@@ -62,8 +62,8 @@ public class ExportAsLocalFileDialog extends Dialog {
 	String url;
 	
 	public static void setLastFileName(String s) {
-	    // remember filename for use when saving a new file.
-	    // if s is null or automatically generated then just clear out old filename.
+	    // 记住文件名，以便保存新文件时使用。
+	    // 如果 s 为 null 或是自动生成的文件名，则直接清除旧文件名。
 	    if (s == null || s.startsWith("circuitjs-"))
 		lastFileName = null;
 	    else

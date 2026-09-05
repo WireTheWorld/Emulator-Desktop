@@ -31,14 +31,14 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Random;
 import com.lushprojects.circuitjs1.client.util.Locale;
 
-// circuit element class
+// 电路元件类
 public abstract class CircuitElm implements Editable {
     static double voltageRange = 5;
-    static int colorScaleCount = 201; // odd so ground = gray 
+    static int colorScaleCount = 201; // 取奇数，使地线显示为灰色 
     static Color colorScale[];
     static double currentMult, powerMult;
     
-    // scratch points for convenience
+    // 临时点，方便使用
     static Point ps1, ps2;
     
     static CirSim sim;
@@ -57,52 +57,52 @@ public abstract class CircuitElm implements Editable {
     
     static int decimalDigits, shortDecimalDigits;
  
-    // initial point where user created element.  For simple two-terminal elements, this is the first node/post.
+    // 用户创建元件时的初始点。对于简单的两端元件，这是第一个节点/端点。
     int x, y;
     
-    // point to which user dragged out element.  For simple two-terminal elements, this is the second node/post
+    // 用户拖出元件时到达的点。对于简单的两端元件，这是第二个节点/端点
     int x2, y2;
     
     int flags, nodes[], voltSource;
     
-    // length along x and y axes, and sign of difference
+    // 沿 x 轴和 y 轴的长度，以及差值的符号
     int dx, dy, dsign;
 
     int lastHandleGrabbed=-1;
     
-    // length of element
+    // 元件长度
     double dn;
     
     double dpx1, dpy1;
     
-    // (x,y) and (x2,y2) as Point objects
+    // (x,y) 和 (x2,y2) 对应的 Point 对象
     Point point1, point2;
     
-    // lead points (ends of wire stubs for simple two-terminal elements)  
+    // 引线点（简单两端元件的导线短线端点）  
     Point lead1, lead2;
     
-    // voltages at each node
+    // 每个节点的电压
     double volts[];
     
     double current, curcount;
     Rectangle boundingBox;
     
-    // if subclasses set this to true, element will be horizontal or vertical only 
+    // 若子类将此设为 true，元件将只能水平或垂直放置 
     boolean noDiagonal;
     
     public boolean selected;
     
-    boolean hasWireInfo; // used in calcWireInfo()
+    boolean hasWireInfo; // 在 calcWireInfo() 中使用
     
 //    abstract int getDumpType();
     int getDumpType() {
 	
-	throw new IllegalStateException(); // Seems necessary to work-around what appears to be a compiler
-	// bug affecting OTAElm to make sure this method (which should really be abstract) throws
-	// an exception.  If you're getting this, try making small update to CompositeElm.java and try again
+	throw new IllegalStateException(); // 这似乎是必要的，用来绕过一个编译器
+	// 影响 OTAElm 的 bug，确保此方法（本应为抽象方法）能够抛出
+	// 异常。如果遇到此问题，请尝试对 CompositeElm.java 做小幅修改后重试
  }
     
-    // leftover from java, doesn't do anything anymore. 
+    // 从 java 时期遗留的代码，已不再执行任何操作。 
     Class getDumpClass() { return getClass(); }
     
     int getDefaultFlags() { return 0; }
@@ -187,7 +187,7 @@ public abstract class CircuitElm implements Editable {
 
     }
     
-    // create new element with one post at xx,yy, to be dragged out by user
+    // 创建一个端点位于 xx,yy 的新元件，由用户拖出
     CircuitElm(int xx, int yy) {
 	x = x2 = xx;
 	y = y2 = yy;
@@ -196,7 +196,7 @@ public abstract class CircuitElm implements Editable {
 	initBoundingBox();
     }
     
-    // create element between xa,ya and xb,yb from undump
+    // 从反序列化数据创建位于 xa,ya 与 xb,yb 之间的元件
     CircuitElm(int xa, int ya, int xb, int yb, int f) {
 	x = xa; y = ya; x2 = xb; y2 = yb; flags = f;
 	allocNodes();
@@ -209,24 +209,24 @@ public abstract class CircuitElm implements Editable {
 			      abs(x2-x)+1, abs(y2-y)+1);
     }
     
-    // allocate nodes/volts arrays we need
+    // 分配所需的 nodes/volts 数组
     void allocNodes() {
 	int n = getPostCount() + getInternalNodeCount();
-	// preserve voltages if possible
+	// 尽可能保留电压
 	if (nodes == null || nodes.length != n) {
 	    nodes = new int[n];
 	    volts = new double[n];
 	}
     }
     
-    // dump component state for export/undo
+    // 导出/撤销时转储元件状态
     String dump() {
 	int t = getDumpType();
 	return (t < 127 ? ((char)t)+" " : t+" ") + x + " " + y + " " +
 	    x2 + " " + y2 + " " + flags;
     }
     
-    // handle reset button
+    // 处理复位按钮
     void reset() {
 	int i;
 	for (i = 0; i != getPostCount()+getInternalNodeCount(); i++)
@@ -235,19 +235,19 @@ public abstract class CircuitElm implements Editable {
     }
     void draw(Graphics g) {}
     
-    // set current for voltage source vn to c.  vn will be the same value as in a previous call to setVoltageSource(n, vn) 
+    // 将电压源 vn 的电流设置为 c。vn 与之前调用 setVoltageSource(n, vn) 时的值相同 
     void setCurrent(int vn, double c) { current = c; }
     
-    // get current for one- or two-terminal elements
+    // 获取单端或双端元件的电流
     double getCurrent() { return current; }
 
     void setParentList(Vector<CircuitElm> elmList) {}
     
-    // stamp matrix values for linear elements.
-    // for non-linear elements, use this to stamp values that don't change each iteration, and call stampRightSide() or stampNonLinear() as needed
+    // 为线性元件填充矩阵值。
+    // 对于非线性元件，用此方法填充每次迭代都不变化的数值，并按需调用 stampRightSide() 或 stampNonLinear()
     void stamp() {}
     
-    // stamp matrix values for non-linear elements
+    // 为非线性元件填充矩阵值
     void doStep() {}
     
     void delete() {
@@ -257,19 +257,19 @@ public abstract class CircuitElm implements Editable {
     }
     void startIteration() {}
     
-    // get voltage of x'th node
+    // 获取第 x 个节点的电压
     double getPostVoltage(int x) { return volts[x]; }
     
-    // set voltage of x'th node, called by simulator logic
+    // 设置第 x 个节点的电压，由仿真器逻辑调用
     void setNodeVoltage(int n, double c) {
 	volts[n] = c;
 	calculateCurrent();
     }
     
-    // calculate current in response to node voltages changing
+    // 根据节点电压的变化计算电流
     void calculateCurrent() {}
     
-    // calculate post locations and other convenience values used for drawing.  Called when element is moved 
+    // 计算端点位置及其他用于绘制的便捷值。元件移动时调用 
     void setPoints() {
     	dx = x2-x; dy = y2-y;
     	dn = Math.sqrt(dx*dx+dy*dy);
@@ -280,8 +280,8 @@ public abstract class CircuitElm implements Editable {
     	point2 = new Point(x2, y2);
     }
     
-    // calculate lead points for an element of length len.  Handy for simple two-terminal elements.
-    // Posts are where the user connects wires; leads are ends of wire stubs drawn inside the element.
+    // 计算长度为 len 的元件的引线点。适用于简单的两端元件。
+    // 端点是用户连接导线的地方；引线是元件内部绘制的导线短线的末端。
     void calcLeads(int len) {
 	if (dn < len || len == 0) {
 	    lead1 = point1;
@@ -292,12 +292,12 @@ public abstract class CircuitElm implements Editable {
 	lead2 = interpPoint(point1, point2, (dn+len)/(2*dn));
     }
 
-    // adjust leads so that the point exactly between them is a grid point (so we can place a terminal there)
+    // 调整引线，使两者之间的中点恰好落在网格点上（以便在那里放置端子）
     void adjustLeadsToGrid(boolean flipX, boolean flipY) {
         int cx = (point1.x+point2.x)/2;
         int cy = (point1.y+point2.y)/2;
 
-	// when flipping, it changes the rounding direction.  need to adjust for this
+	// 翻转时取整方向会改变，需要对此进行调整
 	int roundx = (flipX) ? 1 : -1;
 	int roundy = (flipY) ? 1 : -1;
 
@@ -307,26 +307,26 @@ public abstract class CircuitElm implements Editable {
         lead2.move(adjx, adjy);
     }
 
-    // calculate point fraction f between a and b, linearly interpolated
+    // 计算 a 与 b 之间线性插值比例为 f 的点
     Point interpPoint(Point a, Point b, double f) {
 	Point p = new Point();
 	interpPoint(a, b, p, f);
 	return p;
     }
     
-    // calculate point fraction f between a and b, linearly interpolated, return it in c
+    // 计算 a 与 b 之间线性插值比例为 f 的点，结果存入 c
     void interpPoint(Point a, Point b, Point c, double f) {
 	c.x = (int) Math.floor(a.x*(1-f)+b.x*f+.48);
 	c.y = (int) Math.floor(a.y*(1-f)+b.y*f+.48);
     }
     
     /**
-     * Returns a point fraction f along the line between a and b and offset perpendicular by g
-     * @param a 1st Point
-     * @param b 2nd Point
-     * @param f Fraction along line
-     * @param g Fraction perpendicular to line
-     * Returns interpolated point in c
+     * 返回 a 与 b 之间直线上比例为 f 的点，并沿垂直方向偏移 g
+     * @param a 第一个点
+     * @param b 第二个点
+     * @param f 沿直线的比例
+     * @param g 垂直于直线的比例
+     * 将插值点存入 c
      */
     void interpPoint(Point a, Point b, Point c, double f, double g) {
 	int gx = b.y-a.y;
@@ -337,12 +337,12 @@ public abstract class CircuitElm implements Editable {
     }
     
     /**
-     * Returns a point fraction f along the line between a and b and offset perpendicular by g
-     * @param a 1st Point
-     * @param b 2nd Point
-     * @param f Fraction along line
-     * @param g Fraction perpendicular to line
-     * @return Interpolated point
+     * 返回 a 与 b 之间直线上比例为 f 的点，并沿垂直方向偏移 g
+     * @param a 第一个点
+     * @param b 第二个点
+     * @param f 沿直线的比例
+     * @param g 垂直于直线的比例
+     * @return 插值点
      */
     Point interpPoint(Point a, Point b, double f, double g) {
 	Point p = new Point();
@@ -352,13 +352,13 @@ public abstract class CircuitElm implements Editable {
     
     
     /**
-     * Calculates two points fraction f along the line between a and b and offest perpendicular by +/-g
-     * @param a 1st point (In)
-     * @param b 2nd point (In)
-     * @param c 1st point (Out)
-     * @param d 2nd point (Out)
-     * @param f Fraction along line
-     * @param g Fraction perpendicular to line
+     * 计算 a 与 b 之间直线上比例为 f 的两个点，并沿垂直方向偏移 +/-g
+     * @param a 第一个点（输入）
+     * @param b 第二个点（输入）
+     * @param c 第一个点（输出）
+     * @param d 第二个点（输出）
+     * @param f 沿直线的比例
+     * @param g 垂直于直线的比例
      */
     void interpPoint2(Point a, Point b, Point c, Point d, double f, double g) {
 //	int xpd = b.x-a.x;
@@ -373,11 +373,11 @@ public abstract class CircuitElm implements Editable {
     }
     
     void draw2Leads(Graphics g) {
-	// draw first lead
+	// 绘制第一根引线
 	setVoltageColor(g, volts[0]);
 	drawThickLine(g, point1, lead1);
 
-	// draw second lead
+	// 绘制第二根引线
 	setVoltageColor(g, volts[1]);
 	drawThickLine(g, lead2, point2);
     }
@@ -390,7 +390,7 @@ public abstract class CircuitElm implements Editable {
 
     final int CURRENT_TOO_FAST = 100;
 
-    // draw current dots from point a to b
+    // 从点 a 到点 b 绘制电流圆点
     void drawDots(Graphics g, Point pa, Point pb, double pos) {
 	 if ((!sim.simIsRunning()) || pos == 0 || !sim.dotsCheckItem.getState())
 	    return;
@@ -400,8 +400,8 @@ public abstract class CircuitElm implements Editable {
 	g.setColor(currentColor);
 	int ds = 16;
 	if (pos == CURRENT_TOO_FAST || pos == -CURRENT_TOO_FAST) {
-	    // current is moving too fast, avoid aliasing by drawing dots at
-	    // random position with transparent yellow line underneath
+	    // 电流移动过快，为避免混叠，在随机位置绘制圆点
+	    // 并在下方绘制一条半透明的黄色线条
 	    g.save();
 	    Context2d ctx = g.context;
 	    ctx.setLineWidth(4);
@@ -466,7 +466,7 @@ public abstract class CircuitElm implements Editable {
 	return p;
     }
     
-    // draw second point to xx, yy
+    // 将第二个点移至 xx, yy
     void drag(int xx, int yy) {
 	xx = sim.snapGrid(xx);
 	yy = sim.snapGrid(yy);
@@ -487,12 +487,12 @@ public abstract class CircuitElm implements Editable {
 	setPoints();
     }
 
-    // called when an element is done being dragged out; returns true if it's zero size and should be deleted
+    // 元件拖出完成时调用；若其尺寸为零且应被删除则返回 true
     boolean creationFailed() {
 	return (x == x2 && y == y2);
     }
 
-    // this is used to set the position of an internal element so we can draw it inside the parent
+    // 用于设置内部元件的位置，以便在父元件内部绘制它
     void setPosition(int x_, int y_, int x2_, int y2_) {
 	x = x_;
 	y = y_;
@@ -501,7 +501,7 @@ public abstract class CircuitElm implements Editable {
 	setPoints();
     }
     
-    // determine if moving this element by (dx,dy) will put it on top of another element
+    // 判断将此元件移动 (dx,dy) 后是否会叠放到另一个元件上
     boolean allowMove(int dx, int dy) {
 	int nx = x+dx;
 	int ny = y+dy;
@@ -519,8 +519,8 @@ public abstract class CircuitElm implements Editable {
     }
     
     void movePoint(int n, int dx, int dy) {
-    	// modified by IES to prevent the user dragging points to create zero sized nodes
-    	// that then render improperly
+    	// 由 IES 修改，防止用户拖动端点创建尺寸为零的节点
+    	// 从而导致渲染异常
     	int oldx=x;
     	int oldy=y;
     	int oldx2=x2;
@@ -570,9 +570,9 @@ public abstract class CircuitElm implements Editable {
     }
 
     void drawPosts(Graphics g) {
-	// we normally do this in updateCircuit() now because the logic is more complicated.
-	// we only handle the case where we have to draw all the posts.  That happens when
-	// this element is selected or is being created
+	// 现在通常会在 updateCircuit() 中完成此操作，因为那里的逻辑更复杂。
+	// 这里仅处理必须绘制所有端点的情况。这种情况发生在
+	// 该元件被选中或正在创建时
 	if (sim.dragElm == null && !needsHighlight())
 	    return;
 	if (sim.mouseMode == CirSim.MODE_DRAG_ROW ||
@@ -614,22 +614,22 @@ public abstract class CircuitElm implements Editable {
     	return lastHandleGrabbed;
     }
     
-    // number of voltage sources this element needs 
+    // 该元件所需的电压源数量 
     int getVoltageSourceCount() { return 0; }
     
-    // number of internal nodes (nodes not visible in UI that are needed for implementation)
+    // 内部节点数量（实现所需、界面上不可见的节点）
     int getInternalNodeCount() { return 0; }
     
-    // notify this element that its pth node is n.  This value n can be passed to stampMatrix()
+    // 通知此元件其第 p 个节点为 n。该值 n 可传给 stampMatrix()
     void setNode(int p, int n) { nodes[p] = n; }
     
-    // notify this element that its nth voltage source is v.  This value v can be passed to stampVoltageSource(), etc and will be passed back in calls to setCurrent()
+    // 通知此元件其第 n 个电压源为 v。该值 v 可传给 stampVoltageSource() 等，并会在调用 setCurrent() 时传回
     void setVoltageSource(int n, int v) {
-	// default implementation only makes sense for subclasses with one voltage source.  If we have 0 this isn't used, if we have >1 this won't work 
+	// 默认实现仅对只有一个电压源的子类有意义。若有 0 个电压源则不会用到，若有超过 1 个则无法正常工作 
 	voltSource = v;
     }
     
-//    int getVoltageSource() { return voltSource; } // Never used except for debug code which is commented out
+//    int getVoltageSource() { return voltSource; } // 除已注释掉的调试代码外从未使用
     
     double getVoltageDiff() {
 	return volts[0] - volts[1];
@@ -637,15 +637,15 @@ public abstract class CircuitElm implements Editable {
     boolean nonLinear() { return false; }
     int getPostCount() { return 2; }
     
-    // get (global) node number of nth node
+    // 获取第 n 个节点的（全局）节点编号
     int getNode(int n) { return nodes[n]; }
     
-    // get position of nth node
+    // 获取第 n 个节点的位置
     Point getPost(int n) {
 	return (n == 0) ? point1 : (n == 1) ? point2 : null;
     }
     
-    // return post we're connected to (for wires, so we can optimize them out in calculateWireClosure())
+    // 返回我们所连接的端点（用于导线，以便在 calculateWireClosure() 中将其优化掉）
     Point getConnectedPost() {
 	return point2;
     }
@@ -676,14 +676,14 @@ public abstract class CircuitElm implements Editable {
 	g.fillOval(pt.x-3, pt.y-3, 7, 7);
     }
     
-    // set/adjust bounding box used for selecting elements.  getCircuitBounds() does not use this!
+    // 设置/调整用于选择元件的包围盒。getCircuitBounds() 不使用此方法！
     void setBbox(int x1, int y1, int x2, int y2) {
 	if (x1 > x2) { int q = x1; x1 = x2; x2 = q; }
 	if (y1 > y2) { int q = y1; y1 = y2; y2 = q; }
 	boundingBox.setBounds(x1, y1, x2-x1+1, y2-y1+1);
     }
     
-    // set bounding box for an element from p1 to p2 with width w
+    // 为从 p1 到 p2、宽度为 w 的元件设置包围盒
     void setBbox(Point p1, Point p2, double w) {
 	setBbox(p1.x, p1.y, p2.x, p2.y);
 	int dpx = (int) (dpx1*w);
@@ -691,7 +691,7 @@ public abstract class CircuitElm implements Editable {
 	adjustBbox(p1.x+dpx, p1.y+dpy, p1.x-dpx, p1.y-dpy);
     }
 
-    // enlarge bbox to contain an additional rectangle
+    // 扩大包围盒以包含额外的矩形
     void adjustBbox(int x1, int y1, int x2, int y2) {
 	if (x1 > x2) { int q = x1; x1 = x2; x2 = q; }
 	if (y1 > y2) { int q = y1; y1 = y2; y2 = q; }
@@ -705,7 +705,7 @@ public abstract class CircuitElm implements Editable {
 	adjustBbox(p1.x, p1.y, p2.x, p2.y);
     }
     
-    // needed for calculating circuit bounds (need to special-case centered text elements)
+    // 计算电路边界时需要（需对居中文本元件做特殊处理）
     boolean isCenteredText() { return false; }
     
     void drawCenteredText(Graphics g, String s, int x, int y, boolean cx) {
@@ -734,7 +734,7 @@ public abstract class CircuitElm implements Editable {
 		g.restore();
     }
     
-    // draw component values (number of resistor ohms, etc).  hs = offset
+    // 绘制元件参数值（电阻欧姆数等）。hs = 偏移量
     void drawValues(Graphics g, String s, double hs) {
 	if (s == null)
 	    return;
@@ -810,7 +810,7 @@ public abstract class CircuitElm implements Editable {
 	g.context.scale(1, hs > 0 ? 1 : -1);
 
 	int loop;
-	// draw more loops for a longer coil
+	// 线圈更长时绘制更多的圈数
 	int loopCt = (int)Math.ceil(len/11);
 	for (loop = 0; loop != loopCt; loop++) {
 	    g.context.beginPath();
@@ -922,7 +922,7 @@ public abstract class CircuitElm implements Editable {
 	String sp = sf ? "" : " ";
 	double va = Math.abs(v);
 	if (va < 1e-14)
-	    // this used to return null, but then wires would display "null" with 0V
+	    // 这里曾返回 null，但那样导线在 0V 时会显示 "null"
 	    return "0" + sp + u;
 	if (va < 1e-9)
 	    return format(v*1e12, sf) + sp + "p" + u;
@@ -965,12 +965,12 @@ public abstract class CircuitElm implements Editable {
 	return getUnitText(val, utext);
     }
 
-    // update dot positions (curcount) for drawing current (simple case for single current)
+    // 更新用于绘制电流的圆点位置 (curcount)（单电流的简单情况）
     void updateDotCount() {
 	curcount = updateDotCount(current, curcount);
     }
 
-    // update dot positions (curcount) for drawing current (general case for multiple currents)
+    // 更新用于绘制电流的圆点位置 (curcount)（多电流的通用情况）
     double updateDotCount(double cur, double cc) {
   
 	 if (!sim.simIsRunning())
@@ -984,7 +984,7 @@ public abstract class CircuitElm implements Editable {
 	return cc + cadd;
     }
     
-    // update and draw current for simple two-terminal element
+    // 更新并绘制简单两端元件的电流
     void doDots(Graphics g) {
 	updateDotCount();
 	if (sim.dragElm != this)
@@ -994,7 +994,7 @@ public abstract class CircuitElm implements Editable {
     void doAdjust() {}
     void setupAdjust() {}
     
-    // get component info for display in lower right
+    // 获取显示在右下角的元件信息
     void getInfo(String arr[]) {
     }
     
@@ -1029,7 +1029,7 @@ public abstract class CircuitElm implements Editable {
     	g.setColor(getVoltageColor(g, volts));
     }
     
-    // yellow argument is unused, can't remember why it was there
+    // yellow 参数未被使用，记不清当初为何加上它
     void setPowerColor(Graphics g, boolean yellow) {
 
 	/*if (conductanceCheckItem.getState()) {
@@ -1078,24 +1078,24 @@ public abstract class CircuitElm implements Editable {
     public EditInfo getEditInfo(int n) { return null; }
     public void setEditValue(int n, EditInfo ei) {}
     
-    // get number of nodes that can be retrieved by getConnectionNode()
+    // 获取可通过 getConnectionNode() 获取的节点数量
     int getConnectionNodeCount() { return getPostCount(); }
     
-    // get nodes that can be passed to getConnection(), to test if this element connects
-    // those two nodes; this is the same as getNode() for all but labeled nodes.
+    // 获取可传给 getConnection() 的节点，用于测试此元件是否连接
+    // 这两个节点；除带标签的节点外，与 getNode() 相同。
     int getConnectionNode(int n) { return getNode(n); }
     
-    // are n1 and n2 connected by this element?  this is used to determine
-    // unconnected nodes, and look for loops
+    // n1 和 n2 是否通过此元件相连？用于确定
+    // 未连接的节点，并查找回路
     boolean getConnection(int n1, int n2) { return true; }
     
-    // is n1 connected to ground somehow?
+    // n1 是否以某种方式接地？
     boolean hasGroundConnection(int n1) { return false; }
     
-    // is this a wire or equivalent to a wire?  (used for circuit validation)
+    // 这是导线或等效于导线吗？（用于电路校验）
     boolean isWireEquivalent() { return false; }
     
-    // is this a wire we can remove?
+    // 这是我们可以移除的导线吗？
     boolean isRemovableWire() { return false; }
     
     boolean isIdealCapacitor() { return false; }
@@ -1109,7 +1109,7 @@ public abstract class CircuitElm implements Editable {
     }
     boolean needsHighlight() { 
 	return mouseElmRef==this || selected || sim.plotYElm == this ||
-		// Test if the current mouseElm is a ScopeElm and, if so, does it belong to this elm
+		// 测试当前 mouseElm 是否为 ScopeElm，若是，则判断它是否属于此元件
 		(mouseElmRef instanceof ScopeElm && ((ScopeElm) mouseElmRef).elmScope.getElm()==this); 
     }
     boolean isSelected() { return selected; }
@@ -1165,9 +1165,9 @@ public abstract class CircuitElm implements Editable {
     void updateModels() {}
     void stepFinished() {}
     
-    // get current flowing into node n out of this element
+    // 获取从该元件流入节点 n 的电流
     double getCurrentIntoNode(int n) {
-	// if we take out the getPostCount() == 2 it gives the wrong value for rails
+	// 若去掉 getPostCount() == 2 的判断，rail 元件会得到错误的值
 	if (n==0 && getPostCount() == 2)
 	    return -current;
 	else

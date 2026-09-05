@@ -16,7 +16,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// Via http://grepcode.com/file_/repository.grepcode.com/java/root/jdk/openjdk/6-b14/java/awt/Rectangle.java/?v=source
+// 来自 http://grepcode.com/file_/repository.grepcode.com/java/root/jdk/openjdk/6-b14/java/awt/Rectangle.java/?v=source
 
 public class Rectangle {
 	int x;
@@ -65,10 +65,10 @@ public class Rectangle {
         int w = this.width;
         int h = this.height;
         if ((w | h) < 0) {
-            // At least one of the dimensions is negative...
+            // 至少有一个维度为负数...
             return false;
         }
-        // Note: if either dimension is zero, tests below must return false...
+        // 注意：如果任一维度为零，下面的测试必须返回 false...
         int x = this.x;
         int y = this.y;
         if (X < x || Y < y) {
@@ -76,7 +76,7 @@ public class Rectangle {
         }
         w += x;
         h += y;
-        //    overflow || intersect
+        //    溢出 || 相交
         return ((w < x || w > X) &&
                 (h < y || h > Y));
     }
@@ -108,7 +108,7 @@ public class Rectangle {
         rh += ry;
         tw += tx;
         th += ty;
-        //      overflow || intersect
+        //      溢出 || 相交
         return ((rw < rx || rw > tx) &&
                 (rh < ry || rh > ty) &&
                 (tw < tx || tw > rx) &&
@@ -119,12 +119,12 @@ public class Rectangle {
         long tx2 = this.width;
         long ty2 = this.height;
         if ((tx2 | ty2) < 0) {
-            // This rectangle has negative dimensions...
-            // If r has non-negative dimensions then it is the answer.
-            // If r is non-existant (has a negative dimension), then both
-            // are non-existant and we can return any non-existant rectangle
-            // as an answer.  Thus, returning r meets that criterion.
-            // Either way, r is our answer.
+            // 该矩形具有负维度...
+            // 如果 r 具有非负维度，则答案就是 r。
+            // 如果 r 不存在（具有负维度），那么两者
+            // 都不存在，我们可以返回任意不存在的矩形
+            // 作为答案。因此，返回 r 符合该标准。
+            // 无论哪种情况，r 都是我们的答案。
             return new Rectangle(r);
         }
         long rx2 = r.width;
@@ -146,9 +146,9 @@ public class Rectangle {
         if (ty2 < ry2) ty2 = ry2;
         tx2 -= tx1;
         ty2 -= ty1;
-        // tx2,ty2 will never underflow since both original rectangles
-        // were already proven to be non-empty
-        // they might overflow, though...
+        // tx2,ty2 永远不会下溢，因为两个原始矩形
+        // 都已被证明是非空的
+        // 但它们可能会溢出...
         if (tx2 > Integer.MAX_VALUE) tx2 = Integer.MAX_VALUE;
         if (ty2 > Integer.MAX_VALUE) ty2 = Integer.MAX_VALUE;
         return new Rectangle(tx1, ty1, (int) tx2, (int) ty2);

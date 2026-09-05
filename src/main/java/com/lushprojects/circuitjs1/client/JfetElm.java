@@ -86,8 +86,8 @@ class JfetElm extends MosfetElm {
 	void setPoints() {
 	    super.setPoints();
 
-	    // find the coordinates of the various points we need to draw
-	    // the JFET.
+	    // 计算绘制 JFET 所需的各个点的坐标
+	    // （JFET 的各关键点）。
 	    int hs2 = hs*dsign;
 	    src = newPointArray(3);
 	    drn = newPointArray(3);
@@ -128,7 +128,7 @@ class JfetElm extends MosfetElm {
 	boolean showBulk() { return false; }
 
 	int getDumpType() { return 'j'; }
-	// these values are taken from Hayes+Horowitz p155
+	// 这些值取自 Hayes+Horowitz 教材第 155 页
 	double getDefaultThreshold() { return -4; }
 	double getDefaultBeta() { return .00125; }
 	double getBackwardCompatibilityBeta() { return getDefaultBeta(); }

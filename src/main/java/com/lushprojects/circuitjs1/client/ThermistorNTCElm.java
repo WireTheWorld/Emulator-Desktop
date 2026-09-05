@@ -8,24 +8,24 @@ import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 
-/*Bill Collis - June 2015
+/*Bill Collis - 2015年6月
 
-datasheet for Vishay thermistor ntcle100
-thermistor model
+Vishay 热敏电阻 ntcle100 的数据手册
+热敏电阻模型
 view-source:http://www.giangrandi.ch/electronics/ntc/ntc.shtml
 http://www.giangrandi.ch/electronics/ntc/ntcparam.html
-no heating effects
+不考虑发热效应
 ID = 350
-add id to CirSim.constructElement and part to CirSim.createCe and to CirSimcomposeMainMenu
+将 id 添加到 CirSim.constructElement、CirSim.createCe 和 CirSim.composeMainMenu 中
  */
 class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler {
-    double position; //of the slider 0.005 to 0.995
-    double resistance; //based upon slider position
-    double minTempr, maxTempr; //Celsius - note min is -40, max is +150 degC
-    double temperature; //calculated from slider value (0.005 - 0.995) ratios of minTempr - maxTempr
-    double r25, r50; //the values that a user can input from a datsheet r 225 degc and r at 50degC
-    double rneg40; //maximum resistance - will be at -40 degC
-    double b25100; // constant based upon 2 values of R for 2 temperatures
+    double position; //滑块的当前位置 0.005 到 0.995
+    double resistance; //根据滑块位置计算出的电阻
+    double minTempr, maxTempr; //摄氏度 - 注意最小为 -40，最大为 +150 摄氏度
+    double temperature; //根据滑块值（0.005 - 0.995）在 minTempr - maxTempr 之间的比例计算得出
+    double r25, r50; //用户可根据数据手册输入的电阻值：25 摄氏度时的 R 和 50 摄氏度时的 R
+    double rneg40; //最大电阻 - 在 -40 摄氏度时取得
+    double b25100; //基于两个温度下的两个电阻值计算出的常数
     double t0 = 273.15;
     double t25 = t0 + 25;
 
@@ -33,17 +33,17 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
     Label label;
     String sliderText;
 
-    //constructor - when initially created
+    //构造函数 - 最初创建时调用
     public ThermistorNTCElm(int xx, int yy) {
 	super(xx, yy);
 	//setup();
-	minTempr = -40;//celsius
+	minTempr = -40;//摄氏度
 	maxTempr = 150; 
-	r25 = 10000; //default 10k thermistor e.g. NTCLE100E3010 Vishay
+	r25 = 10000; //默认 10k 热敏电阻，例如 NTCLE100E3010 Vishay
 	r50 = 3605;
-	position = .34; //25 degC for -40 to 150 degC
-	//thermistor calcs
-	rneg40 = calcResistance(minTempr); //for 10k ntc about 400k	
+	position = .34; //对于 -40 到 150 摄氏度的范围，对应 25 摄氏度
+	//热敏电阻计算
+	rneg40 = calcResistance(minTempr); //对于 10k ntc 约为 400k	
 	b25100 = calcB25100(); //	
 	temperature = temprFromSliderPos();
 	resistance = calcResistance(temperature); 
@@ -51,7 +51,7 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	createSlider();
     }
 
-    //constructor - when read in from file
+    //构造函数 - 从文件读取时调用
     public ThermistorNTCElm(int xa, int ya, int xb, int yb, int f,
 	    StringTokenizer st) {
 	super(xa, ya, xb, yb, f);
@@ -60,22 +60,22 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	minTempr = new Double(st.nextToken()).doubleValue();
 	maxTempr = new Double(st.nextToken()).doubleValue();
 	position = new Double(st.nextToken()).doubleValue();
-	//thermistor calcs
-	rneg40 = calcResistance(minTempr); //for 10k ntc about 400k	
+	//热敏电阻计算
+	rneg40 = calcResistance(minTempr); //对于 10k ntc 约为 400k	
 	b25100 = calcB25100(); //
 	temperature = temprFromSliderPos();
 	resistance = calcResistance(temperature); 
 	sliderText = CustomLogicModel.unescape(st.nextToken());
-	createSlider(); //uses position to set the slider
+	createSlider(); //使用 position 来设置滑块
     }
 
     //void setup() {
     //}
 
     int getPostCount() { return 2; }
-    int getDumpType() { return 350; } //NTC thermistor
+    int getDumpType() { return 350; } //NTC 热敏电阻
 
-    //data for file saving - make sure it matches order of items in file input constructor
+    //用于文件保存的数据 - 确保与文件输入构造函数中的项目顺序一致
     String dump() { 
 	return super.dump() + " " + r25 + " " + r50 + " " + minTempr + " " + maxTempr +" " + position  + " " + CustomLogicModel.escape(sliderText); 
     }
@@ -98,7 +98,7 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
     }
     Point ps3, ps4;   
 
-    //called straight after constructor when txt file is loaded
+    //在加载 txt 文件后立即调用（在构造函数之后）
     void setPoints() {
 	super.setPoints();
 	calcLeads(32);
@@ -109,15 +109,15 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	ps4 = new Point();
     }
 
-    void draw(Graphics g) { //used Resistor draw
+    void draw(Graphics g) { //借用 Resistor 的绘制方法
 	//int segments = 16;
 	int i;
 	//int ox = 0;
-	int hs=6; //is this a width 
+	int hs=6; //这是宽度吗
 	double v1 = volts[0];
 	double v2 = volts[1];
-	setBbox(point1, point2, hs); //the two points that are there when the device is being created
-	draw2Leads(g); //from point1 to lead1 and lead1 to point2 (lead1&2 are on the body) 
+	setBbox(point1, point2, hs); //器件创建时已存在的两个点
+	draw2Leads(g); //从 point1 到 lead1，以及从 lead1 到 point2（lead1 和 lead2 位于本体上）
 	setPowerColor(g, true);
 	double len = distance(lead1, lead2);
 	g.context.save();
@@ -138,10 +138,10 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	    g.context.stroke();
 
 	} else    {
-	    g.context.strokeRect(0, -hs, len, 2.0*hs); //draw the box for the euro resistor
+	    g.context.strokeRect(0, -hs, len, 2.0*hs); //绘制欧式电阻的方框
 	}
 
-	g.context.beginPath(); //thermistor symbol lines 0 is in the middle of the left handside of the resistor box
+	g.context.beginPath(); //热敏电阻符号线条，0 位于电阻方框左侧边的中间
 	g.context.moveTo(0-hs,hs*2);
 	g.context.lineTo(hs,hs*2);
 	g.context.lineTo(len,-hs*2);
@@ -165,9 +165,9 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	current = (volts[0]-volts[1])/resistance;
     }
     void stamp() {
-	temperature = temprFromSliderPos(); //e.g. 190 - 40 for range -40 to +150
+	temperature = temprFromSliderPos(); //例如范围为 -40 到 +150 时，取值 190 - 40
 	resistance = calcResistance(temperature); 
-	sim.stampResistor(nodes[0], nodes[1], resistance); //show temperature as well??
+	sim.stampResistor(nodes[0], nodes[1], resistance); //也显示温度？？
     }
 
     void getInfo(String arr[]) {
@@ -179,13 +179,13 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	arr[5] = "T = " + getUnitText(temperature, "\u00b0C");
     }
     public EditInfo getEditInfo(int n) {
-	// ohmString doesn't work here on linux
+	// ohmString 在 linux 上在这里不起作用
 	if (n == 0)
-	    return new EditInfo("R at 25\u00b0C", r25, r50+100, 100000); //limits: r25 must be > r50
+	    return new EditInfo("R at 25\u00b0C", r25, r50+100, 100000); //限制：r25 必须大于 r50
 	if (n == 1)
 	    return new EditInfo("R at 50\u00b0C", r50, 100, r25-100);
 	if (n == 2)
-	    return new EditInfo("Slider min temp (\u00b0C)", minTempr, -40, maxTempr); //limits: maxTempr must be > minTempr
+	    return new EditInfo("Slider min temp (\u00b0C)", minTempr, -40, maxTempr); //限制：maxTempr 必须大于 minTempr
 	if (n == 3)
 	    return new EditInfo("Slider max temp (\u00b0C)", maxTempr, minTempr, 150);
 	if (n == 4) {
@@ -195,7 +195,7 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	}
 	return null;
     }
-    //component edited
+    //元件已被编辑
     public void setEditValue(int n, EditInfo ei) {
 	if (n == 0)
 	    r25 = ei.value; 
@@ -226,16 +226,16 @@ class ThermistorNTCElm extends CircuitElm implements Command, MouseWheelHandler 
 	    slider.onMouseWheel(e);
     }
 
-    double calcResistance(double tempr) //knowing the temperature
+    double calcResistance(double tempr) //已知温度
     {
 	return Math.round(r25 * Math.exp(b25100 * ((1 / (tempr + t0)) - (1 / t25))));
     }
-    double temprFromSliderPos() //knowing slider position etc
+    double temprFromSliderPos() //已知滑块位置等
     {
 	return Math.round( position * (maxTempr - minTempr) + minTempr);
     }
-    //determine constant B25100 - when knowing two R values at two temperatures
-    double calcB25100() //given R25=10000 and R50=3605  B25100 will be 3932
+    //确定常数 B25100 - 已知两个温度下的两个电阻值时
+    double calcB25100() //给定 R25=10000 和 R50=3605 时，B25100 将为 3932
     {
 	double kelvin1 = t0 + 25;
 	double kelvin2 = t0 + 50;

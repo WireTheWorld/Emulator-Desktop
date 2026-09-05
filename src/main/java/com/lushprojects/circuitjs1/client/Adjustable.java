@@ -6,19 +6,19 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Label;
 import com.lushprojects.circuitjs1.client.util.Locale;
 
-// values with sliders
+// 带滑块的数值
 public class Adjustable implements Command {
     CircuitElm elm;
     double minValue, maxValue;
     int flags;
     String sliderText;
     
-    // null if this Adjustable has its own slider, non-null if it's sharing another one.
+    // 如果该 Adjustable 有自己的滑块则为 null，如果它共享另一个滑块则为非 null。
     Adjustable sharedSlider;
     
     final int FLAG_SHARED = 1;
     
-    // index of value in getEditInfo() list that this slider controls
+    // 该滑块控制的 getEditInfo() 列表中的值的索引
     int editItem;
     
     Label label;
@@ -38,7 +38,7 @@ public class Adjustable implements Command {
         }
     }
 
-    // undump
+    // 反序列化
     Adjustable(StringTokenizer st, CirSim sim) {
 	int e = Integer.parseInt(st.nextToken());
 	if (e == -1)
@@ -46,7 +46,7 @@ public class Adjustable implements Command {
 	try {
 	    String ei = st.nextToken();
 
-	    // forgot to dump a "flags" field in the initial code, so we have to do this to support backward compatibility
+	    // 最初的代码忘记转储 "flags" 字段，所以我们必须这样做以支持向后兼容
 	    if (ei.startsWith("F")) {
 		flags = Integer.parseInt(ei.substring(1));
 		ei = st.nextToken();
@@ -94,7 +94,7 @@ public class Adjustable implements Command {
 	    return;
 	}
         int intValue = (int) ((value-minValue)*100/(maxValue-minValue));
-        settingValue = true; // don't recursively set value again in execute()
+        settingValue = true; // 不要在 execute() 中再次递归设置值
         slider.setValue(intValue);
         settingValue = false;
     }
@@ -155,9 +155,9 @@ public class Adjustable implements Command {
 			CustomLogicModel.escape(sliderText);
     }
     
-    // reorder adjustables so that items with sliders come first in the list, followed by items that reference them.
-    // this simplifies the UI code, and also makes it much easier to dump/undump the adjustables list, since we will
-    // always be undumping the adjustables with sliders first, then the adjustables that reference them.
+    // 重新排列可调项，使带滑块的项目排在列表前面，随后是引用它们的项目。
+    // 这简化了 UI 代码，也使转储/反序列化可调项列表容易得多，因为我们总是
+    // 先反序列化带滑块的可调项，然后再反序列化引用它们的可调项。
     static void reorderAdjustables() {
 	Vector<Adjustable> newList = new Vector<Adjustable>();
 	Vector<Adjustable> oldList = CirSim.theSim.adjustables;

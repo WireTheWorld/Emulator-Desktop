@@ -42,7 +42,7 @@ class ADCElm extends ChipElm {
     }
     void execute() {
 	int imax = (1<<bits)-1;
-	// if we round, the half-flash doesn't work
+	// 如果取整，半闪式（half-flash）转换器将无法工作
 	double val = imax*volts[bits]/volts[bits+1]; // + .5;
 	int ival = (int) val;
 	ival = min(imax, max(0, ival));
@@ -54,7 +54,7 @@ class ADCElm extends ChipElm {
     int getPostCount() { return bits+2; }
     int getDumpType() { return 167; }
 
-    // there's already a V+ pin, how does that relate to high logic voltage?  figure out later
+    // 已经有一个 V+ 引脚，它与高逻辑电压有什么关系？以后再研究
     @Override boolean isDigitalChip() { return false; }
     public EditInfo getChipEditInfo(int n) {
         if (n == 0)

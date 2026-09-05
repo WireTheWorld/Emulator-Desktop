@@ -48,10 +48,10 @@ class EditOptions implements Editable {
 	            ei.choice.add("Norsk bokmål");
 	            ei.choice.add("Polski");
 	            ei.choice.add("Português");
-	            ei.choice.add("\u0420\u0443\u0441\u0441\u043a\u0438\u0439"); // Russian 
-	            ei.choice.add("\u4e2d\u6587 (\u4e2d\u56fd\u5927\u9646)"); // Chinese 
-	            ei.choice.add("\u4e2d\u6587 (\u53f0\u6e7e)"); // Chinese (tw) 
-	            ei.choice.add("日本語"); // Japanese
+	            ei.choice.add("\u0420\u0443\u0441\u0441\u043a\u0438\u0439"); // 俄语 
+	            ei.choice.add("\u4e2d\u6587 (\u4e2d\u56fd\u5927\u9646)"); // 中文 
+	            ei.choice.add("\u4e2d\u6587 (\u53f0\u6e7e)"); // 中文（台湾） 
+	            ei.choice.add("日本語"); // 日语
 	            return ei;
 		}
 		
@@ -113,7 +113,7 @@ class EditOptions implements Editable {
 		if (n == 0 && ei.value > 0) {
 			sim.maxTimeStep = ei.value;
 
-			// if timestep changed manually, prompt before changing it again
+			// 如果手动更改了时间步长，再次更改前先进行提示
 			AudioOutputElm.okToChangeTimeStep = false;
 		}
 		if (n == 1 && ei.value > 0)
@@ -124,7 +124,7 @@ class EditOptions implements Editable {
 		    	    return;
 		    	String langString = null;
 		    	switch (lang) {
-		    	// Czech is csx instead of cs because we are not ready to use it automatically yet
+		    	// 捷克语使用 csx 而非 cs，因为我们还没有准备好自动使用它
 		    	case 1: langString = "csx"; break;
 		    	case 2: langString = "da"; break;
 		    	case 3: langString = "de"; break;

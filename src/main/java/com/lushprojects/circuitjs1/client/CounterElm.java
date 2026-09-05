@@ -129,23 +129,23 @@ class CounterElm extends ChipElm {
 		int i;
 		int value = 0;
 		
-		// get direction
+		// 获取方向
 		int dir = 1;
 		if (hasUpDown() && pins[bits+2].value)
 		    dir = -1;
 		
-		// get current value
+		// 获取当前值
 		int lastBit = 2+bits-1;
 		for (i = 0; i != bits; i++)
 		    if (pins[lastBit-i].value)
 			value |= 1<<i;
 		
-		// update value
+		// 更新数值
 		value += dir;
 		if (modulus != 0)
 		   value = (value+modulus) % modulus;
 		
-		// convert value to binary
+		// 将数值转换为二进制
 		for (i = 0; i != bits; i++)
 		    pins[lastBit-i].value = (value & (1<<i)) != 0;
 	    }

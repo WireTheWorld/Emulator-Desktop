@@ -20,9 +20,9 @@
 package com.lushprojects.circuitjs1.client;
 
 class UnijunctionElm extends CompositeElm {
-	// node 0 = E
-	// node 1 = B1
-	// node 2 = B2
+	// 节点 0 = E
+	// 节点 1 = B1
+	// 节点 2 = B2
 	
 	final int FLAG_FLIP = 2;
 
@@ -43,11 +43,11 @@ class UnijunctionElm extends CompositeElm {
 	    flags |= FLAG_ESCAPE;
 	    StringTokenizer st = new StringTokenizer(ujtModelDump, "/");
 	    loadComposite(st, ujtModelString, ujtExternalNodes);
-	    sim.adjustTimeStep = true; // model doesn't work without time step auto-adjust
+	    sim.adjustTimeStep = true; // 没有时间步自动调整，模型无法正常工作
 	}
 	
 	public String dump() {
-	    // don't want model details dumped, takes up space and will make it hard to change
+	    // 不想转储模型细节，会占用空间并使修改变得困难
 	    return super.dumpWithMask(0);
 	}
 
@@ -99,7 +99,7 @@ class UnijunctionElm extends CompositeElm {
 	        void setPoints() {
 	            super.setPoints();
 
-	            // find the coordinates of the various points we need to draw it
+	            // 找出绘制它所需的各种点的坐标
 		    int flip = hasFlag(FLAG_FLIP) ? -1 : 1;
 	            int hs2 = hs*dsign*flip;
 	            b1 = newPointArray(3);

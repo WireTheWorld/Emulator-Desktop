@@ -70,14 +70,14 @@ class CCVSElm extends VCCSElm {
 		for (i = 0; i != inputCount; i += 2)
 		    pins[i+1].voltSource = voltageSources[i/2].getVoltageSource();
 	    } else {
-		// voltage source (0V) between C+ and C- so we can measure current
+		// 在 C+ 和 C- 之间放置电压源（0V）以便测量电流
 		for (i = 0; i != inputCount; i += 2) {
 		    int vn1 = pins[i+1].voltSource;
 		    sim.stampVoltageSource(nodes[i], nodes[i+1], vn1, 0);
 		}
 	    }
 	    
-	    // voltage source for outputs
+	    // 输出用的电压源
 	    int vn2 = pins[inputCount].voltSource;
             outputVS = vn2;
             sim.stampNonLinear(vn2 + sim.nodeList.size());
@@ -87,7 +87,7 @@ class CCVSElm extends VCCSElm {
 	double lastCurrents[];
 	
         void doStep() {
-            // converged yet?
+            // 是否已收敛？
             double convergeLimit = getConvergeLimit()*.1;
             
             int i;
@@ -104,7 +104,7 @@ class CCVSElm extends VCCSElm {
             
             int vno = outputVS + sim.nodeList.size();
             if (expr != null) {
-        	// calculate output
+        	// 计算输出
         	for (i = 0; i != inputPairCount; i++)
         	    setCurrentExprValue(i, pins[i*2+1].current);
         	exprState.t = sim.t;
@@ -125,7 +125,7 @@ class CCVSElm extends VCCSElm {
         	    if (Math.abs(dx) < 1e-6)
         		dx = sign(dx, 1e-6);
         	    sim.stampMatrix(vno, vni, -dx);
-        	    // adjust right side
+        	    // 调整右侧（向量）
         	    rs -= dx*cur;
         	    //if (sim.subIterations > 1)
         	        //sim.console("ccedx " + i + " " + cur + " " + dx + " " + rs + " " + sim.subIterations + " " + sim.t);
@@ -143,7 +143,7 @@ class CCVSElm extends VCCSElm {
         }
 
         void setCurrentExprValue(int n, double cur) {
-            // set i to current for backward compatibility
+            // 为向后兼容，将 i 设置为电流
             if (n == 0 && inputPairCount < 9)
         	exprState.values[8] = cur;
             exprState.values[n] = cur;
@@ -177,7 +177,7 @@ class CCVSElm extends VCCSElm {
         
         public void setChipEditValue(int n, EditInfo ei) {
             if (n == 1) {
-        	// make sure number of inputs is even
+        	// 确保输入数量为偶数
                 if (ei.value < 0 || ei.value > 8 || (ei.value % 2) == 1)
                     return;
                 inputCount = (int) ei.value;
@@ -193,8 +193,8 @@ class CCVSElm extends VCCSElm {
             if (!isSpiceStyle())
         	return;
             
-            // look for voltage sources across our inputs and use them rather than
-            // creating our own.  this is useful for converting spice subcircuits
+            // 查找跨接在我们输入端的电压源并直接使用它们，而不是
+            // 自己创建。这有助于转换 spice 子电路
             voltageSources = new VoltageElm[inputPairCount];
             for (i = 0; i != inputCount; i += 2) {
         	for (j = 0; j != elmList.size(); j++) {

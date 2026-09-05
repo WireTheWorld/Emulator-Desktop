@@ -68,7 +68,7 @@ class VoltageElm extends CircuitElm {
 	    phaseShift = pi/2;
 	}
 	
-	// old circuit files have the wrong duty cycle for pulse waveforms (wasn't configurable in the past)
+	// 旧的电路文件中脉冲波形的占空比是错误的（过去不可配置）
 	if ((flags & FLAG_PULSE_DUTY) == 0 && waveform == WF_PULSE) {
 	    dutyCycle = defaultPulseDuty;
 	}
@@ -78,7 +78,7 @@ class VoltageElm extends CircuitElm {
     int getDumpType() { return 'v'; }
     
     String dump() {
-	// set flag so we know if duty cycle is correct for pulse waveforms
+	// 设置标志以判断脉冲波形的占空比是否正确
 	if (waveform == WF_PULSE)
 	    flags |= FLAG_PULSE_DUTY;
 	else
@@ -87,7 +87,7 @@ class VoltageElm extends CircuitElm {
 	return super.dump() + " " + waveform + " " + frequency + " " +
 	    maxVoltage + " " + bias + " " + phaseShift + " " +
 	    dutyCycle;
-	// VarRailElm adds text at the end
+	// VarRailElm 会在末尾追加文本
     }
 
     void reset() {
@@ -335,8 +335,8 @@ class VoltageElm extends CircuitElm {
 	if (n == 2)
 	    bias = ei.value;
 	if (n == 3) {
-	    // adjust time zero to maintain continuity ind the waveform
-	    // even though the frequency has changed.
+	    // 调整时间零点以保持波形连续性
+	    // 即使频率已经改变。
 	    double oldfreq = frequency;
 	    frequency = ei.value;
 	    double maxfreq = 1/(8*sim.maxTimeStep);
@@ -358,7 +358,7 @@ class VoltageElm extends CircuitElm {
 	    } else if (waveform != ow)
 		ei.newDialog = true;
 	    
-	    // change duty cycle if we're changing to or from pulse
+	    // 如果在脉冲波形之间切换，则更改占空比
 	    if (waveform == WF_PULSE && ow != WF_PULSE)
 		dutyCycle = defaultPulseDuty;
 	    else if (ow == WF_PULSE && waveform != WF_PULSE)

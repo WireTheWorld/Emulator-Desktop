@@ -60,7 +60,7 @@ package com.lushprojects.circuitjs1.client;
 	void stamp() {
 	    super.stamp();
 	    
-	    // create grid of diodes
+	    // 创建二极管网格
 	    diodes = new Diode[sizeX*sizeY];
 	    int i;
 	    DiodeModel model = DiodeModel.getModelWithName("default-led");
@@ -97,12 +97,12 @@ package com.lushprojects.circuitjs1.client;
 	}
 	
 	void calculateCurrent() {
-	    // calculate diode currents
+	    // 计算二极管电流
 	    int ix, iy, i = 0;
 	    for (ix = 0; ix != sizeX; ix++)
 		pins[ix].current = 0;
 	    
-	    // avoid exception if this is called before stamp() 
+	    // 避免在 stamp() 之前调用时出现异常 
 	    if (diodes == null)
 		return;
 	    
@@ -118,7 +118,7 @@ package com.lushprojects.circuitjs1.client;
 	}
 
 	void stepFinished() {
-	    // stop for huge currents that make simulator act weird
+	    // 阻止使模拟器行为异常的巨大电流
 	    int i;
 	    for (i = 0; i != currents.length; i++)
 		if (Math.abs(currents[i]) > 1e12)
@@ -126,7 +126,7 @@ package com.lushprojects.circuitjs1.client;
 	}
 
 	void setColor(Graphics g, int p) {
-	    // 10mA current = max brightness
+	    // 10mA 电流 = 最大亮度
 	    if (currents == null) {
 		g.setColor(new Color(20, 0, 0));
 		return;
@@ -139,7 +139,7 @@ package com.lushprojects.circuitjs1.client;
             if (w < 20)
                 w = 20;
             
-            // when diode turns off, made it fade gradually to simulate persistence of vision
+            // 当二极管关闭时，使其逐渐变暗以模拟视觉暂留
             w = Math.max(w, brightness[p]);
             brightness[p] = w*.99;
             
@@ -150,7 +150,7 @@ package com.lushprojects.circuitjs1.client;
 	int getVoltageSourceCount() { return 0; }
 	int getDumpType() { return 405; }
 	
-	// this is true but it causes strange behavior with unconnected pins so we don't do it
+	// 这虽然是正确的，但会导致未连接引脚出现奇怪的行为，所以我们不这样做
 //	boolean getConnection(int n1, int n2) { return true; }
 	
 	public EditInfo getChipEditInfo(int n) {
@@ -178,7 +178,7 @@ package com.lushprojects.circuitjs1.client;
             }
 	}
 	
-	// default getInfo doesn't work because the pins are unlabeled
+	// 默认的 getInfo 不起作用，因为引脚没有标签
 	void getInfo(String arr[]) {
 	    arr[0] = getChipName();
 	    return;

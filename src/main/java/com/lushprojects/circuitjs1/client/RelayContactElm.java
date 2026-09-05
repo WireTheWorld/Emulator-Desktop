@@ -22,13 +22,13 @@ package com.lushprojects.circuitjs1.client;
 import com.google.gwt.user.client.ui.Button;
 import com.lushprojects.circuitjs1.client.util.Locale;
 
-// 0 = switch
-// 1 = switch end 1
-// 2 = switch end 2
+// 0 = 开关
+// 1 = 开关端 1
+// 2 = 开关端 2
 // ...
-// 3n   = coil
-// 3n+1 = coil
-// 3n+2 = end of coil resistor
+// 3n   = 线圈
+// 3n+1 = 线圈
+// 3n+2 = 线圈电阻末端
 
 class RelayContactElm extends CircuitElm {
     double r_on, r_off;
@@ -39,10 +39,10 @@ class RelayContactElm extends CircuitElm {
     final int FLAG_IEC = 4;
     int type;
 
-    // fractional position, between 0 and 1 inclusive
+    // 分数位置，介于 0 和 1 之间（含）
 //    double d_position;
     
-    // integer position, can be 0 (off), 1 (on), 2 (in between)
+    // 整数位置，可以是 0（断开）、1（闭合）、2（过渡中）
     int i_position;
     
     int poleCount;
@@ -77,14 +77,14 @@ class RelayContactElm extends CircuitElm {
     boolean useIECSymbol() { return (flags & FLAG_IEC) != 0; }
 
     String dump() {
-	// escape label
+	// 转义标签
 	return super.dump() + " " + CustomLogicModel.escape(label) + " " + r_on + " " + r_off + " " + i_position;
     }
     
     void draw(Graphics g) {
 	int i;
 	for (i = 0; i != 2; i++) {
-	    // draw lead
+	    // 绘制引线
 	    setVoltageColor(g, volts[nSwitch0+i]);
 	    drawThickLine(g, swposts[i], swpoles[i]);
 	}
@@ -146,7 +146,7 @@ class RelayContactElm extends CircuitElm {
 	allocNodes();
 	openhs = dsign*16;
 
-	// switch
+	// 开关
 	calcLeads(32);
 	swposts = new Point[3];
 	swpoles = new Point[3];
@@ -187,7 +187,7 @@ class RelayContactElm extends CircuitElm {
 	switchCurrent = switchCurCount = 0;
 	i_position = 0;
 
-	// preserve onState because if we don't, Relay Flip-Flop gets left in a weird state on reset.
+	// 保留 onState，否则复位时继电器触发器会处于异常状态。
 	// onState = false;
     }
 
@@ -196,15 +196,15 @@ class RelayContactElm extends CircuitElm {
 	sim.stampNonLinear(nodes[nSwitch1]);
     }
     
-    // we need this to be able to change the matrix for each step
+    // 我们需要这样做才能在每一步修改矩阵
     boolean nonLinear() { return true; }
 
     void doStep() {
 	sim.stampResistor(nodes[nSwitch0], nodes[nSwitch1], i_position == 0 ? r_on : r_off);
     }
     void calculateCurrent() {
-	// actually this isn't correct, since there is a small amount
-	// of current through the switch when off
+	// 实际上这并不完全正确，因为开关断开时
+	// 仍有少量电流流过
 	if (i_position == 1)
 	    switchCurrent = 0;
 	else

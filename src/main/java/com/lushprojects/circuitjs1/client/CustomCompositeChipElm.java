@@ -19,8 +19,8 @@
 
 package com.lushprojects.circuitjs1.client;
 
-    // concrete subclass of ChipElm that can be used by other elements (like CustomCompositeElm) to draw chips.
-    // CustomCompositeElm can't be a subclass of both ChipElm and CompositeElm.
+    // ChipElm 的具体子类，可供其他元件（如 CustomCompositeElm）用来绘制芯片。
+    // CustomCompositeElm 不能同时成为 ChipElm 和 CompositeElm 的子类。
     class CustomCompositeChipElm extends ChipElm {
 	String label;
 	

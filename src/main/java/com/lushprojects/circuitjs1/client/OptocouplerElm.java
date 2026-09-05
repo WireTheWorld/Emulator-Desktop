@@ -18,7 +18,7 @@ public class OptocouplerElm extends CompositeElm {
     }
 
     public OptocouplerElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
-	// pass st=null since we don't need to undump any of the sub-elements
+	// 传入 st=null，因为我们不需要反序列化任何子元件
 	super(xa, ya, xb, yb, f, null, modelString, modelExternalNodes);
 	noDiagonal = true;
 	initOptocoupler();
@@ -35,7 +35,7 @@ public class OptocouplerElm extends CompositeElm {
 	diode = (DiodeElm) compElmList.get(0);
 	CCCSElm cccs = (CCCSElm) compElmList.get(1);
 	
-	// from http://www.cel.com/pdf/appnotes/an3017.pdf
+	// 来自 http://www.cel.com/pdf/appnotes/an3017.pdf
 	cccs.setExpr("max(0,min(.0001, select(i-.003, (-80000000000*(i)^5+800000000*(i)^4-3000000*(i)^3+5177.2*(i)^2+.2453*(i)-.00005)*1.04/700, (9000000*(i)^5-998113*(i)^4+42174*(i)^3-861.32*(i)^2+9.0836*(i)-.0078)*.945/700)))");
 	
 	transistor = (TransistorElm) compElmList.get(2);
@@ -56,7 +56,7 @@ public class OptocouplerElm extends CompositeElm {
         g.setColor(needsHighlight() ? selectColor : lightGrayColor);
         drawThickPolygon(g, rectPointsX, rectPointsY, 4);
 	
-        // draw stubs
+        // 绘制短引线
         int i;
         for (i = 0; i != 4; i++) {
             setVoltageColor(g, volts[i]);
@@ -72,7 +72,7 @@ public class OptocouplerElm extends CompositeElm {
         
         drawPosts(g);
 
-        // draw little arrows
+        // 绘制小箭头
         g.setColor(lightGrayColor);
 	int dx = isFlippedX() ? -1 : 1;
         int sx = stubs[0].x+2*dx;
@@ -92,7 +92,7 @@ public class OptocouplerElm extends CompositeElm {
     void setPoints() {
 	super.setPoints();
 	
-	// adapted from ChipElm
+	// 改编自 ChipElm
         int hs = cspc;
         int x0 = x+cspc2; int y0 = y;
         int xr = x0-cspc;

@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-// contributed by Edward Calver
+// 由 Edward Calver 贡献
 
     class DeMultiplexerElm extends ChipElm {
 	int selectBitCount;

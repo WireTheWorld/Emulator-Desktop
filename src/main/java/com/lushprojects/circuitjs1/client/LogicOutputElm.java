@@ -58,7 +58,7 @@ package com.lushprojects.circuitjs1.client;
 	    g.setColor(lightGrayColor);
 	    String s = (volts[0] < threshold) ? "L" : "H";
 	    if (isTernary()) {
-		// we don't have 2 separate thresholds for ternary inputs so we do this instead
+		// 三态输入没有两个独立的阈值，因此我们采用这种方式代替
 		if (volts[0] > threshold * 1.5)   // 3.75 V
 		    s = "2";
 		else if (volts[0] > threshold * .5)  // 1.25 V
